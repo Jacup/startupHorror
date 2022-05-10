@@ -2,7 +2,7 @@ package people;
 
 import java.time.LocalDate;
 
-public class Human {
+public abstract class Human {
     private final String firstName;
     private final String lastName;
 
@@ -13,5 +13,13 @@ public class Human {
         this.firstName = firstName;
         this.lastName = lastName;
         Birthday = birthday;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 }
