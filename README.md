@@ -1,0 +1,2 @@
+# startupHorror
+IT Startup simulator
