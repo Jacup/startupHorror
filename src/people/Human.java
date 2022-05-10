@@ -6,13 +6,10 @@ public abstract class Human {
     private final String firstName;
     private final String lastName;
 
-    private final LocalDate Birthday;
 
-
-    public Human(String firstName, String lastName, LocalDate birthday) {
+    public Human(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        Birthday = birthday;
     }
 
     public String getFirstName() {

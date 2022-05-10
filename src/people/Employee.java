@@ -11,17 +11,10 @@ public class Employee extends Human {
 
     private final Position position;
 
-    public Employee(String firstName, String lastName, LocalDate birthday, String mail, Double salary, Position position) {
-        super(firstName, lastName, birthday);
+    public Employee(String firstName, String lastName, String mail, Double salary, Position position) {
+        super(firstName, lastName);
         this.mail = mail;
         this.salary = salary;
-        this.position = position;
-    }
-
-    public Employee(String firstName, String lastName, LocalDate birthday, Position position) {
-        super(firstName, lastName, birthday);
-        this.mail = createEmailAddress();
-        this.salary = getDefaultSalary(position);
         this.position = position;
     }
 
@@ -48,4 +41,6 @@ public class Employee extends Human {
     public Position getPosition() {
         return position;
     }
+
+
 }
