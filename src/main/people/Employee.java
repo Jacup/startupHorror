@@ -1,6 +1,6 @@
-package people;
+package main.people;
 
-import people.enums.Position;
+import main.people.enums.Position;
 
 public class Employee extends Human {
 

@@ -1,4 +1,4 @@
-package people;
+package main.people;
 
 public class Client extends Human{
 

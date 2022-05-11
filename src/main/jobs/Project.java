@@ -1,8 +1,7 @@
-package jobs;
+package main.jobs;
 
-import helpers.Randomizer;
-import org.junit.jupiter.api.Test;
-import people.Client;
+import main.helpers.Randomizer;
+import main.people.Client;
 
 import java.time.LocalDate;
 import java.util.HashMap;

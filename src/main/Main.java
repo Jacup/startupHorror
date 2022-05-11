@@ -1,6 +1,6 @@
 package main;
 
-import jobs.Project;
+import main.jobs.Project;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -36,7 +36,7 @@ public class Main {
     }
 
     private static void createCompany(String name) {
-        Company company = new Company(name);
+        main.Company company = new main.Company(name);
     }
 
     private static void generateEmployees() {

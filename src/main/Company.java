@@ -1,6 +1,6 @@
 package main;
 
-import people.Employee;
+import main.people.Employee;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;

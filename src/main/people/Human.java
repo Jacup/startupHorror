@@ -1,6 +1,4 @@
-package people;
-
-import java.time.LocalDate;
+package main.people;
 
 public abstract class Human {
     private final String firstName;
