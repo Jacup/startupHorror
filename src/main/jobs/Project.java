@@ -1,6 +1,8 @@
 package main.jobs;
 
 import main.helpers.Randomizer;
+import main.jobs.enums.DifficultyLevel;
+import main.jobs.enums.TechStack;
 import main.people.Client;
 
 import java.time.LocalDate;
@@ -26,21 +28,21 @@ public class Project {
         this.name = name;
         this.client = client;
         this.difficultyLevel = generateDifficultyLevel();
-        this.deadline = generateDeadline();
         this.deadlinePenalty = deadlinePenalty;
         this.paymentDeadlineDays = paymentDeadlineDays;
         this.payment = payment;
         this.techStackAndWorkload = generateTechStack();
+        this.deadline = generateDeadline();
     }
 
-    private LocalDate generateDeadline() {
-        var today = LocalDate.now();
-        int sumOfTimeNeeded = 0;
+    LocalDate generateDeadline() {
+        int sumOfHoursNeeded = 0;
         var getValues = techStackAndWorkload.values();
         for (Integer value : getValues) {
-            sumOfTimeNeeded = +value;
+            sumOfHoursNeeded = sumOfHoursNeeded + value;
         }
-        var randomDeadlineDays = Randomizer.generateRandomValue(sumOfTimeNeeded / 8, MAX_SPARE_DAYS);
+        int daysNeeded = (int) Math.ceil(sumOfHoursNeeded/8);
+        var randomDeadlineDays = Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
 
         return LocalDate.now().plusDays(randomDeadlineDays);
     }
