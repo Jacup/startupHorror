@@ -2,8 +2,6 @@ package people;
 
 import people.enums.Position;
 
-import java.time.LocalDate;
-
 public class Employee extends Human {
 
     private final String mail;
@@ -23,7 +21,6 @@ public class Employee extends Human {
     }
 
     private Double getDefaultSalary(Position position) {
-
         double value;
         switch (position) {
             case DEVELOPER -> value = 15000.0;
