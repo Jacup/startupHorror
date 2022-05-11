@@ -1,10 +1,9 @@
 package main;
 
 import people.Employee;
-import people.enums.Position;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Company {
 
@@ -16,13 +15,20 @@ public class Company {
     // COMPANY RESOURCES
     private Double cash;
 
+
+    private final String name;
     private final String domain;
     private ArrayList<Employee> hiredEmployees = new ArrayList<>();
     private ArrayList<Employee> availableEmployees = new ArrayList<>();
 
-    public Company(Double cash, String domain) {
-        this.cash = cash;
-        this.domain = domain;
+    public Company(String name) {
+        this.cash = generateRandomCashAmount();
+        this.name = name;
+        this.domain = name + ".pl";
+    }
+
+    private Double generateRandomCashAmount() {
+        return (double) ThreadLocalRandom.current().nextInt(5000, 10000 + 1);
     }
 
     public String getDomain() {
@@ -46,4 +52,7 @@ public class Company {
         return cash >= value;
     }
 
+    public String getName() {
+        return name;
+    }
 }
