@@ -1,8 +1,10 @@
 package main;
 
+import main.jobs.Project;
 import main.people.Employee;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Company {
@@ -15,11 +17,16 @@ public class Company {
     // COMPANY RESOURCES
     private Double cash;
 
-
+    // COMPANY DETAILS
     private final String name;
     private final String domain;
-    private ArrayList<Employee> hiredEmployees = new ArrayList<>();
-    private ArrayList<Employee> availableEmployees = new ArrayList<>();
+
+    // HUMAN RESOURCES
+    private LinkedList<Employee> hiredEmployees = new LinkedList<>();
+    private LinkedList<Employee> availableEmployees = new LinkedList<>();
+
+    // JOBS
+    private LinkedList<Project> availableProjects = new LinkedList<>();
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();
