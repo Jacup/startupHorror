@@ -1,9 +1,11 @@
 package main;
 
+import main.helpers.Randomizer;
+import main.jobs.Project;
 import main.people.Employee;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.LinkedList;
 
 public class Company {
 
@@ -15,11 +17,17 @@ public class Company {
     // COMPANY RESOURCES
     private Double cash;
 
-
+    // COMPANY DETAILS
     private final String name;
     private final String domain;
-    private ArrayList<Employee> hiredEmployees = new ArrayList<>();
-    private ArrayList<Employee> availableEmployees = new ArrayList<>();
+
+    // HUMAN RESOURCES
+    private LinkedList<Employee> hiredEmployees = new LinkedList<>();
+    private LinkedList<Employee> availableEmployees = new LinkedList<>();
+
+    // JOBS
+    private LinkedList<Project> availableProjects = new LinkedList<>();
+
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();
@@ -28,11 +36,7 @@ public class Company {
     }
 
     private Double generateRandomCashAmount() {
-        return (double) ThreadLocalRandom.current().nextInt(5000, 10000 + 1);
-    }
-
-    public String getDomain() {
-        return domain;
+        return (double) Randomizer.generateRandomValue(5000, 15000);
     }
 
     public void hireEmployee(Employee employee) {
@@ -40,6 +44,7 @@ public class Company {
             if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
                 cash -= EMPLOYEE_HIRE_COST;
                 hiredEmployees.add(employee);
+                availableEmployees.remove(employee);
             } else {
                 System.out.println("You can't hire employee now, because you don't have enough money");
             }
@@ -48,8 +53,18 @@ public class Company {
         }
     }
 
+    public void fireEmployee(Employee employee) {
+        if (hiredEmployees.contains(employee)) {
+
+        }
+    }
+
     private boolean haveEnoughCash(Double value) {
         return cash >= value;
+    }
+
+    public String getDomain() {
+        return domain;
     }
 
     public String getName() {
