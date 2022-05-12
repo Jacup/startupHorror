@@ -17,6 +17,7 @@ public class Project extends ProjectTemplate {
     private final String name;
     private final Client client;
     private final DifficultyLevel difficultyLevel;
+    private final Integer hoursLeftToFinish;
 
     private final Integer deadlineDays;
     private final Double deadlinePenalty;
@@ -33,9 +34,19 @@ public class Project extends ProjectTemplate {
         this.difficultyLevel = generateDifficultyLevel();
         this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
+        this.hoursLeftToFinish = setLeftHours();
         this.payment = generatePayment();
         this.deadlinePenalty = generateDeadlinePenalty();
         this.deadlineDays = generateDeadlineDays();
+    }
+
+    private Integer setLeftHours() {
+        int sum = 0;
+        var getValues = techStackAndWorkload.values();
+        for (Integer value : getValues) {
+            sum += value;
+        }
+        return sum;
     }
 
     private String generateRandomName() {
@@ -176,5 +187,9 @@ public class Project extends ProjectTemplate {
 
     public HashMap<TechStack, Integer> getTechStackAndWorkload() {
         return techStackAndWorkload;
+    }
+
+    public Integer getHoursLeftToFinish() {
+        return hoursLeftToFinish;
     }
 }

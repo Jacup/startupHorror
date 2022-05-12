@@ -1,45 +1,31 @@
 package main;
 
-import main.jobs.Project;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final int START_PROJECTS = 3;
-
-    private static final ArrayList<Project> availableProjects = new ArrayList();
 
     public static void main(String[] args) {
-        initializeData();
+        welcomeMsg();
 
-        startGame();
+        System.out.println("            --- Press any key to start the game ---");
+        var scanner = new Scanner(System.in);
+        scanner.nextLine();
+
+        var game = new Game();
+        game.setup();
+        game.play();
     }
 
-    private static void initializeData() {
-        generateEmployees();
-        for (int i = 0; i < START_PROJECTS; i++) {
-            availableProjects.add(Project.generateRandomProject());
-        }
-    }
-
-    private static void startGame() {
-        // creates user company
-        System.out.println("Enter your startup name:\n");
-        Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
-
-
-        createCompany(name);
-
-    }
-
-    private static void createCompany(String name) {
-        main.Company company = new main.Company(name);
-    }
-
-    private static void generateEmployees() {
-        // generates random 3 employees to hire at start
+    private static void welcomeMsg() {
+        System.out.println("|---------------------------------------------------------------|");
+        System.out.println("|                      - Startup Horror -                       |");
+        System.out.println("|                                                               |");
+        System.out.println("|           Play the role of the owner of a software            |");
+        System.out.println("|                house and develop the company.                 |");
+        System.out.println("|                                                               |");
+        System.out.println("|          Your goal is to get 3 full payments for the          |");
+        System.out.println("|                     completed projects.                       |");
+        System.out.println("|---------------------------------------------------------------|");
     }
 }

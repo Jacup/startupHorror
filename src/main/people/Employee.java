@@ -4,16 +4,18 @@ import main.people.enums.Position;
 
 public class Employee extends Human {
 
-    private final String mail;
     private final Double salary;
 
     private final Position position;
 
-    public Employee(String firstName, String lastName, String mail, Double salary, Position position) {
+    public Employee(String firstName, String lastName, Double salary, Position position) {
         super(firstName, lastName);
-        this.mail = mail;
         this.salary = salary;
         this.position = position;
+    }
+
+    public static Employee generateRandomEmployee() {
+        return new Employee("", "", 10.0, Position.DEVELOPER);
     }
 
     private String createEmailAddress() {
@@ -29,10 +31,6 @@ public class Employee extends Human {
             default -> value = 5000.0;
         }
         return value;
-    }
-
-    public String getMail() {
-        return mail;
     }
 
     public Position getPosition() {
