@@ -1,11 +1,11 @@
 package main;
 
+import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.Employee;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Company {
 
@@ -28,6 +28,7 @@ public class Company {
     // JOBS
     private LinkedList<Project> availableProjects = new LinkedList<>();
 
+
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
@@ -35,11 +36,7 @@ public class Company {
     }
 
     private Double generateRandomCashAmount() {
-        return (double) ThreadLocalRandom.current().nextInt(5000, 10000 + 1);
-    }
-
-    public String getDomain() {
-        return domain;
+        return (double) Randomizer.generateRandomValue(5000, 15000);
     }
 
     public void hireEmployee(Employee employee) {
@@ -47,6 +44,7 @@ public class Company {
             if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
                 cash -= EMPLOYEE_HIRE_COST;
                 hiredEmployees.add(employee);
+                availableEmployees.remove(employee);
             } else {
                 System.out.println("You can't hire employee now, because you don't have enough money");
             }
@@ -55,8 +53,18 @@ public class Company {
         }
     }
 
+    public void fireEmployee(Employee employee) {
+        if (hiredEmployees.contains(employee)) {
+
+        }
+    }
+
     private boolean haveEnoughCash(Double value) {
         return cash >= value;
+    }
+
+    public String getDomain() {
+        return domain;
     }
 
     public String getName() {
