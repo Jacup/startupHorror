@@ -6,11 +6,12 @@ import main.jobs.enums.TechStack;
 import main.people.Client;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 public class Project {
     private static final int MAX_SPARE_DAYS = 8;
+    private static final int PLN_PER_HOUR_RATE = 150;
+    private static final int DEFAULT_PAYMENT_DEADLINE = 20;
 
     private final String name;
     private final Client client;
@@ -29,10 +30,44 @@ public class Project {
         this.client = client;
         this.difficultyLevel = generateDifficultyLevel();
         this.deadlinePenalty = deadlinePenalty;
-        this.paymentDeadlineDays = paymentDeadlineDays;
-        this.payment = payment;
+        this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
+        this.payment = generatePayment();
         this.deadline = generateDeadline();
+    }
+
+    private Integer generatePaymentDeadline() {
+        int value = DEFAULT_PAYMENT_DEADLINE;
+        switch (client.getType()) {
+            case EASY:
+                if (Randomizer.draw(30)) {
+                    value = value + 7;
+                }
+                break;
+            case DEMANDING:
+                break;
+            case MTHRFCKR:
+                int chance = Randomizer.generateRandomValue(100);
+                if (chance < 30) {
+                    value = value + 7;
+                } else if (chance < 35) {
+                    value = value + 30;
+                }
+                break;
+        }
+        return value;
+    }
+
+    private Double generatePayment() {
+        int sumOfHoursNeeded = 0;
+        var getValues = techStackAndWorkload.values();
+        for (Integer value : getValues) {
+            sumOfHoursNeeded = sumOfHoursNeeded + value;
+        }
+        int basePayment = sumOfHoursNeeded * PLN_PER_HOUR_RATE;
+
+        int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.8), (int) (basePayment * 1.2));
+        return (double) finalRate;
     }
 
     LocalDate generateDeadline() {
@@ -41,7 +76,7 @@ public class Project {
         for (Integer value : getValues) {
             sumOfHoursNeeded = sumOfHoursNeeded + value;
         }
-        int daysNeeded = (int) Math.ceil(sumOfHoursNeeded/8);
+        int daysNeeded = (int) Math.ceil(sumOfHoursNeeded / 8);
         var randomDeadlineDays = Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
 
         return LocalDate.now().plusDays(randomDeadlineDays);
@@ -84,8 +119,12 @@ public class Project {
     }
 
     private HashMap<TechStack, Integer> generateTechStack() {
-        int min = 0, max = TechStack.values().length;
-        int hoursPerTech = 30;      // temporary, idk how to handle this.
+        int min, max;
+        var hoursPerTech = 30;      // temporary, idk how to handle this.
+
+        var availableTechStack = new LinkedList<>(Arrays.asList(TechStack.class.getEnumConstants()));
+        var hashMap = new HashMap<TechStack, Integer>();
+
         switch (difficultyLevel) {
             case EASY -> {
                 min = 1;
@@ -99,17 +138,25 @@ public class Project {
                 min = 3;
                 max = 5;
             }
+            default -> {
+                min = 1;
+                max = TechStack.values().length;
+            }
         }
+
         int amountOfTechStacks = Randomizer.generateRandomValue(min, max);
-        HashMap<TechStack, Integer> hashMap = new HashMap<>();
+
         for (int i = 0; i < amountOfTechStacks; i++) {
-            var techStack = TechStack.values()[new Random().nextInt(TechStack.values().length)];
+            TechStack techStack = availableTechStack.get(Randomizer.generateRandomValue(availableTechStack.size()));
+
             hashMap.put(techStack, hoursPerTech);
+            availableTechStack.remove(techStack);
         }
+
         return hashMap;
     }
 
     public static Project generateRandomProject() {
-        return new Project("dupa", new Client("asd", "asd"), LocalDate.now(), 5000.0, 60, 10000.0);
+        return new Project("dupa", new Client("asd", "asd", Client.ClientType.EASY), LocalDate.now(), 5000.0, 60, 10000.0);
     }
 }

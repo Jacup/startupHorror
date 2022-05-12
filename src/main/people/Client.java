@@ -2,11 +2,17 @@ package main.people;
 
 public class Client extends Human{
 
-    public enum Type {
-        EASY, DEMANDING, MTHRFCKR
+    public ClientType getType() {
+        return type;
     }
 
-    public Client(String firstName, String lastName) {
+    public enum ClientType {
+        EASY, DEMANDING, MTHRFCKR
+    }
+    private final ClientType type;
+
+    public Client(String firstName, String lastName, ClientType type) {
         super(firstName, lastName);
+        this.type = type;
     }
 }
