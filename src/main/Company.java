@@ -7,7 +7,7 @@ import main.people.Employee;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Company {
+public class Company extends Game{
 
     // costs
     private static final Double EMPLOYEE_HIRE_COST = 2000.0;
@@ -23,10 +23,9 @@ public class Company {
 
     // HUMAN RESOURCES
     private LinkedList<Employee> hiredEmployees = new LinkedList<>();
-    private LinkedList<Employee> availableEmployees = new LinkedList<>();
 
-    // JOBS
-    private LinkedList<Project> availableProjects = new LinkedList<>();
+    // JOBS ETC
+    private LinkedList<Project> actualProjects = new LinkedList<>();
 
 
     public Company(String name) {
@@ -36,7 +35,7 @@ public class Company {
     }
 
     private Double generateRandomCashAmount() {
-        return (double) Randomizer.generateRandomValue(5000, 15000);
+        return (double) Randomizer.generateRandomValue(10000, 20000);
     }
 
     public void hireEmployee(Employee employee) {
@@ -63,11 +62,27 @@ public class Company {
         return cash >= value;
     }
 
+    public Double getCash() {
+        return cash;
+    }
+
     public String getDomain() {
         return domain;
     }
 
     public String getName() {
         return name;
+    }
+
+    public LinkedList<Project> getActualProjects() {
+        return actualProjects;
+    }
+
+    public void setActualProjects(LinkedList<Project> actualProjects) {
+        this.actualProjects = actualProjects;
+    }
+
+    public boolean returnProject() {
+        return false;
     }
 }
