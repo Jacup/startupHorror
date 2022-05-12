@@ -8,32 +8,48 @@ import main.people.Client;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Project {
+public class Project extends ProjectTemplate {
     private static final int MAX_SPARE_DAYS = 8;
     private static final int PLN_PER_HOUR_RATE = 150;
     private static final int DEFAULT_PAYMENT_DEADLINE = 20;
+    private static final Double DEFAULT_DEADLINE_PENALTY = 0.2;
 
     private final String name;
     private final Client client;
     private final DifficultyLevel difficultyLevel;
 
-    private final LocalDate deadline;
+    private final Integer deadlineDays;
     private final Double deadlinePenalty;
+    private LocalDate actualDeadline;
 
     private final Integer paymentDeadlineDays;
     private final Double payment;
 
-    private HashMap<TechStack, Integer> techStackAndWorkload = new HashMap<>();
+    private final HashMap<TechStack, Integer> techStackAndWorkload;
 
-    public Project(String name, Client client, LocalDate deadline, Double deadlinePenalty, Integer paymentDeadlineDays, Double payment) {
-        this.name = name;
+    public Project(Client client) {
+        this.name = generateRandomName();
         this.client = client;
         this.difficultyLevel = generateDifficultyLevel();
-        this.deadlinePenalty = deadlinePenalty;
         this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
         this.payment = generatePayment();
-        this.deadline = generateDeadline();
+        this.deadlinePenalty = generateDeadlinePenalty();
+        this.deadlineDays = generateDeadlineDays();
+    }
+
+    private String generateRandomName() {
+        var name = availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
+        availableProjectNames.remove(name);
+        return name;
+    }
+
+    private Double generateDeadlinePenalty() {
+        return payment * DEFAULT_DEADLINE_PENALTY;
+    }
+
+    public static Project generateRandomProject() {
+        return new Project(new Client("asd", "asd", Client.ClientType.EASY));
     }
 
     private Integer generatePaymentDeadline() {
@@ -41,7 +57,7 @@ public class Project {
         switch (client.getType()) {
             case EASY:
                 if (Randomizer.draw(30)) {
-                    value = value + 7;
+                    value += 7;
                 }
                 break;
             case DEMANDING:
@@ -49,12 +65,13 @@ public class Project {
             case MTHRFCKR:
                 int chance = Randomizer.generateRandomValue(100);
                 if (chance < 30) {
-                    value = value + 7;
+                    value += 7;
                 } else if (chance < 35) {
-                    value = value + 30;
+                    value += 30;
                 }
                 break;
         }
+
         return value;
     }
 
@@ -64,54 +81,23 @@ public class Project {
         for (Integer value : getValues) {
             sumOfHoursNeeded = sumOfHoursNeeded + value;
         }
-        int basePayment = sumOfHoursNeeded * PLN_PER_HOUR_RATE;
 
+        int basePayment = sumOfHoursNeeded * PLN_PER_HOUR_RATE;
         int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.8), (int) (basePayment * 1.2));
+
         return (double) finalRate;
     }
 
-    LocalDate generateDeadline() {
+    private Integer generateDeadlineDays() {
         int sumOfHoursNeeded = 0;
         var getValues = techStackAndWorkload.values();
         for (Integer value : getValues) {
-            sumOfHoursNeeded = sumOfHoursNeeded + value;
+            sumOfHoursNeeded += value;
         }
         int daysNeeded = (int) Math.ceil(sumOfHoursNeeded / 8);
-        var randomDeadlineDays = Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
+        var randomizedDeadlineDays = Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
 
-        return LocalDate.now().plusDays(randomDeadlineDays);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public Double getDeadlinePenalty() {
-        return deadlinePenalty;
-    }
-
-    public Integer getPaymentDeadlineDays() {
-        return paymentDeadlineDays;
-    }
-
-    public Double getPayment() {
-        return payment;
-    }
-
-    public DifficultyLevel getDifficultyLevel() {
-        return difficultyLevel;
-    }
-
-    public HashMap<TechStack, Integer> getTechStackAndWorkload() {
-        return techStackAndWorkload;
+        return randomizedDeadlineDays;
     }
 
     private DifficultyLevel generateDifficultyLevel() {
@@ -156,7 +142,39 @@ public class Project {
         return hashMap;
     }
 
-    public static Project generateRandomProject() {
-        return new Project("dupa", new Client("asd", "asd", Client.ClientType.EASY), LocalDate.now(), 5000.0, 60, 10000.0);
+    public String getName() {
+        return name;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Integer getDeadlineDays() {
+        return deadlineDays;
+    }
+
+    public Double getDeadlinePenalty() {
+        return deadlinePenalty;
+    }
+
+    public LocalDate getActualDeadline() {
+        return actualDeadline;
+    }
+
+    public Integer getPaymentDeadlineDays() {
+        return paymentDeadlineDays;
+    }
+
+    public Double getPayment() {
+        return payment;
+    }
+
+    public DifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public HashMap<TechStack, Integer> getTechStackAndWorkload() {
+        return techStackAndWorkload;
     }
 }
