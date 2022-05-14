@@ -192,4 +192,10 @@ public class Project extends ProjectTemplate {
     public Integer getHoursLeftToFinish() {
         return hoursLeftToFinish;
     }
+
+    @Override
+    public String toString() {
+    return "Project name= " + name + ", difficulty= " + difficultyLevel
+            + ", tech stack= " + techStackAndWorkload.toString();
+    }
 }

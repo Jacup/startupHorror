@@ -3,11 +3,11 @@ package main;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.Employee;
+import main.people.enums.Position;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Company extends Game{
+public class Company extends Game {
 
     // costs
     private static final Double EMPLOYEE_HIRE_COST = 2000.0;
@@ -34,10 +34,28 @@ public class Company extends Game{
         this.domain = name + ".pl";
     }
 
+    // company
+    public String getName() {
+        return name;
+    }
+
     private Double generateRandomCashAmount() {
         return (double) Randomizer.generateRandomValue(10000, 20000);
     }
 
+    private boolean haveEnoughCash(Double value) {
+        return cash >= value;
+    }
+
+    public Double getCash() {
+        return cash;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    // employees
     public void hireEmployee(Employee employee) {
         if (!availableEmployees.isEmpty()) {
             if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
@@ -58,21 +76,15 @@ public class Company extends Game{
         }
     }
 
-    private boolean haveEnoughCash(Double value) {
-        return cash >= value;
+    public LinkedList<Employee> getHiredEmployees() {
+        return hiredEmployees;
     }
 
-    public Double getCash() {
-        return cash;
+    public int getAmountOfEmployeesByType(Position position) {
+        return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
     }
 
-    public String getDomain() {
-        return domain;
-    }
-
-    public String getName() {
-        return name;
-    }
+    // projects
 
     public LinkedList<Project> getActualProjects() {
         return actualProjects;
@@ -84,5 +96,12 @@ public class Company extends Game{
 
     public boolean returnProject() {
         return false;
+    }
+
+    public boolean signNewProject(Project project) {
+        actualProjects.add(project);
+        System.out.println("\nCongratulations! Your have new project! \nDetails:");
+        System.out.println(project.toString());
+        return true;
     }
 }
