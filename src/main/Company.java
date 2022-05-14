@@ -100,7 +100,6 @@ public class Company extends Game {
 
     public boolean signNewProject(Project project) {
         actualProjects.add(project);
-        getAvailableProjects().remove(project);
         System.out.println("\nCongratulations! Your have new project! \nDetails:");
         System.out.println(project.toString());
         return true;

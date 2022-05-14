@@ -28,8 +28,8 @@ public class Game {
     private final Scanner scanner;
     private Company company;
 
-    private final LinkedList<Client> availableClients;
-    private final LinkedList<Project> availableProjects;
+    protected final LinkedList<Client> availableClients;
+    protected final LinkedList<Project> availableProjects;
     protected final LinkedList<Employee> availableEmployees;
 
 
@@ -61,6 +61,7 @@ public class Game {
     }
 
     // each activity should return true if successful (nextDay++) or false if we're returning (action was not successful)
+    // todo later: divide into sections/submenus: HR, Contracts, etc.
     private boolean dayActivities() {
         printHeader();
 
@@ -89,13 +90,20 @@ public class Game {
     // 1. Contract Menu
     private boolean contractMenu() {
         System.out.println("\nAvailable projects: ");
+        if (availableProjects.size() == 0) {
+            System.out.println("You don't have any available projects. You have to find new clients.");
+            UserActions.pressEnterKeyToContinue();
+            return false;
+        }
         for (int i = 1; i <= availableProjects.size(); i++)
             System.out.println(TAB + i + ". " + availableProjects.get(i - 1));
         System.out.println(TAB + 0 + ". Go back");
 
         var selectedProject = selectProjectToSignUp();
         if (selectedProject != null) {
+            availableProjects.remove(selectedProject);
             return company.signNewProject(selectedProject);
+
         }
         return false;
     }
