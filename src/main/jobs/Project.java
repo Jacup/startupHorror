@@ -6,18 +6,21 @@ import main.jobs.enums.TechStack;
 import main.people.Client;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Random;
 
 public class Project extends ProjectTemplate {
-    private static final int MAX_SPARE_DAYS = 8;
-    private static final int PLN_PER_HOUR_RATE = 150;
+    private static final int MAX_SPARE_DAYS = 10;
+    private static final int PLN_PER_DAY_RATE = 1200;
     private static final int DEFAULT_PAYMENT_DEADLINE = 20;
     private static final Double DEFAULT_DEADLINE_PENALTY = 0.2;
 
     private final String name;
     private final Client client;
     private final DifficultyLevel difficultyLevel;
-    private Integer hoursLeftToFinish;
+    private Integer workingDaysLeft;
 
     private final Integer deadlineDays;
     private final Double deadlinePenalty;
@@ -34,137 +37,13 @@ public class Project extends ProjectTemplate {
         this.difficultyLevel = generateDifficultyLevel();
         this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
-        this.hoursLeftToFinish = setInitLeftHours();
+        this.workingDaysLeft = setInitWorkingDaysLeft();
         this.payment = generatePayment();
         this.deadlinePenalty = generateDeadlinePenalty();
         this.deadlineDays = generateDeadlineDays();
     }
 
-    public boolean makeProgress() {
-        // todo: change this value to progress and divide it into days.
-        hoursLeftToFinish -= 8;
-        System.out.println("Hours left to finish: " + hoursLeftToFinish);
-        return true;
-    }
-
-
-
-
-
-
-
-    private Integer setInitLeftHours() {
-        int sum = 0;
-        var getValues = techStackAndWorkload.values();
-        for (Integer value : getValues) {
-            sum += value;
-        }
-        return sum;
-    }
-
-    private String generateRandomName() {
-        var name = availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
-        availableProjectNames.remove(name);
-        return name;
-    }
-
-    private Double generateDeadlinePenalty() {
-        return payment * DEFAULT_DEADLINE_PENALTY;
-    }
-
-    public static Project generateRandomProject() {
-        return new Project(new Client("asd", "asd", Client.ClientType.EASY));
-    }
-
-    private Integer generatePaymentDeadline() {
-        int value = DEFAULT_PAYMENT_DEADLINE;
-        switch (client.getType()) {
-            case EASY:
-                if (Randomizer.draw(30)) {
-                    value += 7;
-                }
-                break;
-            case DEMANDING:
-                break;
-            case MTHRFCKR:
-                int chance = Randomizer.generateRandomValue(100);
-                if (chance < 30) {
-                    value += 7;
-                } else if (chance < 35) {
-                    value += 30;
-                }
-                break;
-        }
-
-        return value;
-    }
-
-    private Double generatePayment() {
-        int sumOfHoursNeeded = 0;
-        var getValues = techStackAndWorkload.values();
-        for (Integer value : getValues) {
-            sumOfHoursNeeded = sumOfHoursNeeded + value;
-        }
-
-        int basePayment = sumOfHoursNeeded * PLN_PER_HOUR_RATE;
-        int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.8), (int) (basePayment * 1.2));
-
-        return (double) finalRate;
-    }
-
-    private Integer generateDeadlineDays() {
-        int sumOfHoursNeeded = 0;
-        var getValues = techStackAndWorkload.values();
-        for (Integer value : getValues) {
-            sumOfHoursNeeded += value;
-        }
-        int daysNeeded = (int) Math.ceil(sumOfHoursNeeded / 8);
-        var randomizedDeadlineDays = Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
-
-        return randomizedDeadlineDays;
-    }
-
-    private DifficultyLevel generateDifficultyLevel() {
-        return DifficultyLevel.values()[new Random().nextInt(DifficultyLevel.values().length)];
-    }
-
-    private HashMap<TechStack, Integer> generateTechStack() {
-        int min, max;
-        var hoursPerTech = 30;      // temporary, idk how to handle this.
-
-        var availableTechStack = new LinkedList<>(Arrays.asList(TechStack.class.getEnumConstants()));
-        var hashMap = new HashMap<TechStack, Integer>();
-
-        switch (difficultyLevel) {
-            case EASY -> {
-                min = 1;
-                max = 1;
-            }
-            case MEDIUM -> {
-                min = 2;
-                max = 3;
-            }
-            case HARD -> {
-                min = 3;
-                max = 5;
-            }
-            default -> {
-                min = 1;
-                max = TechStack.values().length;
-            }
-        }
-
-        int amountOfTechStacks = Randomizer.generateRandomValue(min, max);
-
-        for (int i = 0; i < amountOfTechStacks; i++) {
-            TechStack techStack = availableTechStack.get(Randomizer.generateRandomValue(availableTechStack.size()));
-
-            hashMap.put(techStack, hoursPerTech);
-            availableTechStack.remove(techStack);
-        }
-
-        return hashMap;
-    }
+    // public getters
 
     public String getName() {
         return name;
@@ -202,17 +81,132 @@ public class Project extends ProjectTemplate {
         return techStackAndWorkload;
     }
 
-    public Integer getHoursLeftToFinish() {
-        return hoursLeftToFinish;
+    public Integer getWorkingDaysLeft() {
+        return workingDaysLeft;
     }
 
     @Override
     public String toString() {
-    return "Project name= " + name + ", difficulty= " + difficultyLevel
-            + ", tech stack= " + techStackAndWorkload.toString();
+        return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
     }
 
-    public void isValid() {
 
+    // public methods
+
+    public static Project generateRandomProject() {
+        return new Project(new Client("asd", "asd", Client.ClientType.EASY));
+    }
+
+    public boolean makeProgress() {
+        // todo: change this value to progress and divide it into days.
+        workingDaysLeft -= 8;
+        System.out.println("Hours left to finish: " + workingDaysLeft);
+        return true;
+    }
+
+
+    // private methods, generators
+
+    private String generateRandomName() {
+        var name = availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
+        availableProjectNames.remove(name);
+        return name;
+    }
+
+    private Double generateDeadlinePenalty() {
+        return payment * DEFAULT_DEADLINE_PENALTY;
+    }
+
+    private Integer generatePaymentDeadline() {
+        int value = DEFAULT_PAYMENT_DEADLINE;
+        switch (client.getType()) {
+            case EASY:
+                if (Randomizer.draw(30)) {
+                    value += 7;
+                }
+                break;
+            case DEMANDING:
+                break;
+            case MTHRFCKR:
+                int chance = Randomizer.generateRandomValue(100);
+                if (chance < 30) {
+                    value += 7;
+                } else if (chance < 35) {
+                    value += 30;
+                }
+                break;
+        }
+
+        return value;
+    }
+
+    private Double generatePayment() {
+        int sumOfDaysNeeded = 0;
+        var getValues = techStackAndWorkload.values();
+        for (Integer value : getValues) {
+            sumOfDaysNeeded += value;
+        }
+
+        int basePayment = sumOfDaysNeeded * PLN_PER_DAY_RATE;
+        int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.8), (int) (basePayment * 1.2));
+
+        return (double) finalRate;
+    }
+
+    private Integer generateDeadlineDays() {
+        int daysNeeded = setInitWorkingDaysLeft();
+
+        return Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
+    }
+
+    private DifficultyLevel generateDifficultyLevel() {
+        return DifficultyLevel.values()[new Random().nextInt(DifficultyLevel.values().length)];
+    }
+
+    private HashMap<TechStack, Integer> generateTechStack() {
+        int min, max;
+        var DaysPerTech = 20;      // TODO temporary, idk how to handle this. maybe assign it with game difficulty lvl
+
+        var availableTechStack = new LinkedList<>(Arrays.asList(TechStack.class.getEnumConstants()));
+        var hashMap = new HashMap<TechStack, Integer>();
+
+        switch (difficultyLevel) {
+            case EASY -> {
+                min = 1;
+                max = 1;
+            }
+            case MEDIUM -> {
+                min = 2;
+                max = 3;
+            }
+            case HARD -> {
+                min = 3;
+                max = 5;
+            }
+            default -> {
+                min = 1;
+                max = TechStack.values().length;
+            }
+        }
+
+        int amountOfTechStacks = Randomizer.generateRandomValue(min, max);
+
+        for (int i = 0; i < amountOfTechStacks; i++) {
+            TechStack techStack = availableTechStack.get(Randomizer.generateRandomValue(availableTechStack.size()));
+
+            hashMap.put(techStack, DaysPerTech);
+            availableTechStack.remove(techStack);
+        }
+
+        return hashMap;
+    }
+
+    private Integer setInitWorkingDaysLeft() {
+        int sum = 0;
+        var getValues = techStackAndWorkload.values();
+        for (Integer value : getValues) {
+            sum += value;
+        }
+        return sum;
     }
 }
