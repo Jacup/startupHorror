@@ -1,5 +1,6 @@
 package main.jobs;
 
+import main.Game;
 import main.helpers.Randomizer;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
@@ -14,8 +15,8 @@ import java.util.Random;
 public class Project extends ProjectTemplate {
     private static final int MAX_SPARE_DAYS = 10;
     private static final int PLN_PER_DAY_RATE = 1200;
-    private static final int DEFAULT_PAYMENT_DEADLINE = 20;
-    private static final Double DEFAULT_DEADLINE_PENALTY = 0.2;
+    private static final int DEFAULT_PAYMENT_DELAY = 10;
+    public static final Double DEFAULT_DEADLINE_PENALTY = 0.2;
 
     private final String name;
     private final Client client;
@@ -27,7 +28,7 @@ public class Project extends ProjectTemplate {
     private LocalDate actualDeadline;
 
     private boolean isFinished;
-    private final Integer paymentDeadlineDays;
+    private final Integer paymentDelayDays;
     private final Double payment;
 
     private final HashMap<TechStack, Integer> techStackAndWorkload;
@@ -37,7 +38,7 @@ public class Project extends ProjectTemplate {
         this.client = client;
         this.isFinished = false;
         this.difficultyLevel = generateDifficultyLevel();
-        this.paymentDeadlineDays = generatePaymentDeadline();
+        this.paymentDelayDays = generatePaymentDelay();
         this.techStackAndWorkload = generateTechStack();
         this.workingDaysLeft = setInitWorkingDaysLeft();
         this.payment = generatePayment();
@@ -67,8 +68,8 @@ public class Project extends ProjectTemplate {
         return actualDeadline;
     }
 
-    public Integer getPaymentDeadlineDays() {
-        return paymentDeadlineDays;
+    public Integer getPaymentDelayDays() {
+        return paymentDelayDays;
     }
 
     public Double getPayment() {
@@ -103,6 +104,10 @@ public class Project extends ProjectTemplate {
         return new Project(new Client("asd", "asd", Client.ClientType.EASY));
     }
 
+    public void setActualDeadline() {
+        actualDeadline = Game.getGameDate().plusDays(deadlineDays);
+    }
+
     public boolean makeProgress() {
         if (isFinished || workingDaysLeft <= 0) {
             System.out.println("There is no more work to do.");
@@ -119,6 +124,25 @@ public class Project extends ProjectTemplate {
         return true;
     }
 
+    public boolean isDeadlinePassed() {
+        return Game.getGameDate().isAfter(actualDeadline);
+    }
+
+    public Integer daysAfterDeadline() {
+        if (isDeadlinePassed()) return Game.getGameDate().compareTo(actualDeadline);
+
+        return 0;
+    }
+
+    public boolean isPenaltyAdded() {
+        var days = daysAfterDeadline();
+
+        if (client.getType() == Client.ClientType.EASY) {
+            if (days <= 7) return !Randomizer.draw(20);
+        }
+
+        return true;
+    }
 
     // private methods, generators
 
@@ -132,23 +156,18 @@ public class Project extends ProjectTemplate {
         return payment * DEFAULT_DEADLINE_PENALTY;
     }
 
-    private Integer generatePaymentDeadline() {
-        int value = DEFAULT_PAYMENT_DEADLINE;
+    private Integer generatePaymentDelay() {
+        int value = DEFAULT_PAYMENT_DELAY;
         switch (client.getType()) {
             case EASY:
-                if (Randomizer.draw(30)) {
-                    value += 7;
-                }
+                if (Randomizer.draw(30)) value += 7;
                 break;
             case DEMANDING:
                 break;
             case MTHRFCKR:
                 int chance = Randomizer.generateRandomValue(100);
-                if (chance < 30) {
-                    value += 7;
-                } else if (chance < 35) {
-                    value += 30;
-                }
+                if (chance < 30) value += 7;
+                else if (chance < 35) value += 30;
                 break;
         }
 
@@ -163,7 +182,7 @@ public class Project extends ProjectTemplate {
         }
 
         int basePayment = sumOfDaysNeeded * PLN_PER_DAY_RATE;
-        int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.8), (int) (basePayment * 1.2));
+        int finalRate = Randomizer.generateRandomValue((int) (basePayment * 0.7), (int) (basePayment * 1.3));
 
         return (double) finalRate;
     }

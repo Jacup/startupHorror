@@ -10,10 +10,7 @@ import main.people.Owner;
 import main.people.enums.Position;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
     /**
@@ -29,10 +26,11 @@ public class Game {
     protected final LinkedList<Employee> availableEmployees;
     private final Scanner scanner;
     protected int successfulProjects;
-    private int gameDay;
-    private LocalDate gameDate;
+    protected static int gameDay;
+    protected static LocalDate gameDate;
     private Company company;
 
+    protected static HashMap<LocalDate, Double> dailyTransactions = new HashMap<>();
 
     public Game() {
         this.availableClients = new LinkedList<>();
@@ -40,8 +38,8 @@ public class Game {
         this.availableProjects = new LinkedList<>();
         this.availableEmployees = new LinkedList<>();
         this.successfulProjects = 0;
-        this.gameDate = LocalDate.now();
-        this.gameDay = 1;
+        gameDate = LocalDate.now();
+        gameDay = 1;
     }
 
     public LinkedList<Project> getAvailableProjects() {
@@ -50,6 +48,10 @@ public class Game {
 
     public LinkedList<Employee> getAvailableEmployees() {
         return availableEmployees;
+    }
+
+    public static LocalDate getGameDate() {
+        return gameDate;
     }
 
     public void setup() {
@@ -64,15 +66,24 @@ public class Game {
         while (successfulProjects < 3) {
             if (dayActivities()) {
                 nextDay();
+                dailyRoutines();
                 UserActions.pressEnterKeyToContinue();
             }
         }
     }
 
-    private void nextDay() {
+    private void dailyRoutines() {
+        if (dailyTransactions.containsKey(gameDate)) {
+            var newCash = dailyTransactions.get(gameDate);
+            company.addCash(newCash);
+        }
+    }
+
+    private static void nextDay() {
         gameDay += 1;
         gameDate = gameDate.plusDays(1);
     }
+
 
     /**
      * todo later: divide into sections/submenus: HR, Contracts, etc.
@@ -97,9 +108,9 @@ public class Game {
             case 3:
                 return goProgramming();
             case 5:
-                returnContract();
-                break;
+                return returnContract();
             case 8:
+                nextDay();
                 System.out.println("8888");
                 break;
             case 0:
@@ -233,14 +244,22 @@ public class Game {
     }
 
 
-    private void returnContract() {
-        var finishedProjects = company.getActualProjects().stream().filter((project) -> project.getWorkingDaysLeft().equals(0)).toList();
-        if (finishedProjects.equals(0)) {
-            var successful = company.returnProject();
-            if (!successful) successfulProjects = +1;
+    private boolean returnContract() {
+        var finishedProjects = company.getActualProjects().stream()
+                .filter(Project::isFinished).toList();
+
+        if (finishedProjects.size() == 0) {
+            System.out.println("You don't have any ready to return projects. Go programming or hire devs!");
+            UserActions.pressEnterKeyToContinue();
+            return false;
         }
 
+        var choice = UserActions.getUserInputByte(finishedProjects.size());
+        if (choice == 0) return false;
 
+        var chosenProject = finishedProjects.get(choice - 1);
+
+        return company.returnProject(chosenProject);
     }
 
     private void printHeader() {
@@ -249,7 +268,7 @@ public class Game {
         System.out.println("> Successful projects: " + successfulProjects + "\n");
     }
 
-    private Company createCompany() {
+    public Company createCompany() {
         System.out.println("\nPlease enter name of your startup: ");
         var companyName = scanner.nextLine();
 
