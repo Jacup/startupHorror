@@ -16,8 +16,12 @@ public class UserActions {
         return getUserInputByte(127);
     }
 
-
     public static byte getUserInputByte(int maxValue) {
+        return getUserInputByte(maxValue, false);
+    }
+
+    public static byte getUserInputByte(int maxValue, boolean isZeroIncludedInList) {
+        if (isZeroIncludedInList) maxValue--;
         int minValue = 0;
         boolean inputWasGood = false;
         byte value = 0;
@@ -28,8 +32,7 @@ public class UserActions {
                 value = s.nextByte();
                 inputWasGood = value >= minValue && value <= maxValue;
                 if (!inputWasGood)
-                    System.out.println("Your input is invalid. Choose value between "
-                            + minValue + " and " + maxValue + "\n");
+                    System.out.println("Your input is invalid. Choose value between " + minValue + " and " + maxValue + "\n");
             } catch (Exception e) {
                 System.out.println("Your input is invalid.\n");
             } finally {

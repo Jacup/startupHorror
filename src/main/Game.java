@@ -10,10 +10,7 @@ import main.people.Owner;
 import main.people.enums.Position;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
     /**
@@ -29,10 +26,11 @@ public class Game {
     protected final LinkedList<Employee> availableEmployees;
     private final Scanner scanner;
     protected int successfulProjects;
-    private int gameDay;
-    private LocalDate gameDate;
+    protected static int gameDay;
+    protected static LocalDate gameDate;
     private Company company;
 
+    protected static HashMap<LocalDate, Double> dailyTransactions = new HashMap<>();
 
     public Game() {
         this.availableClients = new LinkedList<>();
@@ -40,23 +38,52 @@ public class Game {
         this.availableProjects = new LinkedList<>();
         this.availableEmployees = new LinkedList<>();
         this.successfulProjects = 0;
-        this.gameDate = LocalDate.now();
-        this.gameDay = 1;
+        gameDate = LocalDate.now();
+        gameDay = 1;
+    }
+
+    public LinkedList<Project> getAvailableProjects() {
+        return availableProjects;
+    }
+
+    public LinkedList<Employee> getAvailableEmployees() {
+        return availableEmployees;
+    }
+
+    public static LocalDate getGameDate() {
+        return gameDate;
+    }
+
+    public void setup() {
+        company = createCompany();
+
+        generateEmployees();
+        generateClients();
+        generateProjects();
     }
 
     public void play() {
         while (successfulProjects < 3) {
             if (dayActivities()) {
                 nextDay();
+                dailyRoutines();
                 UserActions.pressEnterKeyToContinue();
             }
         }
     }
 
-    private void nextDay() {
+    private void dailyRoutines() {
+        if (dailyTransactions.containsKey(gameDate)) {
+            var newCash = dailyTransactions.get(gameDate);
+            company.addCash(newCash);
+        }
+    }
+
+    private static void nextDay() {
         gameDay += 1;
         gameDate = gameDate.plusDays(1);
     }
+
 
     /**
      * todo later: divide into sections/submenus: HR, Contracts, etc.
@@ -71,7 +98,7 @@ public class Game {
 
         printList(activities);
 
-        var choice = UserActions.getUserInputByte(activities.size());
+        var choice = UserActions.getUserInputByte(activities.size(), true);
 
         switch (choice) {
             case 1:
@@ -81,9 +108,9 @@ public class Game {
             case 3:
                 return goProgramming();
             case 5:
-                returnContract();
-                break;
+                return returnContract();
             case 8:
+                nextDay();
                 System.out.println("8888");
                 break;
             case 0:
@@ -95,7 +122,7 @@ public class Game {
     }
 
     private static void exitGame() {
-        System.out.println("You lost! Closing app. . . ");
+        System.out.println("Closing app. . . ");
     }
 
     private void printList(List<String> options) {
@@ -177,10 +204,16 @@ public class Game {
 
         printProjects(projectsForOwner);
 
-        var choice = scanner.nextInt();
+        var choice = UserActions.getUserInputByte(projectsForOwner.size());
         if (choice == 0) return false;
 
-        return projectsForOwner.get(choice).makeProgress();
+        var chosenProject = projectsForOwner.get(choice - 1);
+        if (chosenProject.isFinished()) {
+            System.out.println("This project is finished! Contact with client to return and get paid.");
+            return false;
+        }
+
+        return chosenProject.makeProgress();
     }
 
     private ArrayList<Project> findAvailableProjectsForOwner() {
@@ -211,14 +244,22 @@ public class Game {
     }
 
 
-    private void returnContract() {
-        var finishedProjects = company.getActualProjects().stream().filter((project) -> project.getHoursLeftToFinish().equals(0)).toList();
-        if (finishedProjects.equals(0)) {
-            var successful = company.returnProject();
-            if (!successful) successfulProjects = +1;
+    private boolean returnContract() {
+        var finishedProjects = company.getActualProjects().stream()
+                .filter(Project::isFinished).toList();
+
+        if (finishedProjects.size() == 0) {
+            System.out.println("You don't have any ready to return projects. Go programming or hire devs!");
+            UserActions.pressEnterKeyToContinue();
+            return false;
         }
 
+        var choice = UserActions.getUserInputByte(finishedProjects.size());
+        if (choice == 0) return false;
 
+        var chosenProject = finishedProjects.get(choice - 1);
+
+        return company.returnProject(chosenProject);
     }
 
     private void printHeader() {
@@ -227,15 +268,7 @@ public class Game {
         System.out.println("> Successful projects: " + successfulProjects + "\n");
     }
 
-    public void setup() {
-        company = createCompany();
-
-        generateEmployees();
-        generateClients();
-        generateProjects();
-    }
-
-    private Company createCompany() {
+    public Company createCompany() {
         System.out.println("\nPlease enter name of your startup: ");
         var companyName = scanner.nextLine();
 
@@ -260,12 +293,5 @@ public class Game {
         }
     }
 
-    public LinkedList<Project> getAvailableProjects() {
-        return availableProjects;
-    }
-
-    public LinkedList<Employee> getAvailableEmployees() {
-        return availableEmployees;
-    }
 
 }

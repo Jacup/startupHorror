@@ -2,6 +2,7 @@ package main;
 
 import main.helpers.Randomizer;
 import main.jobs.Project;
+import main.people.Client;
 import main.people.Employee;
 import main.people.HumanTemplate;
 import main.people.Owner;
@@ -56,15 +57,20 @@ public class Company extends Game {
         return cash;
     }
 
+    public void addCash(Double value) {
+        cash += value;
+    }
+
     public String getDomain() {
         return domain;
     }
 
-    // employees
 
+    // employees
     public Owner createOwner() {
         return new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
     }
+
     public void hireEmployee(Employee employee) {
         if (!availableEmployees.isEmpty()) {
             if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
@@ -93,8 +99,8 @@ public class Company extends Game {
         return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
     }
 
-    // projects
 
+    // projects
     public LinkedList<Project> getActualProjects() {
         return actualProjects;
     }
@@ -103,12 +109,30 @@ public class Company extends Game {
         this.actualProjects = actualProjects;
     }
 
-    public boolean returnProject() {
-        return false;
+    public boolean returnProject(Project project) {
+        if (!project.isFinished()) {
+            System.out.println("This project is not finished yet.");
+            return false;
+        }
+
+        createPayment(project, project.isPenaltyAdded());
+        return true;
+    }
+
+
+
+
+    private void createPayment(Project project, boolean isPenalty) {
+        var penalty = 1 - Project.DEFAULT_DEADLINE_PENALTY;
+        var paymentDate = getGameDate().plusDays(project.getPaymentDelayDays());
+        var cash = isPenalty ? (project.getPayment() * penalty) : project.getPayment();
+
+        dailyTransactions.put(paymentDate, cash);
     }
 
     public boolean signNewProject(Project project) {
         actualProjects.add(project);
+        project.setActualDeadline();
         System.out.println("\nCongratulations! Your have new project! \nDetails:");
         System.out.println(project.toString());
         return true;
