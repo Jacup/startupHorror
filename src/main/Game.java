@@ -196,7 +196,13 @@ public class Game {
         var choice = UserActions.getUserInputByte(projectsForOwner.size());
         if (choice == 0) return false;
 
-        return projectsForOwner.get(choice - 1).makeProgress();
+        var chosenProject = projectsForOwner.get(choice - 1);
+        if (chosenProject.isFinished()) {
+            System.out.println("This project is finished! Contact with client to return and get paid.");
+            return false;
+        }
+
+        return chosenProject.makeProgress();
     }
 
     private ArrayList<Project> findAvailableProjectsForOwner() {
@@ -225,9 +231,6 @@ public class Game {
         return techstack.stream().filter(element -> !owner.getAbilities().contains(element)).toList();
 
     }
-
-
-
 
 
     private void returnContract() {

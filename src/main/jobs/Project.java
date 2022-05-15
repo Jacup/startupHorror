@@ -26,6 +26,7 @@ public class Project extends ProjectTemplate {
     private final Double deadlinePenalty;
     private LocalDate actualDeadline;
 
+    private boolean isFinished;
     private final Integer paymentDeadlineDays;
     private final Double payment;
 
@@ -34,6 +35,7 @@ public class Project extends ProjectTemplate {
     public Project(Client client) {
         this.name = generateRandomName();
         this.client = client;
+        this.isFinished = false;
         this.difficultyLevel = generateDifficultyLevel();
         this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
@@ -85,6 +87,10 @@ public class Project extends ProjectTemplate {
         return workingDaysLeft;
     }
 
+    public boolean isFinished() {
+        return isFinished;
+    }
+
     @Override
     public String toString() {
         return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
@@ -98,8 +104,18 @@ public class Project extends ProjectTemplate {
     }
 
     public boolean makeProgress() {
+        if (isFinished || workingDaysLeft <= 0) {
+            System.out.println("There is no more work to do.");
+            return false;
+        }
+
         workingDaysLeft--;
-        System.out.println("Days left to finish: " + workingDaysLeft);
+
+        if (workingDaysLeft.equals(0)) {
+            System.out.println("Congratulations! You have finished working on this project. Please return this to the client.");
+            isFinished = true;
+        } else System.out.println("Days left to finish: " + workingDaysLeft);
+
         return true;
     }
 
@@ -164,7 +180,7 @@ public class Project extends ProjectTemplate {
 
     private HashMap<TechStack, Integer> generateTechStack() {
         int min, max;
-        var DaysPerTech = 20;      // TODO temporary, idk how to handle this. maybe assign it with game difficulty lvl
+        var DaysPerTech = 3;      // TODO temporary, idk how to handle this. maybe assign it with game difficulty lvl
 
         var availableTechStack = new LinkedList<>(Arrays.asList(TechStack.class.getEnumConstants()));
         var hashMap = new HashMap<TechStack, Integer>();
