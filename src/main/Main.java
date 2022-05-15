@@ -17,6 +17,7 @@ public class Main {
         game.play();
     }
 
+    // todo: replace raw strings with generator
     private static void welcomeMsg() {
         System.out.println("|---------------------------------------------------------------|");
         System.out.println("|                      - Startup Horror -                       |");
