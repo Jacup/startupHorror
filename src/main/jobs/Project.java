@@ -194,7 +194,7 @@ public class Project extends ProjectTemplate {
     }
 
     private DifficultyLevel generateDifficultyLevel() {
-        return DifficultyLevel.values()[new Random().nextInt(DifficultyLevel.values().length)];
+        return DifficultyLevel.values()[Randomizer.generateRandomValue(DifficultyLevel.values().length)];
     }
 
     private HashMap<TechStack, Integer> generateTechStack() {
