@@ -3,6 +3,8 @@ package main;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.Employee;
+import main.people.HumanTemplate;
+import main.people.Owner;
 import main.people.enums.Position;
 
 import java.util.LinkedList;
@@ -24,6 +26,8 @@ public class Company extends Game {
     // HUMAN RESOURCES
     private LinkedList<Employee> hiredEmployees = new LinkedList<>();
 
+    private final Owner owner;
+
     // JOBS ETC
     private LinkedList<Project> actualProjects = new LinkedList<>();
 
@@ -32,6 +36,7 @@ public class Company extends Game {
         this.cash = generateRandomCashAmount();
         this.name = name;
         this.domain = name + ".pl";
+        this.owner = createOwner();
     }
 
     // company
@@ -56,6 +61,10 @@ public class Company extends Game {
     }
 
     // employees
+
+    public Owner createOwner() {
+        return new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
+    }
     public void hireEmployee(Employee employee) {
         if (!availableEmployees.isEmpty()) {
             if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
@@ -103,5 +112,9 @@ public class Company extends Game {
         System.out.println("\nCongratulations! Your have new project! \nDetails:");
         System.out.println(project.toString());
         return true;
+    }
+
+    public Owner getOwner() {
+        return owner;
     }
 }

@@ -17,7 +17,7 @@ public class Project extends ProjectTemplate {
     private final String name;
     private final Client client;
     private final DifficultyLevel difficultyLevel;
-    private final Integer hoursLeftToFinish;
+    private Integer hoursLeftToFinish;
 
     private final Integer deadlineDays;
     private final Double deadlinePenalty;
@@ -34,13 +34,26 @@ public class Project extends ProjectTemplate {
         this.difficultyLevel = generateDifficultyLevel();
         this.paymentDeadlineDays = generatePaymentDeadline();
         this.techStackAndWorkload = generateTechStack();
-        this.hoursLeftToFinish = setLeftHours();
+        this.hoursLeftToFinish = setInitLeftHours();
         this.payment = generatePayment();
         this.deadlinePenalty = generateDeadlinePenalty();
         this.deadlineDays = generateDeadlineDays();
     }
 
-    private Integer setLeftHours() {
+    public boolean makeProgress() {
+        // todo: change this value to progress and divide it into days.
+        hoursLeftToFinish -= 8;
+        System.out.println("Hours left to finish: " + hoursLeftToFinish);
+        return true;
+    }
+
+
+
+
+
+
+
+    private Integer setInitLeftHours() {
         int sum = 0;
         var getValues = techStackAndWorkload.values();
         for (Integer value : getValues) {
@@ -197,5 +210,9 @@ public class Project extends ProjectTemplate {
     public String toString() {
     return "Project name= " + name + ", difficulty= " + difficultyLevel
             + ", tech stack= " + techStackAndWorkload.toString();
+    }
+
+    public void isValid() {
+
     }
 }

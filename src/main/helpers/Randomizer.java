@@ -1,7 +1,5 @@
 package main.helpers;
 
-import main.jobs.enums.TechStack;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Randomizer {
