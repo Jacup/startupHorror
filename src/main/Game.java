@@ -44,6 +44,22 @@ public class Game {
         this.gameDay = 1;
     }
 
+    public LinkedList<Project> getAvailableProjects() {
+        return availableProjects;
+    }
+
+    public LinkedList<Employee> getAvailableEmployees() {
+        return availableEmployees;
+    }
+
+    public void setup() {
+        company = createCompany();
+
+        generateEmployees();
+        generateClients();
+        generateProjects();
+    }
+
     public void play() {
         while (successfulProjects < 3) {
             if (dayActivities()) {
@@ -95,7 +111,7 @@ public class Game {
     }
 
     private static void exitGame() {
-        System.out.println("You lost! Closing app. . . ");
+        System.out.println("Closing app. . . ");
     }
 
     private void printList(List<String> options) {
@@ -177,7 +193,7 @@ public class Game {
 
         printProjects(projectsForOwner);
 
-        var choice = scanner.nextInt();
+        var choice = UserActions.getUserInputByte(projectsForOwner.size());
         if (choice == 0) return false;
 
         return projectsForOwner.get(choice).makeProgress();
@@ -211,8 +227,11 @@ public class Game {
     }
 
 
+
+
+
     private void returnContract() {
-        var finishedProjects = company.getActualProjects().stream().filter((project) -> project.getHoursLeftToFinish().equals(0)).toList();
+        var finishedProjects = company.getActualProjects().stream().filter((project) -> project.getWorkingDaysLeft().equals(0)).toList();
         if (finishedProjects.equals(0)) {
             var successful = company.returnProject();
             if (!successful) successfulProjects = +1;
@@ -225,14 +244,6 @@ public class Game {
         System.out.println("\n\n--------------------------------------------------------------------------------");
         System.out.println("> Your bank account: " + company.getCash() + "                       Today is " + gameDate + " -  Day " + gameDay);
         System.out.println("> Successful projects: " + successfulProjects + "\n");
-    }
-
-    public void setup() {
-        company = createCompany();
-
-        generateEmployees();
-        generateClients();
-        generateProjects();
     }
 
     private Company createCompany() {
@@ -260,12 +271,5 @@ public class Game {
         }
     }
 
-    public LinkedList<Project> getAvailableProjects() {
-        return availableProjects;
-    }
-
-    public LinkedList<Employee> getAvailableEmployees() {
-        return availableEmployees;
-    }
 
 }
