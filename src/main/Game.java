@@ -87,7 +87,7 @@ public class Game {
 
         printList(activities);
 
-        var choice = UserActions.getUserInputByte(activities.size());
+        var choice = UserActions.getUserInputByte(activities.size(), true);
 
         switch (choice) {
             case 1:
@@ -196,7 +196,7 @@ public class Game {
         var choice = UserActions.getUserInputByte(projectsForOwner.size());
         if (choice == 0) return false;
 
-        return projectsForOwner.get(choice).makeProgress();
+        return projectsForOwner.get(choice - 1).makeProgress();
     }
 
     private ArrayList<Project> findAvailableProjectsForOwner() {

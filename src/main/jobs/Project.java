@@ -98,9 +98,8 @@ public class Project extends ProjectTemplate {
     }
 
     public boolean makeProgress() {
-        // todo: change this value to progress and divide it into days.
-        workingDaysLeft -= 8;
-        System.out.println("Hours left to finish: " + workingDaysLeft);
+        workingDaysLeft--;
+        System.out.println("Days left to finish: " + workingDaysLeft);
         return true;
     }
 
