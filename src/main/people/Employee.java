@@ -5,9 +5,10 @@ import main.jobs.enums.TechStack;
 import main.people.enums.Position;
 import main.people.enums.Seniority;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+
+import static java.lang.Double.parseDouble;
 
 public class Employee extends Human {
 
@@ -28,7 +29,6 @@ public class Employee extends Human {
 
 
     // generators
-
     private Position generatePosition() {
         return Position.values()[Randomizer.generateRandomValue(Position.values().length)];
     }
@@ -49,7 +49,7 @@ public class Employee extends Human {
             }
             case MID -> {
                 min = 3;
-                max = 4;
+                max = 5;
             }
             case JUNIOR -> {
                 min = 1;
@@ -73,8 +73,34 @@ public class Employee extends Human {
     }
 
     private Double generateSalary() {
-        Double salary = 0.0;
-        return salary;
+        int base = 0;
+
+        if (isDeveloper()) {
+            Double skillsMultiplier = getSkillsMultiplier();
+
+            switch (seniority) {
+                case SENIOR -> base = 12000;
+                case MID -> base = 5000;
+                case JUNIOR -> base = 3000;
+            }
+            return base * skillsMultiplier;
+        } else if (position == Position.SALES) {
+            base = 5000;
+            return (double) Randomizer.generateRandomValue((int) (base * 0.8), base * 2);
+        } else if (position == Position.TESTER) {
+            base = 4000;
+            return (double) Randomizer.generateRandomValue((int) (base * 0.8), (int) (base * 1.8));
+        }
+
+        return null;
+    }
+
+    // I now it sucks, but works!
+    private Double getSkillsMultiplier() {
+        String str = Integer.toString(skills.size());
+        String multiplier = "1." + str;
+
+        return parseDouble(multiplier);
     }
 
 
