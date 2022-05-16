@@ -20,7 +20,7 @@ public class Game {
      */
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
-    private static final int START_EMPLOYEES = 5;
+    private static final int START_EMPLOYEES = 10;
 
 
     private static final String TAB = "   ";
@@ -222,10 +222,6 @@ public class Game {
         if (choice == 0) return false;
 
         var chosenProject = projectsForOwner.get(choice - 1);
-        if (chosenProject.isFinished()) {
-            System.out.println("This project is finished! Contact with client to return and get paid.");
-            return false;
-        }
 
         return chosenProject.makeProgress();
     }

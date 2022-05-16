@@ -110,7 +110,7 @@ public class Project extends ProjectTemplate {
 
     public boolean makeProgress() {
         if (isFinished || workingDaysLeft <= 0) {
-            System.out.println("There is no more work to do.");
+            System.out.println("This project is finished! Contact with client to return and get paid.");
             return false;
         }
 

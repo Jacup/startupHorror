@@ -30,7 +30,12 @@ public class Employee extends Human {
 
     // generators
     private Position generatePosition() {
-        return Position.values()[Randomizer.generateRandomValue(Position.values().length)];
+        // since we have 3 types of devs + 2 non-devs, it's fair to each have 20% chance. 60% per devs, 20% test, 20% sales
+        var isDev = Randomizer.draw(60);
+        if (isDev) return Position.DEVELOPER;
+
+        if (Randomizer.draw(50)) return Position.TESTER;
+        return Position.SALES;
     }
 
     private Seniority generateSeniority() {
@@ -108,6 +113,15 @@ public class Employee extends Human {
         return position == Position.DEVELOPER;
     }
 
+
+    @Override
+    public String toString() {
+        if (isDeveloper())
+            return "Name: " + getFirstName() + " " + getLastName() +
+                    ", role: " + seniority + " " + position + ", salary: " + salary + ", skills: " + skills;
+
+        return "Name: " + getFirstName() + " " + getLastName() + ", role: " + position + ", salary: " + salary;
+    }
 
     public static Employee generateRandomEmployee() {
         return new Employee();

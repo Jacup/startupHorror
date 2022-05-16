@@ -79,6 +79,7 @@ public class Company extends Game {
         cash -= HIRE_COST;
         hiredEmployees.add(employee);
         availableEmployees.remove(employee);
+        System.out.println("Congratulations! You have hired new " + employee.getPosition());
         return true;
     }
 
