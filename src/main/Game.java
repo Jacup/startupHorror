@@ -122,6 +122,8 @@ public class Game {
                 return returnContract();
             case 6:
                 return hireEmployee();
+            case 7:
+                return fireEmployee();
             case 8:
                 nextDay();
                 System.out.println("8888");
@@ -133,6 +135,7 @@ public class Game {
 
         return false;
     }
+
 
 
     private static void exitGame() {
@@ -272,7 +275,7 @@ public class Game {
     }
 
     /**
-     * 1. hire employees menu
+     * 6. hire employees menu
      *
      * @return true if day is ended and hiring was successfully.
      */
@@ -294,6 +297,27 @@ public class Game {
         return company.hireEmployee(chosenEmployee);
     }
 
+    /**
+     * 7. Fire employees menu
+     *
+     * @return true if day is ended and firing was successfully.
+     */
+    private boolean fireEmployee() {
+        var employees = company.getHiredEmployees();
+        if (employees.size() == 0){
+            System.out.println("You don't have any employees to fire.");
+            UserActions.pressEnterKeyToContinue();
+            return false;
+        }
+
+        printEmployees(employees);
+        var choice = UserActions.getUserInputByte(employees.size());
+        if (choice == 0) return false;
+
+        var chosenEmployee = employees.get(choice - 1);
+        return company.fireEmployee(chosenEmployee);
+
+    }
 
     private void printEmployees(List<Employee> employees) {
         for (int i = 1; i <= employees.size(); i++)

@@ -83,10 +83,21 @@ public class Company extends Game {
         return true;
     }
 
-    public void fireEmployee(Employee employee) {
-        if (hiredEmployees.contains(employee)) {
-
+    public boolean fireEmployee(Employee employee) {
+        if (!hiredEmployees.contains(employee)) {
+            System.out.println("Something gone wrong... " + employee.getName() + " does not work here.");
+            return false;
         }
+
+        if (!haveEnoughCash(FIRE_COST)) {
+            System.out.println("You can't fire employee now, because you don't have enough money");
+            return false;
+        }
+
+        hiredEmployees.remove(employee);
+        cash -= FIRE_COST;
+        System.out.println(employee.getPosition() + " " + employee.getName() +  " has been fired.");
+        return true;
     }
 
     public LinkedList<Employee> getHiredEmployees() {

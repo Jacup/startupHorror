@@ -17,4 +17,9 @@ public abstract class Human {
     public String getLastName() {
         return lastName;
     }
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
 }
