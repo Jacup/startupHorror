@@ -12,13 +12,16 @@ import main.people.enums.Position;
 import java.time.LocalDate;
 import java.util.*;
 
+import static main.Company.HIRE_COST;
+
 public class Game {
     /**
-     * Global settings. Could be replaced in future with difficulty level, changed by user.
+     * Global game settings. Could be replaced in future with difficulty level, changed by user.
      */
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
     private static final int START_EMPLOYEES = 5;
+
 
     private static final String TAB = "   ";
     protected final LinkedList<Client> availableClients;
@@ -94,7 +97,15 @@ public class Game {
         printHeader();
 
         System.out.println("What would you like to do today?");
-        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project", "2. Try to find a new client", "3. Go programming!", "4. Go testing!", "5. Return the finished project to the client", "6. Hire a new employee", "7. Fire an employee", "8. Pay taxes", "0. Exit game"));
+        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project",
+                "2. Try to find a new client",
+                "3. Go programming!",
+                "4. Go testing!",
+                "5. Return the finished project to the client",
+                "6. Hire a new employee",
+                "7. Fire an employee",
+                "8. Pay taxes",
+                "0. Exit game"));
 
         printList(activities);
 
@@ -109,6 +120,8 @@ public class Game {
                 return goProgramming();
             case 5:
                 return returnContract();
+            case 6:
+                return hireEmployee();
             case 8:
                 nextDay();
                 System.out.println("8888");
@@ -120,6 +133,7 @@ public class Game {
 
         return false;
     }
+
 
     private static void exitGame() {
         System.out.println("Closing app. . . ");
@@ -243,10 +257,9 @@ public class Game {
 
     }
 
-
+    // TODO: FIX PRINTING< REMOVE FROM FINISHED
     private boolean returnContract() {
-        var finishedProjects = company.getActualProjects().stream()
-                .filter(Project::isFinished).toList();
+        var finishedProjects = company.getActualProjects().stream().filter(Project::isFinished).toList();
 
         if (finishedProjects.size() == 0) {
             System.out.println("You don't have any ready to return projects. Go programming or hire devs!");
@@ -260,6 +273,36 @@ public class Game {
         var chosenProject = finishedProjects.get(choice - 1);
 
         return company.returnProject(chosenProject);
+    }
+
+    /**
+     * 1. hire employees menu
+     *
+     * @return true if day is ended and hiring was successfully.
+     */
+    private boolean hireEmployee() {
+        if (availableEmployees.size() == 0) {
+            System.out.println("No one wants to work for you. Advertise your company at job boards.");
+            UserActions.pressEnterKeyToContinue();
+            return false;
+        }
+        System.out.println("Cost of hiring new employee: " + HIRE_COST + "\n");
+
+
+        printEmployees(availableEmployees);
+        var choice = UserActions.getUserInputByte(availableEmployees.size());
+        if (choice == 0) return false;
+
+        var chosenEmployee = availableEmployees.get(choice - 1);
+
+        return company.hireEmployee(chosenEmployee);
+    }
+
+
+    private void printEmployees(List<Employee> employees) {
+        for (int i = 1; i <= employees.size(); i++)
+            System.out.println(TAB + i + ". " + employees.get(i - 1));
+        System.out.println(TAB + 0 + ". Go back");
     }
 
     private void printHeader() {

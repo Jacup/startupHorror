@@ -2,7 +2,6 @@ package main;
 
 import main.helpers.Randomizer;
 import main.jobs.Project;
-import main.people.Client;
 import main.people.Employee;
 import main.people.HumanTemplate;
 import main.people.Owner;
@@ -13,9 +12,9 @@ import java.util.LinkedList;
 public class Company extends Game {
 
     // costs
-    private static final Double EMPLOYEE_HIRE_COST = 2000.0;
-    private static final Double EMPLOYEE_FIRE_COST = 2000.0;
-    private static final Integer EMPLOYEE_TAXES_PERCENT = 30;
+    public static final Double HIRE_COST = 2000.0;
+    private static final Double FIRE_COST = 2000.0;
+    private static final Integer TAXES_PERCENT = 30;
 
     // COMPANY RESOURCES
     private Double cash;
@@ -71,18 +70,16 @@ public class Company extends Game {
         return new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
     }
 
-    public void hireEmployee(Employee employee) {
-        if (!availableEmployees.isEmpty()) {
-            if (haveEnoughCash(EMPLOYEE_HIRE_COST)) {
-                cash -= EMPLOYEE_HIRE_COST;
-                hiredEmployees.add(employee);
-                availableEmployees.remove(employee);
-            } else {
-                System.out.println("You can't hire employee now, because you don't have enough money");
-            }
-        } else {
-            System.out.println("There is no one to hire. Spend some money on HR to find someone!");
+    public boolean hireEmployee(Employee employee) {
+        if (!haveEnoughCash(HIRE_COST)) {
+            System.out.println("You can't hire employee now, because you don't have enough money");
+            return false;
         }
+
+        cash -= HIRE_COST;
+        hiredEmployees.add(employee);
+        availableEmployees.remove(employee);
+        return true;
     }
 
     public void fireEmployee(Employee employee) {
@@ -118,8 +115,6 @@ public class Company extends Game {
         createPayment(project, project.isPenaltyAdded());
         return true;
     }
-
-
 
 
     private void createPayment(Project project, boolean isPenalty) {
