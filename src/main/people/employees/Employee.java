@@ -4,6 +4,7 @@ import main.helpers.Randomizer;
 import main.people.Human;
 import main.people.HumanTemplate;
 import main.people.enums.Position;
+import main.people.interfaces.Worker;
 
 public abstract class Employee extends Human implements Worker {
     protected Position position;

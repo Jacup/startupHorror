@@ -1,4 +1,4 @@
-package main.people.employees;
+package main.people.interfaces;
 
 public interface Worker {
     void goToWork();
