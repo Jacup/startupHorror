@@ -110,18 +110,28 @@ public class Project extends ProjectTemplate {
 
     public boolean makeProgress() {
         if (isFinished || workingDaysLeft <= 0) {
-            System.out.println("There is no more work to do.");
+            System.out.println("This project is finished! Contact with client to return and get paid.");
             return false;
         }
 
         workingDaysLeft--;
 
         if (workingDaysLeft.equals(0)) {
-            System.out.println("Congratulations! You have finished working on this project. Please return this to the client.");
+            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
             isFinished = true;
         } else System.out.println("Days left to finish: " + workingDaysLeft);
 
         return true;
+    }
+
+    public void makeProgressByEmployee() {
+
+        workingDaysLeft--;
+
+        if (workingDaysLeft.equals(0)) {
+            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
+            isFinished = true;
+        }
     }
 
     public boolean isDeadlinePassed() {
@@ -194,7 +204,7 @@ public class Project extends ProjectTemplate {
     }
 
     private DifficultyLevel generateDifficultyLevel() {
-        return DifficultyLevel.values()[new Random().nextInt(DifficultyLevel.values().length)];
+        return DifficultyLevel.values()[Randomizer.generateRandomValue(DifficultyLevel.values().length)];
     }
 
     private HashMap<TechStack, Integer> generateTechStack() {
