@@ -117,11 +117,21 @@ public class Project extends ProjectTemplate {
         workingDaysLeft--;
 
         if (workingDaysLeft.equals(0)) {
-            System.out.println("Congratulations! You have finished working on this project. Please return this to the client.");
+            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
             isFinished = true;
         } else System.out.println("Days left to finish: " + workingDaysLeft);
 
         return true;
+    }
+
+    public void makeProgressByEmployee() {
+
+        workingDaysLeft--;
+
+        if (workingDaysLeft.equals(0)) {
+            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
+            isFinished = true;
+        }
     }
 
     public boolean isDeadlinePassed() {

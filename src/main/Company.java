@@ -22,11 +22,11 @@ public class Company extends Game {
     // COMPANY DETAILS
     private final String name;
     private final String domain;
+    private final Owner owner;
 
     // HUMAN RESOURCES
     private LinkedList<Employee> hiredEmployees = new LinkedList<>();
 
-    private final Owner owner;
 
     // JOBS ETC
     private LinkedList<Project> actualProjects = new LinkedList<>();
@@ -96,7 +96,7 @@ public class Company extends Game {
 
         hiredEmployees.remove(employee);
         cash -= FIRE_COST;
-        System.out.println(employee.getPosition() + " " + employee.getName() +  " has been fired.");
+        System.out.println(employee.getPosition() + " " + employee.getName() + " has been fired.");
         return true;
     }
 
@@ -106,6 +106,45 @@ public class Company extends Game {
 
     public int getAmountOfEmployeesByType(Position position) {
         return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
+    }
+
+    public void goToWork() {
+        Project projectToWorkOn = null;
+
+        for (var actualProject : actualProjects) {
+            if (!actualProject.isFinished()) {
+                projectToWorkOn = actualProject;
+                break;
+            }
+        }
+
+
+        if (projectToWorkOn == null) {
+            System.out.println("sda");
+        } else {
+
+            boolean newProjectFound = false;
+
+            for (var employee : hiredEmployees) {
+                switch (employee.getPosition()) {
+                    case DEVELOPER -> {
+                        projectToWorkOn.makeProgressByEmployee();
+                    }
+                    case TESTER -> {
+                    }
+                    case SALES -> {
+                        newProjectFound = employee.findNewProject();
+                    }
+                }
+
+
+                if (newProjectFound) {
+                    availableProjects.add(Project.generateRandomProject());
+                }
+
+            }
+        }
+
     }
 
 
@@ -127,7 +166,6 @@ public class Company extends Game {
         createPayment(project, project.isPenaltyAdded());
         return true;
     }
-
 
     private void createPayment(Project project, boolean isPenalty) {
         var penalty = 1 - Project.DEFAULT_DEADLINE_PENALTY;

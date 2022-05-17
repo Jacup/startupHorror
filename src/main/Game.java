@@ -69,10 +69,16 @@ public class Game {
         while (successfulProjects < 3) {
             if (dayActivities()) {
                 nextDay();
-                dailyRoutines();
+                routines();
+                sentEmployeesToWork();
                 UserActions.pressEnterKeyToContinue();
             }
         }
+    }
+
+    private void routines() {
+        dailyRoutines();
+        monthlyRoutines();
     }
 
     private void dailyRoutines() {
@@ -81,6 +87,15 @@ public class Game {
             company.addCash(newCash);
         }
     }
+
+    private void monthlyRoutines() {
+//        paySalaryToWorkers();
+    }
+
+    private void sentEmployeesToWork() {
+        company.goToWork();
+    }
+
 
     private static void nextDay() {
         gameDay += 1;
@@ -125,7 +140,7 @@ public class Game {
             case 7:
                 return fireEmployee();
             case 8:
-                nextDay();
+                company.goToWork();
                 System.out.println("8888");
                 break;
             case 0:
@@ -135,7 +150,6 @@ public class Game {
 
         return false;
     }
-
 
 
     private static void exitGame() {
@@ -258,7 +272,8 @@ public class Game {
 
     // TODO: FIX PRINTING< REMOVE FROM FINISHED
     private boolean returnContract() {
-        var finishedProjects = company.getActualProjects().stream().filter(Project::isFinished).toList();
+        var finishedProjects = company.getActualProjects().stream()
+                .filter(Project::isFinished).toList();
 
         if (finishedProjects.size() == 0) {
             System.out.println("You don't have any ready to return projects. Go programming or hire devs!");
@@ -304,7 +319,7 @@ public class Game {
      */
     private boolean fireEmployee() {
         var employees = company.getHiredEmployees();
-        if (employees.size() == 0){
+        if (employees.size() == 0) {
             System.out.println("You don't have any employees to fire.");
             UserActions.pressEnterKeyToContinue();
             return false;
@@ -326,9 +341,14 @@ public class Game {
     }
 
     private void printHeader() {
+        var projects = company.getActualProjects();
         System.out.println("\n\n--------------------------------------------------------------------------------");
         System.out.println("> Your bank account: " + company.getCash() + "                       Today is " + gameDate + " -  Day " + gameDay);
         System.out.println("> Successful projects: " + successfulProjects + "\n");
+        for (var  project: projects) {
+            System.out.println("> workLeft: " + project.getWorkingDaysLeft() + "\n");
+        }
+
     }
 
     public Company createCompany() {

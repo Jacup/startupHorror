@@ -13,10 +13,14 @@ import static java.lang.Double.parseDouble;
 public class Employee extends Human {
 
     private final Position position;
-    private final Seniority seniority;
-
-    private final LinkedList<TechStack> skills;
     private final Double salary;
+
+    // DEV ONLY
+    private final Seniority seniority;
+    private final LinkedList<TechStack> skills;
+
+    // SALES ONLY
+    private int projectFindingIndicator;
 
 
     public Employee() {
@@ -25,6 +29,7 @@ public class Employee extends Human {
         this.seniority = this.isDeveloper() ? generateSeniority() : null;
         this.skills = this.isDeveloper() ? generateSkills() : null;
         this.salary = generateSalary();
+        this.projectFindingIndicator = 0 ;
     }
 
 
@@ -117,8 +122,7 @@ public class Employee extends Human {
     @Override
     public String toString() {
         if (isDeveloper())
-            return "Name: " + getFirstName() + " " + getLastName() +
-                    ", role: " + seniority + " " + position + ", salary: " + salary + ", skills: " + skills;
+            return "Name: " + getFirstName() + " " + getLastName() + ", role: " + seniority + " " + position + ", salary: " + salary + ", skills: " + skills;
 
         return "Name: " + getFirstName() + " " + getLastName() + ", role: " + position + ", salary: " + salary;
     }
@@ -146,5 +150,18 @@ public class Employee extends Human {
         return position;
     }
 
+    private void goToWork() {
 
+    }
+
+
+    public boolean findNewProject() {
+        if (position == Position.SALES) {
+            projectFindingIndicator++;
+
+            return projectFindingIndicator % 5 == 0;
+        }
+
+        return false;
+    }
 }
