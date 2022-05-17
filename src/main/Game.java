@@ -5,7 +5,7 @@ import main.jobs.Project;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
-import main.people.Employee;
+import main.people.employees.Employee;
 import main.people.Owner;
 import main.people.enums.Position;
 
