@@ -2,7 +2,7 @@ package main;
 
 import main.helpers.Randomizer;
 import main.jobs.Project;
-import main.people.Employee;
+import main.people.employees.Employee;
 import main.people.HumanTemplate;
 import main.people.Owner;
 import main.people.enums.Position;
@@ -133,14 +133,14 @@ public class Company extends Game {
                     case TESTER -> {
                     }
                     case SALES -> {
-                        newProjectFound = employee.findNewProject();
+//                        newProjectFound = employee.findNewProject();
                     }
                 }
 
 
-                if (newProjectFound) {
-                    availableProjects.add(Project.generateRandomProject());
-                }
+//                if (newProjectFound) {
+//                    availableProjects.add(Project.generateRandomProject());
+//                }
 
             }
         }
