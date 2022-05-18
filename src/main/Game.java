@@ -5,10 +5,11 @@ import main.jobs.Project;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
-import main.people.employees.Employee;
 import main.people.Owner;
+import main.people.employees.Employee;
 import main.people.enums.Position;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -21,35 +22,34 @@ public class Game {
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
     private static final int START_EMPLOYEES = 10;
-
-
     private static final String TAB = "   ";
-    protected final LinkedList<Client> availableClients;
-    protected final LinkedList<Project> availableProjects;
-    protected final LinkedList<Employee> availableEmployees;
+
+    private static LinkedList<Client> availableClients;
+    private static LinkedList<Project> availableProjects;
+    private static LinkedList<Employee> availableEmployees;
+
+    private static HashMap<LocalDate, Double> dailyTransactions = new HashMap<>();
+    private static int successfulProjects;
+    private static int gameDay;
+    private static LocalDate gameDate;
     private final Scanner scanner;
-    protected int successfulProjects;
-    protected static int gameDay;
-    protected static LocalDate gameDate;
     private Company company;
 
-    protected static HashMap<LocalDate, Double> dailyTransactions = new HashMap<>();
-
     public Game() {
-        this.availableClients = new LinkedList<>();
         this.scanner = new Scanner(System.in);
-        this.availableProjects = new LinkedList<>();
-        this.availableEmployees = new LinkedList<>();
-        this.successfulProjects = 0;
+        availableClients = new LinkedList<>();
+        availableProjects = new LinkedList<>();
+        availableEmployees = new LinkedList<>();
+        successfulProjects = 0;
         gameDate = LocalDate.now();
         gameDay = 1;
     }
 
-    public LinkedList<Project> getAvailableProjects() {
+    public static LinkedList<Project> getAvailableProjects() {
         return availableProjects;
     }
 
-    public LinkedList<Employee> getAvailableEmployees() {
+    public static LinkedList<Employee> getAvailableEmployees() {
         return availableEmployees;
     }
 
@@ -70,11 +70,17 @@ public class Game {
             if (dayActivities()) {
                 nextDay();
                 routines();
-                sentEmployeesToWork();
+                if (isWorkDay(gameDate)) sentEmployeesToWork();
                 UserActions.pressEnterKeyToContinue();
             }
         }
     }
+
+    private static boolean isWorkDay(LocalDate day) {
+        var dayOfWeek = day.getDayOfWeek();
+        return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
+    }
+
 
     private void routines() {
         dailyRoutines();
@@ -93,7 +99,7 @@ public class Game {
     }
 
     private void sentEmployeesToWork() {
-        company.goToWork();
+        company.performWork();
     }
 
 
@@ -140,9 +146,7 @@ public class Game {
             case 7:
                 return fireEmployee();
             case 8:
-                company.goToWork();
-                System.out.println("8888");
-                break;
+                return true;
             case 0:
                 exitGame();
                 break;
@@ -156,7 +160,7 @@ public class Game {
         System.out.println("Closing app. . . ");
     }
 
-    private void printList(List<String> options) {
+    private static void printList(List<String> options) {
         for (var option : options) {
             System.out.println(TAB + option);
         }
@@ -345,7 +349,7 @@ public class Game {
         System.out.println("\n\n--------------------------------------------------------------------------------");
         System.out.println("> Your bank account: " + company.getCash() + "                       Today is " + gameDate + " -  Day " + gameDay);
         System.out.println("> Successful projects: " + successfulProjects + "\n");
-        for (var  project: projects) {
+        for (var project : projects) {
             System.out.println("> workLeft: " + project.getWorkingDaysLeft() + "\n");
         }
 
@@ -358,23 +362,37 @@ public class Game {
         return new Company(companyName);
     }
 
-    private void generateClients() {
+    private static void generateClients() {
         for (int i = 0; i < START_CLIENTS; i++) {
             availableClients.add(Client.generateRandomClient());
         }
     }
 
-    private void generateProjects() {
+    private static void generateProjects() {
         for (int i = 0; i < START_PROJECTS; i++) {
             availableProjects.add(Project.generateRandomProject());
         }
     }
 
-    private void generateEmployees() {
+    public static void generateNewProject() {
+            availableProjects.add(Project.generateRandomProject());
+    }
+
+    private static void generateEmployees() {
         for (int i = 0; i < START_EMPLOYEES; i++) {
             availableEmployees.add(Employee.generateRandomEmployee());
         }
     }
+
+    public static void removeAvailableEmployee(Employee employee) {
+        availableEmployees.remove(employee);
+    }
+
+public static void addNewTransaction(LocalDate date, Double amount) {
+        dailyTransactions.put(date, amount);
+
+}
+
 
 
 }

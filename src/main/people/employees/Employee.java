@@ -7,6 +7,8 @@ import main.people.enums.Position;
 import main.people.interfaces.Worker;
 
 public abstract class Employee extends Human implements Worker {
+    private static final int SICKNESS_CHANCE = 3;
+
     protected Position position;
     protected Double salary;
 
@@ -26,6 +28,12 @@ public abstract class Employee extends Human implements Worker {
     public boolean isDeveloper() {
         return position == Position.DEVELOPER;
     }
+    public boolean isTester() {
+        return position == Position.TESTER;
+    }
+    public boolean isSales() {
+        return position == Position.SALES;
+    }
 
     public Position getPosition() {
         return position;
@@ -41,6 +49,10 @@ public abstract class Employee extends Human implements Worker {
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public boolean isSick() {
+        return Randomizer.draw(SICKNESS_CHANCE);
     }
 
 

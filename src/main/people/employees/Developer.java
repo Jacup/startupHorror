@@ -35,6 +35,8 @@ public class Developer extends Employee {
 
     @Override
     public void goToWork() {
+        var x = isSick();
+
     }
 
 

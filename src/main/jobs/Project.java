@@ -5,6 +5,8 @@ import main.helpers.Randomizer;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
+import main.people.employees.Developer;
+import main.people.employees.Employee;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -124,9 +126,11 @@ public class Project extends ProjectTemplate {
         return true;
     }
 
-    public void makeProgressByEmployee() {
+    // TODO: add support by seniority + add suppoert for msg list in header
+    public void makeProgressByEmployee(Employee dev) {
 
         workingDaysLeft--;
+        System.out.println("DEBUG: dev " + dev.getName() + " worked on " + this + ". Days left: " + workingDaysLeft);
 
         if (workingDaysLeft.equals(0)) {
             System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
