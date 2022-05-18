@@ -1,6 +1,7 @@
 package main.people.employees;
 
 import main.helpers.Randomizer;
+import main.jobs.Project;
 import main.jobs.enums.TechStack;
 import main.people.enums.Position;
 import main.people.enums.Seniority;
@@ -28,17 +29,38 @@ public class Developer extends Employee {
 
     // public methods
 
+    public LinkedList<TechStack> getSkills() {
+        return skills;
+    }
+
+
     @Override
     public String toString() {
         return "Name: " + getName() + ", role: " + seniority + " " + position + ", salary: " + salary + ", skills: " + skills;
     }
 
     @Override
-    public void goToWork() {
-        var x = isSick();
+    public void goToWork(Project project) {
+        System.out.println("WorkDev");
+        if (isSick()) {
+            System.out.println("Dev " + getName() + " is sick today.");
+            return;
+        }
 
+        var workToDo = project.getWorkLeft();
+        if (workToDo.isEmpty()) {
+            return;
+        }
+
+        for (var tech : workToDo.keySet()) {
+            if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
+                System.out.println("DEBUG: dev " + getName() + " worked on " + project.getName() + " in " + tech);
+                System.out.println("Work left: " + project.getWorkLeft().get(tech));
+                project.makeProgressByTech(tech);
+                return;
+            }
+        }
     }
-
 
     // private methods
 
@@ -99,4 +121,5 @@ public class Developer extends Employee {
 
         return parseDouble(multiplier);
     }
+
 }

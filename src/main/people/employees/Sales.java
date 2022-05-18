@@ -1,6 +1,7 @@
 package main.people.employees;
 
 import main.helpers.Randomizer;
+import main.jobs.Project;
 import main.people.enums.Position;
 
 public class Sales extends Employee {
@@ -30,7 +31,7 @@ public class Sales extends Employee {
     }
 
     @Override
-    public void goToWork() {
+    public void goToWork(Project project) {
 
 
     }
