@@ -1,6 +1,7 @@
 package main.people.employees;
 
 import main.helpers.Randomizer;
+import main.jobs.Project;
 import main.people.enums.Position;
 
 public class Sales extends Employee {
@@ -16,13 +17,10 @@ public class Sales extends Employee {
     // public methods
 
     public boolean findNewProject() {
-        if (position == Position.SALES) {
-            projectFindingIndicator++;
+        projectFindingIndicator++;
+        System.out.println("DEBUG: sales " + this.getName() + " worked today. " + "project finding: " + projectFindingIndicator);
 
-            return projectFindingIndicator % 5 == 0;
-        }
-
-        return false;
+        return projectFindingIndicator % 2 == 0;
     }
 
 
@@ -33,7 +31,8 @@ public class Sales extends Employee {
     }
 
     @Override
-    public void goToWork() {
+    public void goToWork(Project project) {
+
 
     }
 }

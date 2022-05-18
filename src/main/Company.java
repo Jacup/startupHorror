@@ -2,14 +2,14 @@ package main;
 
 import main.helpers.Randomizer;
 import main.jobs.Project;
-import main.people.employees.Employee;
 import main.people.HumanTemplate;
 import main.people.Owner;
+import main.people.employees.Employee;
 import main.people.enums.Position;
 
 import java.util.LinkedList;
 
-public class Company extends Game {
+public class Company {
 
     // costs
     public static final Double HIRE_COST = 2000.0;
@@ -21,7 +21,6 @@ public class Company extends Game {
 
     // COMPANY DETAILS
     private final String name;
-    private final String domain;
     private final Owner owner;
 
     // HUMAN RESOURCES
@@ -35,7 +34,6 @@ public class Company extends Game {
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
-        this.domain = name + ".pl";
         this.owner = createOwner();
     }
 
@@ -60,11 +58,6 @@ public class Company extends Game {
         cash += value;
     }
 
-    public String getDomain() {
-        return domain;
-    }
-
-
     // employees
     public Owner createOwner() {
         return new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
@@ -78,8 +71,9 @@ public class Company extends Game {
 
         cash -= HIRE_COST;
         hiredEmployees.add(employee);
-        availableEmployees.remove(employee);
+        Game.removeAvailableEmployee(employee);
         System.out.println("Congratulations! You have hired new " + employee.getPosition());
+
         return true;
     }
 
@@ -108,49 +102,44 @@ public class Company extends Game {
         return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
     }
 
-    public void goToWork() {
-        Project projectToWorkOn = null;
-
-        for (var actualProject : actualProjects) {
-            if (!actualProject.isFinished()) {
-                projectToWorkOn = actualProject;
-                break;
-            }
+    public void performWork() {
+        var developers = hiredEmployees.stream().filter(Employee::isDeveloper).toList();
+        var project = getActualProject();
+        if (project != null) {
+            developers.forEach(developer -> developer.goToWork(project));
         }
 
+        //        var testers = hiredEmployees.stream().filter(Employee::isTester).toList();
 
-        if (projectToWorkOn == null) {
-            System.out.println("sda");
-        } else {
-
-            boolean newProjectFound = false;
-
-            for (var employee : hiredEmployees) {
-                switch (employee.getPosition()) {
-                    case DEVELOPER -> {
-                        projectToWorkOn.makeProgressByEmployee();
-                    }
-                    case TESTER -> {
-                    }
-                    case SALES -> {
-//                        newProjectFound = employee.findNewProject();
-                    }
-                }
+//        LinkedList<Sales> salesList = new LinkedList<>();
+//
+//        for (var worker : hiredEmployees) {
+//            if (worker.isSales()) salesList.add((Sales) worker);
+//        }
 
 
-//                if (newProjectFound) {
-//                    availableProjects.add(Project.generateRandomProject());
-//                }
-
-            }
-        }
-
+//        for (var salesman : salesList) {
+//            if (salesman.isSick()) continue;
+//
+//            var projectFound = salesman.findNewProject();
+//            if (projectFound) Game.generateNewProject();
+//        }
     }
 
 
     // projects
     public LinkedList<Project> getActualProjects() {
         return actualProjects;
+    }
+
+    private Project getActualProject() {
+        for (var actualProject : actualProjects) {
+            if (!actualProject.isFinished()) {
+                return actualProject;
+            }
+        }
+
+        return null;
     }
 
     public void setActualProjects(LinkedList<Project> actualProjects) {
@@ -164,22 +153,23 @@ public class Company extends Game {
         }
 
         createPayment(project, project.isPenaltyAdded());
+        actualProjects.remove(project);
         return true;
     }
 
     private void createPayment(Project project, boolean isPenalty) {
         var penalty = 1 - Project.DEFAULT_DEADLINE_PENALTY;
-        var paymentDate = getGameDate().plusDays(project.getPaymentDelayDays());
+        var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
         var cash = isPenalty ? (project.getPayment() * penalty) : project.getPayment();
 
-        dailyTransactions.put(paymentDate, cash);
+        Game.addNewTransaction(paymentDate, cash);
     }
 
     public boolean signNewProject(Project project) {
         actualProjects.add(project);
         project.setActualDeadline();
         System.out.println("\nCongratulations! Your have new project! \nDetails:");
-        System.out.println(project.toString());
+        System.out.println(project);
         return true;
     }
 

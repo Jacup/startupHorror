@@ -1,5 +1,7 @@
 package main.people.interfaces;
 
+import main.jobs.Project;
+
 public interface Worker {
-    void goToWork();
+    void goToWork(Project project);
 }
