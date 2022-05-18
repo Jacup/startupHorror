@@ -68,9 +68,9 @@ public class Game {
     public void play() {
         while (successfulProjects < 3) {
             if (dayActivities()) {
-                nextDay();
                 routines();
                 if (isWorkDay(gameDate)) sentEmployeesToWork();
+                nextDay();
                 UserActions.pressEnterKeyToContinue();
             }
         }
@@ -206,13 +206,13 @@ public class Game {
     }
 
     private boolean validateProject(Project project) {
-        var amountOfDevelopers = company.getAmountOfEmployeesByType(Position.DEVELOPER);
-
-        if (amountOfDevelopers != 0) return false;
-
         if (project != null && project.getDifficultyLevel() == DifficultyLevel.HARD) {
-            System.out.println("\nThis project is too hard for you, select something easier or hire more developers");
-            selectProject();
+            var amountOfDevelopers = company.getAmountOfEmployeesByType(Position.DEVELOPER);
+
+            if (amountOfDevelopers == 0) {
+                System.out.println("You have selected hard project, but you don't have any developers.");
+                return false;
+            }
         }
 
         return true;
@@ -285,6 +285,9 @@ public class Game {
             return false;
         }
 
+        System.out.println("Which project would you like to return? ");
+        printProjects(finishedProjects);
+
         var choice = UserActions.getUserInputByte(finishedProjects.size());
         if (choice == 0) return false;
 
@@ -350,7 +353,7 @@ public class Game {
         System.out.println("> Your bank account: " + company.getCash() + "                       Today is " + gameDate + " -  Day " + gameDay);
         System.out.println("> Successful projects: " + successfulProjects + "\n");
         for (var project : projects) {
-            System.out.println("> workLeft: " + project.getWorkingDaysLeft() + "\n");
+            System.out.println("> workLeft: " + project.getDaysLeft() + "\n");
         }
 
     }

@@ -5,14 +5,11 @@ import main.helpers.Randomizer;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
-import main.people.employees.Developer;
-import main.people.employees.Employee;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Random;
 
 public class Project extends ProjectTemplate {
     private static final int MAX_SPARE_DAYS = 10;
@@ -23,7 +20,6 @@ public class Project extends ProjectTemplate {
     private final String name;
     private final Client client;
     private final DifficultyLevel difficultyLevel;
-    private Integer workingDaysLeft;
 
     private final Integer deadlineDays;
     private final Double deadlinePenalty;
@@ -34,6 +30,7 @@ public class Project extends ProjectTemplate {
     private final Double payment;
 
     private final HashMap<TechStack, Integer> techStackAndWorkload;
+    private HashMap<TechStack, Integer> workLeft;
 
     public Project(Client client) {
         this.name = generateRandomName();
@@ -42,7 +39,7 @@ public class Project extends ProjectTemplate {
         this.difficultyLevel = generateDifficultyLevel();
         this.paymentDelayDays = generatePaymentDelay();
         this.techStackAndWorkload = generateTechStack();
-        this.workingDaysLeft = setInitWorkingDaysLeft();
+        this.workLeft = new HashMap<>(techStackAndWorkload);
         this.payment = generatePayment();
         this.deadlinePenalty = generateDeadlinePenalty();
         this.deadlineDays = generateDeadlineDays();
@@ -86,12 +83,25 @@ public class Project extends ProjectTemplate {
         return techStackAndWorkload;
     }
 
-    public Integer getWorkingDaysLeft() {
-        return workingDaysLeft;
-    }
-
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public HashMap<TechStack, Integer> getWorkLeft() {
+        return workLeft;
+    }
+
+    public void setWorkLeft(HashMap<TechStack, Integer> workLeft) {
+        this.workLeft = workLeft;
+    }
+
+    public int getDaysLeft() {
+        var days = workLeft.values();
+        var counter = 0;
+        for (var day : days) {
+            counter += day;
+        }
+        return counter;
     }
 
     @Override
@@ -110,31 +120,35 @@ public class Project extends ProjectTemplate {
         actualDeadline = Game.getGameDate().plusDays(deadlineDays);
     }
 
+    // to edit
     public boolean makeProgress() {
-        if (isFinished || workingDaysLeft <= 0) {
-            System.out.println("This project is finished! Contact with client to return and get paid.");
-            return false;
-        }
-
-        workingDaysLeft--;
-
-        if (workingDaysLeft.equals(0)) {
-            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
-            isFinished = true;
-        } else System.out.println("Days left to finish: " + workingDaysLeft);
-
+//        if (isFinished) {
+//            System.out.println("This project is finished! Contact with client to return and get paid.");
+//            return false;
+//        }
+//
+//
+//        if (true) {
+//            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
+//            isFinished = true;
+//        } else System.out.println("Days left to finish: " + workingDaysLeft);
+//
         return true;
     }
 
-    // TODO: add support by seniority + add suppoert for msg list in header
-    public void makeProgressByEmployee(Employee dev) {
+    // TODO: add support by seniority + add support for msg list in header
+    public void makeProgressByTech(TechStack tech) {
+        var value = workLeft.get(tech);
 
-        workingDaysLeft--;
-        System.out.println("DEBUG: dev " + dev.getName() + " worked on " + this + ". Days left: " + workingDaysLeft);
+        workLeft.replace(tech, value - 1);
 
-        if (workingDaysLeft.equals(0)) {
-            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
+        if (workLeft.get(tech) == 0) {
+            workLeft.remove(tech);
+            System.out.println("Finished work on " + tech + " in project. Removing from todo list.");
+        }
+        if (workLeft.isEmpty()) {
             isFinished = true;
+            System.out.println("Finished work on " + getName() + " Return to client to get paid.");
         }
     }
 
@@ -202,7 +216,8 @@ public class Project extends ProjectTemplate {
     }
 
     private Integer generateDeadlineDays() {
-        int daysNeeded = setInitWorkingDaysLeft();
+
+        int daysNeeded = getDaysLeft();
 
         return Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
     }
@@ -249,12 +264,4 @@ public class Project extends ProjectTemplate {
         return hashMap;
     }
 
-    private Integer setInitWorkingDaysLeft() {
-        int sum = 0;
-        var getValues = techStackAndWorkload.values();
-        for (Integer value : getValues) {
-            sum += value;
-        }
-        return sum;
-    }
 }

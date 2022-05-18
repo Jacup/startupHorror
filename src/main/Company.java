@@ -5,7 +5,6 @@ import main.jobs.Project;
 import main.people.HumanTemplate;
 import main.people.Owner;
 import main.people.employees.Employee;
-import main.people.employees.Sales;
 import main.people.enums.Position;
 
 import java.util.LinkedList;
@@ -105,28 +104,26 @@ public class Company {
 
     public void performWork() {
         var developers = hiredEmployees.stream().filter(Employee::isDeveloper).toList();
-        var testers = hiredEmployees.stream().filter(Employee::isTester).toList();
-
-        LinkedList<Sales> salesList = new LinkedList<>();
-
-        for (var worker : hiredEmployees) {
-            if (worker.isSales()) salesList.add((Sales) worker);
+        var project = getActualProject();
+        if (project != null) {
+            developers.forEach(developer -> developer.goToWork(project));
         }
 
-        for (var developer : developers) {
-            if (developer.isSick()) continue;
-            var project = getActualProject();
+        //        var testers = hiredEmployees.stream().filter(Employee::isTester).toList();
 
-            if (project != null)
-                project.makeProgressByEmployee(developer);
-        }
+//        LinkedList<Sales> salesList = new LinkedList<>();
+//
+//        for (var worker : hiredEmployees) {
+//            if (worker.isSales()) salesList.add((Sales) worker);
+//        }
 
-        for (var salesman : salesList) {
-            if (salesman.isSick()) continue;
 
-            var projectFound = salesman.findNewProject();
-            if (projectFound) Game.generateNewProject();
-        }
+//        for (var salesman : salesList) {
+//            if (salesman.isSick()) continue;
+//
+//            var projectFound = salesman.findNewProject();
+//            if (projectFound) Game.generateNewProject();
+//        }
     }
 
 
@@ -141,6 +138,7 @@ public class Company {
                 return actualProject;
             }
         }
+
         return null;
     }
 
@@ -155,6 +153,7 @@ public class Company {
         }
 
         createPayment(project, project.isPenaltyAdded());
+        actualProjects.remove(project);
         return true;
     }
 
@@ -163,7 +162,7 @@ public class Company {
         var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
         var cash = isPenalty ? (project.getPayment() * penalty) : project.getPayment();
 
-        Game.addNewTransaction(paymentDate,cash);
+        Game.addNewTransaction(paymentDate, cash);
     }
 
     public boolean signNewProject(Project project) {
