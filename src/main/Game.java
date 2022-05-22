@@ -12,6 +12,7 @@ import main.people.enums.Position;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static main.Company.HIRE_COST;
 
@@ -130,15 +131,7 @@ public class Game {
         printHeader();
 
         System.out.println("What would you like to do today?");
-        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project",
-                "2. Try to find a new client",
-                "3. Go programming!",
-                "4. Go testing!",
-                "5. Return the finished project to the client",
-                "6. Hire a new employee",
-                "7. Fire an employee",
-                "8. Pay taxes",
-                "0. Exit game"));
+        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project", "2. Try to find a new client", "3. Go programming!", "4. Go testing!", "5. Return the finished project to the client", "6. Hire a new employee", "7. Fire an employee", "8. Pay taxes", "0. Exit game"));
 
         printList(activities);
 
@@ -297,10 +290,8 @@ public class Game {
 
     }
 
-    // TODO: FIX PRINTING< REMOVE FROM FINISHED
     private boolean returnContract() {
-        var finishedProjects = company.getActualProjects().stream()
-                .filter(Project::isFinished).toList();
+        var finishedProjects = company.getActualProjects().stream().filter(Project::isFinished).toList();
 
         if (finishedProjects.size() == 0) {
             System.out.println("You don't have any ready to return projects. Go programming or hire devs!");
@@ -371,23 +362,45 @@ public class Game {
     }
 
     private void printHeader() {
-        var projects = company.getActualProjects();
+        var actualProjects = company.getActualProjects();
         System.out.println("\n\n");
-        System.out.println("|------------------------------------------------------------------------------------------");
-        System.out.println("| > Your bank account: " + company.getCash() + "                              Today is " + gameDate + " -  Day " + gameDay);
+
+        String cashMsg = "Your cash: " + company.getCash();
+        String dateMsg = "Today is " + gameDate + " - Day " + gameDay;
+
+        System.out.println("-".repeat(80));
+        System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
+
         if (successfulProjects > 0) {
-            System.out.println("| > Successful projects: " + successfulProjects + "\n");
+            System.out.println("Successful projects: " + successfulProjects);
+        } else {
+            System.out.println();
         }
 
-        if (!projects.isEmpty()) {
-            System.out.println("| > Current projects: ");
-            for (var project : projects) {
-                System.out.println("| " + TAB + project.getName() + ", work left: "
-                        +  project.getWorkLeft() + ", Deadline:  " + project.getActualDeadline());
+        if (!actualProjects.isEmpty()) {
+            var completedProjects = actualProjects.stream().filter(Project::isFinished).toList();
+            var currentProjects = actualProjects.stream().filter(Predicate.not(Project::isFinished)).toList();
+
+            if (!completedProjects.isEmpty()) {
+                System.out.println("Projects ready to return:");
+
+                for (var project : completedProjects) {
+                    System.out.println(TAB + project.getName() + ", Deadline: " + project.getActualDeadline());
+                }
+            }
+
+            if (!currentProjects.isEmpty()) {
+                System.out.println("Current projects: ");
+
+                for (var project : actualProjects) {
+                    System.out.println(TAB + project.getName() + ", work left: " + project.getWorkLeft()
+                            + ", Deadline: " + project.getActualDeadline());
+                }
             }
         }
 
-        System.out.println("\n");
+        System.out.println("-".repeat(80));
+        System.out.println();
     }
 
     public Company createCompany() {
