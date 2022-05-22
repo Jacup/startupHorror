@@ -32,6 +32,8 @@ public class Game {
     private static int successfulProjects;
     private static int gameDay;
     private static LocalDate gameDate;
+    private static boolean lost = false;
+
     private final Scanner scanner;
     private Company company;
 
@@ -57,6 +59,10 @@ public class Game {
         return gameDate;
     }
 
+    public static void lostGame() {
+        lost = true;
+    }
+
     public void setup() {
         company = createCompany();
 
@@ -66,13 +72,21 @@ public class Game {
     }
 
     public void play() {
-        while (successfulProjects < 3) {
+        while (successfulProjects < 3 && !lost) {
             if (dayActivities()) {
                 routines();
-                if (isWorkDay(gameDate)) sentEmployeesToWork();
+                if (isWorkDay(gameDate)) company.performWork();
                 nextDay();
                 UserActions.pressEnterKeyToContinue();
             }
+        }
+
+        if (!lost) {
+            System.out.println("\n\n\nSorry. You lost. ");
+            return;
+        }
+        if (successfulProjects < 3) {
+            System.out.println("\n\n\nCongratulations. You win");
         }
     }
 
@@ -80,7 +94,6 @@ public class Game {
         var dayOfWeek = day.getDayOfWeek();
         return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
     }
-
 
     private void routines() {
         dailyRoutines();
@@ -95,13 +108,12 @@ public class Game {
     }
 
     private void monthlyRoutines() {
-//        paySalaryToWorkers();
+        var x = gameDate.getDayOfMonth();
+        var y = gameDate.lengthOfMonth();
+        if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
+            company.paySalaryToWorkers();
+        }
     }
-
-    private void sentEmployeesToWork() {
-        company.performWork();
-    }
-
 
     private static void nextDay() {
         gameDay += 1;
@@ -154,7 +166,6 @@ public class Game {
 
         return false;
     }
-
 
     private static void exitGame() {
         System.out.println("Closing app. . . ");
@@ -244,7 +255,19 @@ public class Game {
 
         var chosenProject = projectsForOwner.get(choice - 1);
 
-        return chosenProject.makeProgress();
+        var workToDo = chosenProject.getWorkLeft();
+        if (workToDo == null || workToDo.isEmpty()) {
+            return false;
+        }
+
+        for (var tech : workToDo.keySet()) {
+            if (company.getOwner().getSkills().contains(tech) && workToDo.get(tech) > 0) {
+                chosenProject.makeProgressByTech(tech);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private ArrayList<Project> findAvailableProjectsForOwner() {
@@ -270,7 +293,7 @@ public class Game {
     private List<TechStack> LookForMissingSkills(Project project, Owner owner) {
         var techstack = project.getTechStackAndWorkload().keySet().stream().toList();
 
-        return techstack.stream().filter(element -> !owner.getAbilities().contains(element)).toList();
+        return techstack.stream().filter(element -> !owner.getSkills().contains(element)).toList();
 
     }
 
@@ -349,13 +372,22 @@ public class Game {
 
     private void printHeader() {
         var projects = company.getActualProjects();
-        System.out.println("\n\n--------------------------------------------------------------------------------");
-        System.out.println("> Your bank account: " + company.getCash() + "                       Today is " + gameDate + " -  Day " + gameDay);
-        System.out.println("> Successful projects: " + successfulProjects + "\n");
-        for (var project : projects) {
-            System.out.println("> workLeft: " + project.getDaysLeft() + "\n");
+        System.out.println("\n\n");
+        System.out.println("|------------------------------------------------------------------------------------------");
+        System.out.println("| > Your bank account: " + company.getCash() + "                              Today is " + gameDate + " -  Day " + gameDay);
+        if (successfulProjects > 0) {
+            System.out.println("| > Successful projects: " + successfulProjects + "\n");
         }
 
+        if (!projects.isEmpty()) {
+            System.out.println("| > Current projects: ");
+            for (var project : projects) {
+                System.out.println("| " + TAB + project.getName() + ", work left: "
+                        +  project.getWorkLeft() + ", Deadline:  " + project.getActualDeadline());
+            }
+        }
+
+        System.out.println("\n");
     }
 
     public Company createCompany() {
@@ -378,7 +410,7 @@ public class Game {
     }
 
     public static void generateNewProject() {
-            availableProjects.add(Project.generateRandomProject());
+        availableProjects.add(Project.generateRandomProject());
     }
 
     private static void generateEmployees() {
@@ -391,11 +423,10 @@ public class Game {
         availableEmployees.remove(employee);
     }
 
-public static void addNewTransaction(LocalDate date, Double amount) {
+    public static void addNewTransaction(LocalDate date, Double amount) {
         dailyTransactions.put(date, amount);
 
-}
-
+    }
 
 
 }

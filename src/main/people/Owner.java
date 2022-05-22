@@ -5,13 +5,12 @@ import main.jobs.enums.TechStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Owner extends Human{
-
-    private ArrayList<TechStack> abilities = new ArrayList<>();
+public class Owner extends Human {
+    private final ArrayList<TechStack> skills;
 
     public Owner(String firstName, String lastName) {
         super(firstName, lastName);
-        this.abilities = new ArrayList<>(List.of(
+        this.skills = new ArrayList<>(List.of(
                 TechStack.BACKEND,
                 TechStack.DATABASE,
                 TechStack.FRONTEND,
@@ -19,13 +18,7 @@ public class Owner extends Human{
                 TechStack.WORDPRESS));
     }
 
-
-
-
-
-
-    // getters
-    public ArrayList<TechStack> getAbilities() {
-        return abilities;
+    public ArrayList<TechStack> getSkills() {
+        return skills;
     }
 }
