@@ -8,6 +8,7 @@ import main.people.enums.Seniority;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import static java.lang.Double.parseDouble;
 
@@ -21,18 +22,15 @@ public class Developer extends Employee {
 
     public Developer() {
         super(Position.DEVELOPER);
-        this.seniority = generateSeniority();
+        this.seniority = Seniority.values()[Randomizer.generateRandomValue(Seniority.values().length)];
         this.skills = generateSkills();
-        setSalary(generateSalary());
+        setSalary(getBaseSalary() * getSkillsMultiplier());
     }
 
-
     // public methods
-
     public LinkedList<TechStack> getSkills() {
         return skills;
     }
-
 
     @Override
     public String toString() {
@@ -48,7 +46,7 @@ public class Developer extends Employee {
         }
 
         var workToDo = project.getWorkLeft();
-        if (workToDo.isEmpty()) {
+        if (workToDo == null || workToDo.isEmpty()) {
             return;
         }
 
@@ -62,12 +60,24 @@ public class Developer extends Employee {
         }
     }
 
-    // private methods
+    public Project getValidProject(List<Project> projects) {
+        for (Project project : projects) {
+            var workToDo = project.getWorkLeft();
 
-    private Seniority generateSeniority() {
-        return Seniority.values()[Randomizer.generateRandomValue(Seniority.values().length)];
+            for (TechStack tech : workToDo.keySet()) {
+                if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
+                    System.out.println(this.getName() + skills + " can work on " + tech + " in " + project);
+                    return project;
+                }
+
+            }
+        }
+
+        System.out.println(this.getName() + skills + " can not work on any project");
+        return null;
     }
 
+    // private methods
     private LinkedList<TechStack> generateSkills() {
         var availableSkills = new LinkedList<>(Arrays.asList(TechStack.class.getEnumConstants()));
         var list = new LinkedList<TechStack>();
@@ -101,10 +111,6 @@ public class Developer extends Employee {
         }
 
         return list;
-    }
-
-    private Double generateSalary() {
-        return getBaseSalary() * getSkillsMultiplier();
     }
 
     private int getBaseSalary() {

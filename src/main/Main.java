@@ -15,7 +15,7 @@ public class Main {
         var game = new Game();
         game.setup();
         game.play();
-    }
+     }
 
     // todo: replace raw strings with generator
     private static void welcomeMsg() {

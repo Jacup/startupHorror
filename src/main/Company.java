@@ -4,37 +4,29 @@ import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.HumanTemplate;
 import main.people.Owner;
+import main.people.employees.Developer;
 import main.people.employees.Employee;
+import main.people.employees.Sales;
 import main.people.enums.Position;
 
 import java.util.LinkedList;
 
 public class Company {
-
-    // costs
     public static final Double HIRE_COST = 2000.0;
     private static final Double FIRE_COST = 2000.0;
     private static final Integer TAXES_PERCENT = 30;
 
-    // COMPANY RESOURCES
-    private Double cash;
-
-    // COMPANY DETAILS
     private final String name;
     private final Owner owner;
+    private Double cash;
 
-    // HUMAN RESOURCES
     private LinkedList<Employee> hiredEmployees = new LinkedList<>();
-
-
-    // JOBS ETC
     private LinkedList<Project> actualProjects = new LinkedList<>();
-
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
-        this.owner = createOwner();
+        this.owner = new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
     }
 
     // company
@@ -59,10 +51,6 @@ public class Company {
     }
 
     // employees
-    public Owner createOwner() {
-        return new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
-    }
-
     public boolean hireEmployee(Employee employee) {
         if (!haveEnoughCash(HIRE_COST)) {
             System.out.println("You can't hire employee now, because you don't have enough money");
@@ -98,52 +86,81 @@ public class Company {
         return hiredEmployees;
     }
 
+    public LinkedList<Developer> getHiredDevelopers() {
+        var developers = new LinkedList<Developer>();
+
+        for (Employee worker : hiredEmployees) {
+            if (worker.isDeveloper()) developers.add((Developer) worker);
+        }
+
+        return developers;
+    }
+
+    public LinkedList<Sales> getHiredSales() {
+        var sales = new LinkedList<Sales>();
+
+        for (Employee worker : hiredEmployees) {
+            if (worker.isSales()) sales.add((Sales) worker);
+        }
+
+        return sales;
+    }
+
     public int getAmountOfEmployeesByType(Position position) {
         return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
     }
 
-    public void performWork() {
-        var developers = hiredEmployees.stream().filter(Employee::isDeveloper).toList();
-        var project = getActualProject();
-        if (project != null) {
-            developers.forEach(developer -> developer.goToWork(project));
-        }
+    public void paySalaryToWorkers() {
+        // later I could calculate salary per day, because if someone is hired at the end of the month, he shouldn't get full salary.
+        for (var employee : hiredEmployees) {
+            Double salary = employee.getSalary();
 
-        //        var testers = hiredEmployees.stream().filter(Employee::isTester).toList();
-
-//        LinkedList<Sales> salesList = new LinkedList<>();
-//
-//        for (var worker : hiredEmployees) {
-//            if (worker.isSales()) salesList.add((Sales) worker);
-//        }
-
-
-//        for (var salesman : salesList) {
-//            if (salesman.isSick()) continue;
-//
-//            var projectFound = salesman.findNewProject();
-//            if (projectFound) Game.generateNewProject();
-//        }
-    }
-
-
-    // projects
-    public LinkedList<Project> getActualProjects() {
-        return actualProjects;
-    }
-
-    private Project getActualProject() {
-        for (var actualProject : actualProjects) {
-            if (!actualProject.isFinished()) {
-                return actualProject;
+            if (this.cash > salary) {
+                this.cash = cash - salary;
+                employee.addCash(salary);
+            } else {
+                System.out.println("Whoops! It looks like you don't have enough money to pay salary to " + employee.getName());
+                Game.lostGame();
             }
         }
-
-        return null;
     }
 
-    public void setActualProjects(LinkedList<Project> actualProjects) {
-        this.actualProjects = actualProjects;
+    public void performWork() {
+        sendDevelopersToWork();
+        sendSalesToWork();
+    }
+
+    private void sendDevelopersToWork() {
+        var developers = getHiredDevelopers();
+        var projects = getActualProjects();
+
+        if (projects != null) {
+            for (var developer : developers) {
+                var validProject = developer.getValidProject(projects);
+                if (validProject != null) developer.goToWork(validProject);
+            }
+        }
+    }
+
+    private void sendSalesToWork() {
+        var sales = getHiredSales();
+
+        for (var salesman : sales) {
+            salesman.goToWork();
+        }
+    }
+
+    // projects
+    public boolean signNewProject(Project project) {
+        actualProjects.add(project);
+        project.setActualDeadline();
+        System.out.println("\nCongratulations! Your have new project! \nDetails:");
+        System.out.println(project);
+        return true;
+    }
+
+    public LinkedList<Project> getActualProjects() {
+        return actualProjects;
     }
 
     public boolean returnProject(Project project) {
@@ -163,14 +180,6 @@ public class Company {
         var cash = isPenalty ? (project.getPayment() * penalty) : project.getPayment();
 
         Game.addNewTransaction(paymentDate, cash);
-    }
-
-    public boolean signNewProject(Project project) {
-        actualProjects.add(project);
-        project.setActualDeadline();
-        System.out.println("\nCongratulations! Your have new project! \nDetails:");
-        System.out.println(project);
-        return true;
     }
 
     public Owner getOwner() {

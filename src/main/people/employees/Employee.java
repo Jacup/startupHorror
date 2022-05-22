@@ -11,14 +11,22 @@ public abstract class Employee extends Human implements Worker {
 
     protected Position position;
     protected Double salary;
+    private Double cash;
 
     public Employee(Position position) {
         super(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
         this.position = position;
+        this.cash = 0.0;
     }
 
-
     // public methods
+    public static Employee generateRandomEmployee() {
+        return switch (generatePosition()) {
+            case DEVELOPER -> new Developer();
+            case TESTER -> new Tester();
+            case SALES -> new Sales();
+        };
+    }
 
     @Override
     public String toString() {
@@ -28,9 +36,11 @@ public abstract class Employee extends Human implements Worker {
     public boolean isDeveloper() {
         return position == Position.DEVELOPER;
     }
+
     public boolean isTester() {
         return position == Position.TESTER;
     }
+
     public boolean isSales() {
         return position == Position.SALES;
     }
@@ -39,25 +49,23 @@ public abstract class Employee extends Human implements Worker {
         return position;
     }
 
-    public static Employee generateRandomEmployee() {
-        return switch (generatePosition()) {
-            case DEVELOPER -> new Developer();
-            case TESTER -> new Tester();
-            case SALES -> new Sales();
-        };
+    public Double getSalary() {
+        return salary;
     }
 
     public void setSalary(Double salary) {
         this.salary = salary;
     }
 
+    public void addCash(Double amount) {
+        this.cash += amount;
+    }
+
     public boolean isSick() {
         return Randomizer.draw(SICKNESS_CHANCE);
     }
 
-
     // private methods
-
     private static Position generatePosition() {
         // 50% chance for devs, 25% chance for tester, 25% for sales
         var isDev = Randomizer.draw(50);

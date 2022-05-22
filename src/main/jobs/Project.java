@@ -36,17 +36,16 @@ public class Project extends ProjectTemplate {
         this.name = generateRandomName();
         this.client = client;
         this.isFinished = false;
-        this.difficultyLevel = generateDifficultyLevel();
+        this.difficultyLevel = DifficultyLevel.values()[Randomizer.generateRandomValue(DifficultyLevel.values().length)];
         this.paymentDelayDays = generatePaymentDelay();
         this.techStackAndWorkload = generateTechStack();
         this.workLeft = new HashMap<>(techStackAndWorkload);
         this.payment = generatePayment();
-        this.deadlinePenalty = generateDeadlinePenalty();
+        this.deadlinePenalty = payment * DEFAULT_DEADLINE_PENALTY;
         this.deadlineDays = generateDeadlineDays();
     }
 
-    // public getters
-
+    // public getters and setters
     public String getName() {
         return name;
     }
@@ -120,22 +119,6 @@ public class Project extends ProjectTemplate {
         actualDeadline = Game.getGameDate().plusDays(deadlineDays);
     }
 
-    // to edit
-    public boolean makeProgress() {
-//        if (isFinished) {
-//            System.out.println("This project is finished! Contact with client to return and get paid.");
-//            return false;
-//        }
-//
-//
-//        if (true) {
-//            System.out.println("Congratulations! You have finished working on " + name + ". Please return this project to the client to get paid.");
-//            isFinished = true;
-//        } else System.out.println("Days left to finish: " + workingDaysLeft);
-//
-        return true;
-    }
-
     // TODO: add support by seniority + add support for msg list in header
     public void makeProgressByTech(TechStack tech) {
         var value = workLeft.get(tech);
@@ -173,15 +156,10 @@ public class Project extends ProjectTemplate {
     }
 
     // private methods, generators
-
     private String generateRandomName() {
         var name = availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
         availableProjectNames.remove(name);
         return name;
-    }
-
-    private Double generateDeadlinePenalty() {
-        return payment * DEFAULT_DEADLINE_PENALTY;
     }
 
     private Integer generatePaymentDelay() {
@@ -222,10 +200,6 @@ public class Project extends ProjectTemplate {
         return Randomizer.generateRandomValue(daysNeeded, daysNeeded + MAX_SPARE_DAYS);
     }
 
-    private DifficultyLevel generateDifficultyLevel() {
-        return DifficultyLevel.values()[Randomizer.generateRandomValue(DifficultyLevel.values().length)];
-    }
-
     private HashMap<TechStack, Integer> generateTechStack() {
         int min, max;
         var DaysPerTech = 3;      // TODO temporary, idk how to handle this. maybe assign it with game difficulty lvl
@@ -263,5 +237,4 @@ public class Project extends ProjectTemplate {
 
         return hashMap;
     }
-
 }
