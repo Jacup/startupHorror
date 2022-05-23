@@ -73,7 +73,7 @@ public class Game {
     }
 
     public void play() {
-        while (successfulProjects < 3 && !lost) {
+        while (gameIsContinued()) {
             if (dayActivities()) {
                 routines();
                 if (isWorkDay(gameDate)) company.performWork();
@@ -81,14 +81,20 @@ public class Game {
                 UserActions.pressEnterKeyToContinue();
             }
         }
+    }
 
-        if (!lost) {
+    private boolean gameIsContinued() {
+        if (lost) {
             System.out.println("\n\n\nSorry. You lost. ");
-            return;
+            return false;
         }
-        if (successfulProjects < 3) {
+
+        if (successfulProjects >= 3) {
             System.out.println("\n\n\nCongratulations. You win");
+            return false;
         }
+
+        return true;
     }
 
     private static boolean isWorkDay(LocalDate day) {
