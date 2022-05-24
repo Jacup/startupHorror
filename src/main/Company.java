@@ -9,6 +9,9 @@ import main.people.employees.Employee;
 import main.people.employees.Sales;
 import main.people.enums.Position;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Company {
@@ -23,10 +26,18 @@ public class Company {
     private LinkedList<Employee> hiredEmployees = new LinkedList<>();
     private LinkedList<Project> actualProjects = new LinkedList<>();
 
+    private Integer daysSpendOnTaxes;
+
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
         this.owner = new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
+        this.daysSpendOnTaxes = 0;
+    }
+
+    public boolean payTaxes() {
+        this.daysSpendOnTaxes++;
+        return true;
     }
 
     // company
@@ -180,5 +191,17 @@ public class Company {
 
     public Owner getOwner() {
         return owner;
+    }
+
+    public Integer getDaysSpendOnTaxes() {
+        return daysSpendOnTaxes;
+    }
+
+    public void addDaySpendOnTaxes() {
+        daysSpendOnTaxes++;
+    }
+
+    public void resetTaxDays() {
+        daysSpendOnTaxes = 0;
     }
 }
