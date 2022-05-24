@@ -117,8 +117,21 @@ public class Game {
     }
 
     private void monthlyRoutines() {
+        // salaries
         if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
             company.paySalaryToWorkers();
+        }
+
+        // tax office
+        if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
+
+            if (company.getDaysSpendOnTaxes() < 2) {
+                System.out.println("The tax office shuts down your business because you fail to comply with tax obligations.");
+                Game.lostGame();
+            }
+
+            company.resetTaxDays();
+
         }
     }
 
@@ -137,7 +150,16 @@ public class Game {
         printHeader();
 
         System.out.println("What would you like to do today?");
-        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project", "2. Try to find a new client", "3. Go programming!", "4. Go testing!", "5. Return the finished project to the client", "6. Hire a new employee", "7. Fire an employee", "8. Pay taxes", "0. Exit game"));
+        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project",
+                "2. Try to find a new client",
+                "3. Go programming!",
+                "4. Go testing!",
+                "5. Return the finished project to the client",
+                "6. Hire a new employee",
+                "7. Fire an employee",
+                "8. Go to tax office",
+                "9. Go to sleep",
+                "0. Exit game"));
 
         printList(activities);
 
@@ -157,6 +179,8 @@ public class Game {
             case 7:
                 return fireEmployee();
             case 8:
+                return payTaxes();
+            case 9:
                 return true;
             case 0:
                 exitGame();
@@ -372,15 +396,36 @@ public class Game {
         System.out.println(TAB + 0 + ". Go back");
     }
 
+    /**
+     * 8. Taxes menu
+     *
+     * @return true if day is ended and taxes was paid successfully.
+     */
+    private boolean payTaxes() {
+        if (!company.payTaxes()) {
+            return false;
+        }
+
+        System.out.println("Successful day in tax office. Good job!");
+        return true;
+    }
+
+
+
     private void printHeader() {
         var actualProjects = company.getActualProjects();
         System.out.println("\n\n");
 
+        // cash
         String cashMsg = "Your cash: " + company.getCash();
         String dateMsg = gameDate.getDayOfWeek().toString() +  ", " + gameDate + " - Day " + gameDay;
 
         System.out.println("-".repeat(80));
         System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
+
+        // taxes
+        String taxes = "Days spend on taxes in " + getGameDate().getMonth().toString().toLowerCase() + ": " + company.getDaysSpendOnTaxes();
+        System.out.println(taxes);
 
         if (successfulProjects > 0) {
             System.out.println("Successful projects: " + successfulProjects);
