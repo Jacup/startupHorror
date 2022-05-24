@@ -26,8 +26,10 @@ public class Project extends ProjectTemplate {
     private LocalDate actualDeadline;
 
     private boolean isFinished;
+    private boolean developedByOwner;
     private final Integer paymentDelayDays;
     private final Double payment;
+    private Double finalPayment;
 
     private final HashMap<TechStack, Integer> techStackAndWorkload;
     private HashMap<TechStack, Integer> workLeft;
@@ -43,6 +45,7 @@ public class Project extends ProjectTemplate {
         this.payment = generatePayment();
         this.deadlinePenalty = payment * DEFAULT_DEADLINE_PENALTY;
         this.deadlineDays = generateDeadlineDays();
+        this.developedByOwner = false;
     }
 
     // public getters and setters
@@ -103,9 +106,26 @@ public class Project extends ProjectTemplate {
         return counter;
     }
 
+    public boolean isDevelopedByOwner() {
+        return developedByOwner;
+    }
+
+    public void setDevelopedByOwner(boolean developedByOwner) {
+        this.developedByOwner = developedByOwner;
+    }
+
     @Override
     public String toString() {
         return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
+    }
+
+    public void setFinalPayment() {
+        var penalty = 1 - DEFAULT_DEADLINE_PENALTY;
+        finalPayment = isPenaltyAdded() ? (this.getPayment() * penalty) : this.getPayment();
+    }
+
+    public Double getFinalPayment() {
+        return finalPayment;
     }
 
 

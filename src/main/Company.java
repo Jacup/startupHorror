@@ -169,17 +169,13 @@ public class Company {
             return false;
         }
 
-        createPayment(project, project.isPenaltyAdded());
+        project.setFinalPayment();
         actualProjects.remove(project);
-        return true;
-    }
-
-    private void createPayment(Project project, boolean isPenalty) {
-        var penalty = 1 - Project.DEFAULT_DEADLINE_PENALTY;
         var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
-        var cash = isPenalty ? (project.getPayment() * penalty) : project.getPayment();
 
-        Game.addNewTransaction(paymentDate, cash);
+        Game.addNewTransaction(paymentDate, project);
+
+        return true;
     }
 
     public Owner getOwner() {
