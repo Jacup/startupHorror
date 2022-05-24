@@ -29,11 +29,10 @@ public class Game {
     private static LinkedList<Project> availableProjects;
     private static LinkedList<Employee> availableEmployees;
 
-    private static HashMap<LocalDate, Double> dailyTransactions = new HashMap<>();
+    private static HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
     private static int successfulProjects;
     private static int gameDay;
     private static LocalDate gameDate;
-    private static boolean lost = false;
 
     private final Scanner scanner;
     private Company company;
@@ -61,7 +60,9 @@ public class Game {
     }
 
     public static void lostGame() {
-        lost = true;
+        System.out.println("\n\n\nSorry. You lost. ");
+        UserActions.pressEnterKeyToContinue();
+        System.exit(1);
     }
 
     public void setup() {
@@ -84,11 +85,6 @@ public class Game {
     }
 
     private boolean gameIsContinued() {
-        if (lost) {
-            System.out.println("\n\n\nSorry. You lost. ");
-            return false;
-        }
-
         if (successfulProjects >= 3) {
             System.out.println("\n\n\nCongratulations. You win");
             return false;
@@ -108,15 +104,19 @@ public class Game {
     }
 
     private void dailyRoutines() {
-        if (dailyTransactions.containsKey(gameDate)) {
-            var newCash = dailyTransactions.get(gameDate);
-            company.addCash(newCash);
+        getPaymentsForProjects();
+    }
+
+    private void getPaymentsForProjects() {
+        if (projectTransactions.containsKey(gameDate)) {
+            var project = projectTransactions.get(gameDate);
+            company.addCash(project.getFinalPayment());
+
+            if (!project.isDevelopedByOwner()) successfulProjects++;
         }
     }
 
     private void monthlyRoutines() {
-        var x = gameDate.getDayOfMonth();
-        var y = gameDate.lengthOfMonth();
         if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
             company.paySalaryToWorkers();
         }
@@ -262,6 +262,7 @@ public class Game {
         for (var tech : workToDo.keySet()) {
             if (company.getOwner().getSkills().contains(tech) && workToDo.get(tech) > 0) {
                 chosenProject.makeProgressByTech(tech);
+                chosenProject.setDevelopedByOwner(true);
                 return true;
             }
         }
@@ -290,13 +291,17 @@ public class Game {
     }
 
     private List<TechStack> LookForMissingSkills(Project project, Owner owner) {
+        // if one of tech is missing, owner cannot work on this??? to fix
         var techstack = project.getTechStackAndWorkload().keySet().stream().toList();
 
         return techstack.stream().filter(element -> !owner.getSkills().contains(element)).toList();
-
     }
 
-    private boolean returnContract() {
+    /**
+     * 5. return project menu
+     *
+     * @return true if day is ended and returned project successfully.
+     */    private boolean returnContract() {
         var finishedProjects = company.getActualProjects().stream().filter(Project::isFinished).toList();
 
         if (finishedProjects.size() == 0) {
@@ -372,7 +377,7 @@ public class Game {
         System.out.println("\n\n");
 
         String cashMsg = "Your cash: " + company.getCash();
-        String dateMsg = "Today is " + gameDate + " - Day " + gameDay;
+        String dateMsg = gameDate.getDayOfWeek().toString() +  ", " + gameDate + " - Day " + gameDay;
 
         System.out.println("-".repeat(80));
         System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
@@ -442,8 +447,8 @@ public class Game {
         availableEmployees.remove(employee);
     }
 
-    public static void addNewTransaction(LocalDate date, Double amount) {
-        dailyTransactions.put(date, amount);
+    public static void addNewTransaction(LocalDate date, Project project) {
+        projectTransactions.put(date, project);
 
     }
 
