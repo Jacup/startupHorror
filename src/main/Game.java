@@ -117,21 +117,21 @@ public class Game {
     }
 
     private void monthlyRoutines() {
-        // salaries
-        if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
-            company.paySalaryToWorkers();
-        }
-
-        // tax office
         if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
 
+            // tax office
             if (company.getDaysSpendOnTaxes() < 2) {
                 System.out.println("The tax office shuts down your business because you fail to comply with tax obligations.");
                 Game.lostGame();
             }
-
             company.resetTaxDays();
 
+            // salaries
+            company.paySalaryToWorkers();
+
+
+            // monthly tax
+            company.payMonthlyTaxes();
         }
     }
 
@@ -325,7 +325,8 @@ public class Game {
      * 5. return project menu
      *
      * @return true if day is ended and returned project successfully.
-     */    private boolean returnContract() {
+     */
+    private boolean returnContract() {
         var finishedProjects = company.getActualProjects().stream().filter(Project::isFinished).toList();
 
         if (finishedProjects.size() == 0) {
@@ -402,7 +403,7 @@ public class Game {
      * @return true if day is ended and taxes was paid successfully.
      */
     private boolean payTaxes() {
-        if (!company.payTaxes()) {
+        if (!company.goToTaxOffice()) {
             return false;
         }
 
@@ -411,14 +412,13 @@ public class Game {
     }
 
 
-
     private void printHeader() {
         var actualProjects = company.getActualProjects();
         System.out.println("\n\n");
 
         // cash
         String cashMsg = "Your cash: " + company.getCash();
-        String dateMsg = gameDate.getDayOfWeek().toString() +  ", " + gameDate + " - Day " + gameDay;
+        String dateMsg = gameDate.getDayOfWeek().toString() + ", " + gameDate + " - Day " + gameDay;
 
         System.out.println("-".repeat(80));
         System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
