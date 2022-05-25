@@ -9,9 +9,6 @@ import main.people.employees.Employee;
 import main.people.employees.Sales;
 import main.people.enums.Position;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Company {
@@ -27,15 +24,17 @@ public class Company {
     private LinkedList<Project> actualProjects = new LinkedList<>();
 
     private Integer daysSpendOnTaxes;
+    private Double monthlyTax;
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
         this.owner = new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
         this.daysSpendOnTaxes = 0;
+        this.monthlyTax = 0.0;
     }
 
-    public boolean payTaxes() {
+    public boolean goToTaxOffice() {
         this.daysSpendOnTaxes++;
         return true;
     }
@@ -185,6 +184,7 @@ public class Company {
         var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
 
         Game.addNewTransaction(paymentDate, project);
+        monthlyTax += project.getFinalPayment() * 0.10;
 
         return true;
     }
@@ -203,5 +203,18 @@ public class Company {
 
     public void resetTaxDays() {
         daysSpendOnTaxes = 0;
+    }
+
+    public void payMonthlyTaxes() {
+        if (cash < monthlyTax) {
+         System.out.println("You don't have enough money to pax monthly taxes from your incomes");
+         System.out.println("Your cash: " + cash + ". Taxes to pay this month: " + monthlyTax);
+         Game.lostGame();
+        }
+        else {
+            cash -= monthlyTax;
+            System.out.println("Successfully paid " + monthlyTax + " monthly taxes.");
+            monthlyTax = 0.0;
+        }
     }
 }
