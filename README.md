@@ -101,7 +101,7 @@ Get paid for 3 projects, but with specific conditions:
 - [x] Generate amount of cash
 - [x] Generate set of available employees with randomized attributes
 - [x] Generate set of available projects with randomized attributes
-- [ ] Generate set of clients with randomized attributes
+- [x] Generate set of clients with randomized attributes
 
 #### Employees, subcontractors:
 - [x] Developers 
@@ -121,11 +121,10 @@ Get paid for 3 projects, but with specific conditions:
 - [x] Tax office support
 - [x] Win/lose conditions
 - [x] Daily/monthly operations
-- [x] 
 
 #### Owner's actions: 
 - [x] Sign new project
-- [ ] Search new client/project
+- [x] Search new client/project
 - [x] Go programming
 - [ ] Go testing
 - [x] Return finished project
