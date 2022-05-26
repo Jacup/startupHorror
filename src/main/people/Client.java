@@ -15,8 +15,6 @@ public class Client extends Human {
         this.type = ClientType.values()[Randomizer.generateRandomValue(ClientType.values().length)];
     }
 
-    // public methods
-
     public ClientType getType() {
         return type;
     }
@@ -24,8 +22,4 @@ public class Client extends Human {
     public static Client generateRandomClient() {
         return new Client();
     }
-
-    // private methods
-
-
 }

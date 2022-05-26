@@ -135,9 +135,7 @@ public class Project extends ProjectTemplate {
 
     // public methods
 
-    public static Project generateRandomProject() {
-        var client = Game.getAvailableClients().get(Randomizer.generateRandomValue(Game.getAvailableClients().size()));
-
+    public static Project generateRandomProject(Client client) {
         return new Project(client);
     }
 

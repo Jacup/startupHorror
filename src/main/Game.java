@@ -1,5 +1,6 @@
 package main;
 
+import main.helpers.Randomizer;
 import main.helpers.UserActions;
 import main.jobs.Project;
 import main.jobs.enums.DifficultyLevel;
@@ -29,7 +30,7 @@ public class Game {
     private static LinkedList<Project> availableProjects;
     private static LinkedList<Employee> availableEmployees;
 
-    private static HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
+    private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
     private static int successfulProjects;
     private static int gameDay;
     private static LocalDate gameDate;
@@ -173,7 +174,7 @@ public class Game {
             case 1:
                 return contractMenu();
             case 2:
-                break;
+                return searchClients();
             case 3:
                 return goProgramming();
             case 5:
@@ -183,7 +184,7 @@ public class Game {
             case 7:
                 return fireEmployee();
             case 8:
-                return payTaxes();
+                return goToTaxOffice();
             case 9:
                 return true;
             case 0:
@@ -263,6 +264,16 @@ public class Game {
     }
 
     // 2. Clients
+
+    private boolean searchClients() {
+        if (company.getOwner().makeProgressOnFindingClients()) {
+            generateNewProject(true);
+            System.out.println("Congratulations, you have found new client with available project!");
+        }
+
+        return true;
+    }
+
 
     // 3. Working
 
@@ -406,7 +417,7 @@ public class Game {
      *
      * @return true if day is ended and taxes was paid successfully.
      */
-    private boolean payTaxes() {
+    private boolean goToTaxOffice() {
         if (!company.goToTaxOffice()) {
             return false;
         }
@@ -477,13 +488,28 @@ public class Game {
     }
 
     private static void generateProjects() {
+        var index = Randomizer.generateRandomValue(availableClients.size());
+        var client = availableClients.get(index);
+
         for (int i = 0; i < START_PROJECTS; i++) {
-            availableProjects.add(Project.generateRandomProject());
+            availableProjects.add(Project.generateRandomProject(client));
         }
     }
 
     public static void generateNewProject() {
-        availableProjects.add(Project.generateRandomProject());
+        var index = Randomizer.generateRandomValue(availableProjects.size());
+        var client = availableClients.get(index);
+
+        availableProjects.add(Project.generateRandomProject(client));
+    }
+
+    public static void generateNewProject(boolean newClient) {
+        if (newClient) {
+            var client = Client.generateRandomClient();
+            availableClients.add(client);
+        } else {
+            generateNewProject();
+        }
     }
 
     private static void generateEmployees() {
