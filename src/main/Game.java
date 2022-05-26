@@ -47,6 +47,10 @@ public class Game {
         gameDay = 1;
     }
 
+    public static LinkedList<Client> getAvailableClients() {
+        return availableClients;
+    }
+
     public static LinkedList<Project> getAvailableProjects() {
         return availableProjects;
     }
