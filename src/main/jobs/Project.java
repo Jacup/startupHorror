@@ -122,6 +122,10 @@ public class Project extends ProjectTemplate {
     public void setFinalPayment() {
         var penalty = 1 - DEFAULT_DEADLINE_PENALTY;
         finalPayment = isPenaltyAdded() ? (this.getPayment() * penalty) : this.getPayment();
+
+        if (client.getType() == Client.ClientType.MTHRFCKR) {
+            if (Randomizer.draw(1)) finalPayment = 0.0;
+        }
     }
 
     public Double getFinalPayment() {
@@ -132,7 +136,9 @@ public class Project extends ProjectTemplate {
     // public methods
 
     public static Project generateRandomProject() {
-        return new Project(new Client("asd", "asd", Client.ClientType.EASY));
+        var client = Game.getAvailableClients().get(Randomizer.generateRandomValue(Game.getAvailableClients().size()));
+
+        return new Project(client);
     }
 
     public void setActualDeadline() {
@@ -168,7 +174,7 @@ public class Project extends ProjectTemplate {
     public boolean isPenaltyAdded() {
         var days = daysAfterDeadline();
 
-        if (client.getType() == Client.ClientType.EASY) {
+        if (client.getType() == Client.ClientType.RELAXED) {
             if (days <= 7) return !Randomizer.draw(20);
         }
 
@@ -183,21 +189,21 @@ public class Project extends ProjectTemplate {
     }
 
     private Integer generatePaymentDelay() {
-        int value = DEFAULT_PAYMENT_DELAY;
+        int paymentDelay = DEFAULT_PAYMENT_DELAY;
         switch (client.getType()) {
-            case EASY:
-                if (Randomizer.draw(30)) value += 7;
+            case RELAXED:
+                if (Randomizer.draw(30)) paymentDelay += 7;
                 break;
             case DEMANDING:
                 break;
             case MTHRFCKR:
                 int chance = Randomizer.generateRandomValue(100);
-                if (chance < 30) value += 7;
-                else if (chance < 35) value += 30;
+                if (chance < 30) paymentDelay += 7;
+                else if (chance < 35) paymentDelay += 30;
                 break;
         }
 
-        return value;
+        return paymentDelay;
     }
 
     private Double generatePayment() {
