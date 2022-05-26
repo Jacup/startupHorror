@@ -174,6 +174,7 @@ public class Company {
     }
 
     public boolean returnProject(Project project) {
+        // TODO: support for non-working projects, along with implementing testers.
         if (!project.isFinished()) {
             System.out.println("This project is not finished yet.");
             return false;
