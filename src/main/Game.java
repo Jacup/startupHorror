@@ -23,12 +23,11 @@ public class Game {
      */
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
-    private static final int START_EMPLOYEES = 10;
-    private static final String TAB = "   ";
+
+    public static final String TAB = "   ";
 
     private static LinkedList<Client> availableClients;
     private static LinkedList<Project> availableProjects;
-    private static LinkedList<Employee> availableEmployees;
 
     private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
     private static int successfulProjects;
@@ -36,13 +35,14 @@ public class Game {
     private static LocalDate gameDate;
 
     private final Scanner scanner;
-    private Company company;
+    private final GameHr gameHr;
+    protected Company company;
 
     public Game() {
         this.scanner = new Scanner(System.in);
+        gameHr = new GameHr();
         availableClients = new LinkedList<>();
         availableProjects = new LinkedList<>();
-        availableEmployees = new LinkedList<>();
         successfulProjects = 0;
         gameDate = LocalDate.now();
         gameDay = 1;
@@ -56,9 +56,7 @@ public class Game {
         return availableProjects;
     }
 
-    public static LinkedList<Employee> getAvailableEmployees() {
-        return availableEmployees;
-    }
+
 
     public static LocalDate getGameDate() {
         return gameDate;
@@ -73,7 +71,7 @@ public class Game {
     public void setup() {
         company = createCompany();
 
-        generateEmployees();
+        gameHr.generateEmployees();
         generateClients();
         generateProjects();
     }
@@ -160,7 +158,7 @@ public class Game {
                 "3. Go programming!",
                 "4. Go testing!",
                 "5. Return the finished project to the client",
-                "6. Hire a new employee",
+                "6. HR operations",
                 "7. Fire an employee",
                 "8. Go to tax office",
                 "9. Go to sleep",
@@ -180,9 +178,7 @@ public class Game {
             case 5:
                 return returnContract();
             case 6:
-                return hireEmployee();
-            case 7:
-                return fireEmployee();
+                return gameHr.menu(company);
             case 8:
                 return goToTaxOffice();
             case 9:
@@ -199,7 +195,7 @@ public class Game {
         System.out.println("Closing app. . . ");
     }
 
-    private static void printList(List<String> options) {
+    protected static void printList(List<String> options) {
         for (var option : options) {
             System.out.println(TAB + option);
         }
@@ -362,57 +358,6 @@ public class Game {
     }
 
     /**
-     * 6. hire employees menu
-     *
-     * @return true if day is ended and hiring was successfully.
-     */
-    private boolean hireEmployee() {
-        if (availableEmployees.size() == 0) {
-            System.out.println("No one wants to work for you. Advertise your company at job boards.");
-            UserActions.pressEnterKeyToContinue();
-            return false;
-        }
-        System.out.println("Cost of hiring new employee: " + HIRE_COST + "\n");
-
-
-        printEmployees(availableEmployees);
-        var choice = UserActions.getUserInputByte(availableEmployees.size());
-        if (choice == 0) return false;
-
-        var chosenEmployee = availableEmployees.get(choice - 1);
-
-        return company.hireEmployee(chosenEmployee);
-    }
-
-    /**
-     * 7. Fire employees menu
-     *
-     * @return true if day is ended and firing was successfully.
-     */
-    private boolean fireEmployee() {
-        var employees = company.getHiredEmployees();
-        if (employees.size() == 0) {
-            System.out.println("You don't have any employees to fire.");
-            UserActions.pressEnterKeyToContinue();
-            return false;
-        }
-
-        printEmployees(employees);
-        var choice = UserActions.getUserInputByte(employees.size());
-        if (choice == 0) return false;
-
-        var chosenEmployee = employees.get(choice - 1);
-        return company.fireEmployee(chosenEmployee);
-
-    }
-
-    private void printEmployees(List<Employee> employees) {
-        for (int i = 1; i <= employees.size(); i++)
-            System.out.println(TAB + i + ". " + employees.get(i - 1));
-        System.out.println(TAB + 0 + ". Go back");
-    }
-
-    /**
      * 8. Taxes menu
      *
      * @return true if day is ended and taxes was paid successfully.
@@ -512,15 +457,6 @@ public class Game {
         }
     }
 
-    private static void generateEmployees() {
-        for (int i = 0; i < START_EMPLOYEES; i++) {
-            availableEmployees.add(Employee.generateRandomEmployee());
-        }
-    }
-
-    public static void removeAvailableEmployee(Employee employee) {
-        availableEmployees.remove(employee);
-    }
 
     public static void addNewTransaction(LocalDate date, Project project) {
         projectTransactions.put(date, project);
