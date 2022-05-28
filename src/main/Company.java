@@ -20,8 +20,8 @@ public class Company {
     private final Owner owner;
     private Double cash;
 
-    private LinkedList<Employee> hiredEmployees = new LinkedList<>();
-    private LinkedList<Project> actualProjects = new LinkedList<>();
+    private final LinkedList<Employee> hiredEmployees = new LinkedList<>();
+    private final LinkedList<Project> actualProjects = new LinkedList<>();
 
     private Integer daysSpendOnTaxes;
     private Double monthlyTax;
@@ -69,7 +69,7 @@ public class Company {
 
         cash -= HIRE_COST;
         hiredEmployees.add(employee);
-        Game.removeAvailableEmployee(employee);
+        GameHr.removeAvailableEmployee(employee);
         System.out.println("Congratulations! You have hired new " + employee.getPosition());
 
         return true;
