@@ -146,7 +146,7 @@ public class Company {
 
         if (projects != null) {
             for (var developer : developers) {
-                var validProject = developer.getValidProject(projects);
+                var validProject = developer.getFirstValidProject(projects);
                 if (validProject != null) developer.goToWork(validProject);
             }
         }

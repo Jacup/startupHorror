@@ -1,6 +1,8 @@
 package main.people;
 
+import main.Company;
 import main.Game;
+import main.jobs.Project;
 import main.jobs.enums.TechStack;
 
 import java.util.ArrayList;
@@ -18,23 +20,58 @@ public class Owner extends Human {
         this.projectsFound = 0;
     }
 
-    public ArrayList<TechStack> getSkills() {
-        return skills;
-    }
-
-    public int getFindClientProgress() {
-        return findClientProgress;
-    }
-
     public boolean makeProgressOnFindingClients() {
         findClientProgress++;
 
         if (findClientProgress == 4) {
-            Game.generateNewProject();
+            Game.generateNewProject(true);
             projectsFound++;
             findClientProgress = 0;
             return true;
         }
+        return false;
+    }
+
+    public ArrayList<Project> getProjectsForOwner(Company company) {
+        var actualProjects = company.getActualProjects().stream().filter(project -> !project.isFinished()).toList();
+        if (actualProjects.size() == 0) return null;
+
+        var list = new ArrayList<Project>();
+
+        for (var project : actualProjects) {
+            var candidate = company.getOwner().checkProject(project);
+            if (candidate != null) list.add(candidate);
+        }
+
+        return list;
+    }
+
+    private Project checkProject(Project project) {
+        var workToDo = project.getWorkLeft();
+
+        for (TechStack tech : workToDo.keySet()) {
+            if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
+                return project;
+            }
+        }
+
+        return null;
+    }
+
+
+    public boolean goProgramming(Project project) {
+        var workToDo = project.getWorkLeft();
+        if (workToDo == null || workToDo.isEmpty()) return false;
+
+        for (var tech : workToDo.keySet()) {
+            if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
+                project.makeProgressByTech(tech);
+                project.setDevelopedByOwner(true);
+
+                return true;
+            }
+        }
+
         return false;
     }
 }

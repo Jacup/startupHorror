@@ -5,9 +5,7 @@ import main.helpers.Randomizer;
 import main.helpers.UserActions;
 import main.jobs.Project;
 import main.jobs.enums.DifficultyLevel;
-import main.jobs.enums.TechStack;
 import main.people.Client;
-import main.people.Owner;
 import main.people.enums.Position;
 
 import java.time.DayOfWeek;
@@ -40,7 +38,6 @@ public class Game {
         availableProjects = new LinkedList<>();
         successfulProjects = 0;
         gameDate = LocalDate.of(2022, 1, 1);
-//        gameDate = LocalDate.now();
         gameDay = 1;
     }
 
@@ -100,7 +97,7 @@ public class Game {
             var project = projectTransactions.get(gameDate);
             company.addCash(project.getFinalPayment());
 
-            if (!project.isDevelopedByOwner()) successfulProjects++;
+            if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD)) successfulProjects++;
         }
     }
 
@@ -127,24 +124,13 @@ public class Game {
     }
 
     /**
-     *
      * @return true if activity was successful and next day should begin. False, if user haven't performed action that day.
      */
     private boolean dayActivities() {
         printHeader();
 
         System.out.println("What would you like to do today?");
-        ArrayList<String> activities = new ArrayList<>(List.of(
-                "1. Sign a contract for a new project",
-                "2. Try to find a new client",
-                "3. Go programming!",
-                "4. Go testing!",
-                "5. Return the finished project to the client",
-                "6. HR operations",
-                "7. Fire an employee",
-                "8. Go to tax office",
-                "9. Go to sleep",
-                "0. Exit game"));
+        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project", "2. Try to find a new client", "3. Go programming!", "4. Go testing!", "5. Return the finished project to the client", "6. HR operations", "7. Fire an employee", "8. Go to tax office", "9. Go to sleep", "0. Exit game"));
 
         Console.printList(activities);
 
@@ -190,7 +176,7 @@ public class Game {
         }
 
         System.out.println("\nAvailable projects: ");
-        printProjects(availableProjects);
+        Console.printProjects(availableProjects);
         System.out.println("Which project would you like to sign up? ");
 
         var selectedProject = selectProject();
@@ -222,6 +208,7 @@ public class Game {
 
             if (amountOfDevelopers == 0) {
                 System.out.println("You have selected hard project, but you don't have any developers.");
+                UserActions.pressEnterKeyToContinue();
                 return false;
             }
         }
@@ -229,19 +216,15 @@ public class Game {
         return true;
     }
 
-    private void printProjects(List<Project> projects) {
-        for (int i = 1; i <= projects.size(); i++)
-            System.out.println(TAB + i + ". " + projects.get(i - 1));
-        System.out.println(TAB + 0 + ". Go back");
-    }
+
 
     /**
-     * 1. Clients Menu
+     * 2. Clients Menu
      *
      * @return true if day is ended.
-     */    private boolean searchClients() {
+     */
+    private boolean searchClients() {
         if (company.getOwner().makeProgressOnFindingClients()) {
-            generateNewProject(true);
             System.out.println("Congratulations, you have found new client with available project!");
         }
 
@@ -249,67 +232,27 @@ public class Game {
     }
 
     /**
-     * 1. Programming Menu
+     * 3. Programming Menu
      *
      * @return true if day is ended.
      */
     private boolean goProgramming() {
-        var projectsForOwner = findAvailableProjectsForOwner();
-
-        if (projectsForOwner == null || projectsForOwner.size() == 0) {
+        var owner = company.getOwner();
+        var projectsForOwner = owner.getProjectsForOwner(company);
+        if (projectsForOwner == null || projectsForOwner.isEmpty()) {
             System.out.println("You don't have any project to work on.");
             UserActions.pressEnterKeyToContinue();
             return false;
         }
 
-        printProjects(projectsForOwner);
-
+        Console.printProjects(projectsForOwner, true);
         var choice = UserActions.getUserInputByte(projectsForOwner.size());
         if (choice == 0) return false;
 
         var chosenProject = projectsForOwner.get(choice - 1);
+        if (chosenProject == null) return false;
 
-        var workToDo = chosenProject.getWorkLeft();
-        if (workToDo == null || workToDo.isEmpty()) {
-            return false;
-        }
-
-        for (var tech : workToDo.keySet()) {
-            if (company.getOwner().getSkills().contains(tech) && workToDo.get(tech) > 0) {
-                chosenProject.makeProgressByTech(tech);
-                chosenProject.setDevelopedByOwner(true);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private ArrayList<Project> findAvailableProjectsForOwner() {
-        var actualProjects = company.getActualProjects();
-
-        if (actualProjects.size() == 0) return null;
-
-        ArrayList<Project> availableProjectsForOwner = new ArrayList<>();
-
-        for (var project : actualProjects) {
-            var missingSkills = LookForMissingSkills(project, company.getOwner());
-
-            if (missingSkills.size() != 0) {
-                System.out.println("Sorry, but you cannot work on " + project.getName() + ", because you don't know " + missingSkills);
-            } else {
-                availableProjectsForOwner.add(project);
-            }
-        }
-
-        return availableProjectsForOwner;
-    }
-
-    private List<TechStack> LookForMissingSkills(Project project, Owner owner) {
-        // BUG: if one of tech is missing, owner cannot work on this??? to fix
-        var techstack = project.getTechStackAndWorkload().keySet().stream().toList();
-
-        return techstack.stream().filter(element -> !owner.getSkills().contains(element)).toList();
+        return owner.goProgramming(chosenProject);
     }
 
     /**
@@ -327,7 +270,7 @@ public class Game {
         }
 
         System.out.println("Which project would you like to return? ");
-        printProjects(finishedProjects);
+        Console.printProjects(finishedProjects);
 
         var choice = UserActions.getUserInputByte(finishedProjects.size());
         if (choice == 0) return false;
@@ -430,6 +373,7 @@ public class Game {
         if (newClient) {
             var client = Client.generateRandomClient();
             availableClients.add(client);
+            availableProjects.add(Project.generateRandomProject(client));
         } else {
             generateNewProject();
         }
@@ -437,6 +381,5 @@ public class Game {
 
     public static void addNewTransaction(LocalDate date, Project project) {
         projectTransactions.put(date, project);
-
     }
 }
