@@ -119,6 +119,12 @@ public class Project extends ProjectTemplate {
         return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
     }
 
+    public String toString(boolean showWorkLeft) {
+        if (showWorkLeft)
+            return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + workLeft.toString();
+        return toString();
+    }
+
     public void setFinalPayment() {
         var penalty = 1 - DEFAULT_DEADLINE_PENALTY;
         finalPayment = isPenaltyAdded() ? (this.getPayment() * penalty) : this.getPayment();
@@ -143,7 +149,7 @@ public class Project extends ProjectTemplate {
         actualDeadline = Game.getGameDate().plusDays(deadlineDays);
     }
 
-    // TODO: add support by seniority + add support for msg list in header
+    // TODO: add support by seniority
     public void makeProgressByTech(TechStack tech) {
         var value = workLeft.get(tech);
 
@@ -151,11 +157,10 @@ public class Project extends ProjectTemplate {
 
         if (workLeft.get(tech) == 0) {
             workLeft.remove(tech);
-            System.out.println("Finished work on " + tech + " in project. Removing from todo list.");
         }
+
         if (workLeft.isEmpty()) {
             isFinished = true;
-            System.out.println("Finished work on " + getName() + " Return to client to get paid.");
         }
     }
 

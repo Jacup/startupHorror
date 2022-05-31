@@ -60,7 +60,7 @@ public class Developer extends Employee {
         }
     }
 
-    public Project getValidProject(List<Project> projects) {
+    public Project getFirstValidProject(List<Project> projects) {
         for (Project project : projects) {
             var workToDo = project.getWorkLeft();
 
