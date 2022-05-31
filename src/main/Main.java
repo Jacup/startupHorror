@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         welcomeMsg();
 
-        System.out.println("            --- Press any key to start the game ---");
+        System.out.println("            --- Press enter to start the game ---");
         var scanner = new Scanner(System.in);
         scanner.nextLine();
 
