@@ -1,5 +1,6 @@
 package main;
 
+import main.helpers.Console;
 import main.helpers.Randomizer;
 import main.helpers.UserActions;
 import main.jobs.Project;
@@ -7,7 +8,6 @@ import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
 import main.people.Owner;
-import main.people.employees.Employee;
 import main.people.enums.Position;
 
 import java.time.DayOfWeek;
@@ -15,16 +15,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static main.Company.HIRE_COST;
-
 public class Game {
-    /**
-     * Global game settings. Could be replaced in future with difficulty level, changed by user.
-     */
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
 
-    public static final String TAB = "   ";
+    public static final String TAB = "    ";
 
     private static LinkedList<Client> availableClients;
     private static LinkedList<Project> availableProjects;
@@ -36,7 +31,7 @@ public class Game {
 
     private final Scanner scanner;
     private final GameHr gameHr;
-    protected Company company;
+    private Company company;
 
     public Game() {
         this.scanner = new Scanner(System.in);
@@ -44,19 +39,10 @@ public class Game {
         availableClients = new LinkedList<>();
         availableProjects = new LinkedList<>();
         successfulProjects = 0;
-        gameDate = LocalDate.now();
+        gameDate = LocalDate.of(2022, 1, 1);
+//        gameDate = LocalDate.now();
         gameDay = 1;
     }
-
-    public static LinkedList<Client> getAvailableClients() {
-        return availableClients;
-    }
-
-    public static LinkedList<Project> getAvailableProjects() {
-        return availableProjects;
-    }
-
-
 
     public static LocalDate getGameDate() {
         return gameDate;
@@ -70,7 +56,6 @@ public class Game {
 
     public void setup() {
         company = createCompany();
-
         gameHr.generateEmployees();
         generateClients();
         generateProjects();
@@ -121,7 +106,6 @@ public class Game {
 
     private void monthlyRoutines() {
         if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
-
             // tax office
             if (company.getDaysSpendOnTaxes() < 2) {
                 System.out.println("The tax office shuts down your business because you fail to comply with tax obligations.");
@@ -131,7 +115,6 @@ public class Game {
 
             // salaries
             company.paySalaryToWorkers();
-
 
             // monthly tax
             company.payMonthlyTaxes();
@@ -143,9 +126,7 @@ public class Game {
         gameDate = gameDate.plusDays(1);
     }
 
-
     /**
-     * todo later: divide into sections/submenus: HR, Contracts, etc.
      *
      * @return true if activity was successful and next day should begin. False, if user haven't performed action that day.
      */
@@ -153,7 +134,8 @@ public class Game {
         printHeader();
 
         System.out.println("What would you like to do today?");
-        ArrayList<String> activities = new ArrayList<>(List.of("1. Sign a contract for a new project",
+        ArrayList<String> activities = new ArrayList<>(List.of(
+                "1. Sign a contract for a new project",
                 "2. Try to find a new client",
                 "3. Go programming!",
                 "4. Go testing!",
@@ -164,7 +146,7 @@ public class Game {
                 "9. Go to sleep",
                 "0. Exit game"));
 
-        printList(activities);
+        Console.printList(activities);
 
         var choice = UserActions.getUserInputByte(activities.size(), true);
 
@@ -193,12 +175,6 @@ public class Game {
 
     private static void exitGame() {
         System.out.println("Closing app. . . ");
-    }
-
-    protected static void printList(List<String> options) {
-        for (var option : options) {
-            System.out.println(TAB + option);
-        }
     }
 
     /**
@@ -259,9 +235,11 @@ public class Game {
         System.out.println(TAB + 0 + ". Go back");
     }
 
-    // 2. Clients
-
-    private boolean searchClients() {
+    /**
+     * 1. Clients Menu
+     *
+     * @return true if day is ended.
+     */    private boolean searchClients() {
         if (company.getOwner().makeProgressOnFindingClients()) {
             generateNewProject(true);
             System.out.println("Congratulations, you have found new client with available project!");
@@ -270,9 +248,11 @@ public class Game {
         return true;
     }
 
-
-    // 3. Working
-
+    /**
+     * 1. Programming Menu
+     *
+     * @return true if day is ended.
+     */
     private boolean goProgramming() {
         var projectsForOwner = findAvailableProjectsForOwner();
 
@@ -326,7 +306,7 @@ public class Game {
     }
 
     private List<TechStack> LookForMissingSkills(Project project, Owner owner) {
-        // if one of tech is missing, owner cannot work on this??? to fix
+        // BUG: if one of tech is missing, owner cannot work on this??? to fix
         var techstack = project.getTechStackAndWorkload().keySet().stream().toList();
 
         return techstack.stream().filter(element -> !owner.getSkills().contains(element)).toList();
@@ -371,7 +351,6 @@ public class Game {
         return true;
     }
 
-
     private void printHeader() {
         var actualProjects = company.getActualProjects();
         System.out.println("\n\n");
@@ -409,8 +388,7 @@ public class Game {
                 System.out.println("Current projects: ");
 
                 for (var project : actualProjects) {
-                    System.out.println(TAB + project.getName() + ", work left: " + project.getWorkLeft()
-                            + ", Deadline: " + project.getActualDeadline());
+                    System.out.println(TAB + project.getName() + ", work left: " + project.getWorkLeft() + ", Deadline: " + project.getActualDeadline());
                 }
             }
         }
@@ -457,11 +435,8 @@ public class Game {
         }
     }
 
-
     public static void addNewTransaction(LocalDate date, Project project) {
         projectTransactions.put(date, project);
 
     }
-
-
 }
