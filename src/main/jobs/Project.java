@@ -5,6 +5,7 @@ import main.helpers.Randomizer;
 import main.jobs.enums.DifficultyLevel;
 import main.jobs.enums.TechStack;
 import main.people.Client;
+import main.people.enums.Seniority;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class Project extends ProjectTemplate {
     private final Integer deadlineDays;
     private final Double deadlinePenalty;
     private LocalDate actualDeadline;
+    private Double bugChance = 0.0;
 
     private boolean isFinished;
     private boolean developedByOwner;
@@ -75,6 +77,17 @@ public class Project extends ProjectTemplate {
 
     public Double getPayment() {
         return payment;
+    }
+
+    public Double getBugsChance() {
+        return bugChance;
+    }
+
+    public String getBugsChance(boolean asPercentage) {
+        if (asPercentage) {
+            return bugChance * 100 + "%";
+//            return Game.decimalFormat.format(bugChance * 100) + "%";
+        } else return bugChance.toString();
     }
 
     public DifficultyLevel getDifficultyLevel() {
@@ -149,11 +162,25 @@ public class Project extends ProjectTemplate {
         actualDeadline = Game.getGameDate().plusDays(deadlineDays);
     }
 
-    // TODO: add support by seniority
-    public void makeProgressByTech(TechStack tech) {
+    public void makeProgressByTech(TechStack tech, Seniority seniority) {
         var value = workLeft.get(tech);
 
         workLeft.replace(tech, value - 1);
+
+        switch (seniority) {
+            case SENIOR, MID -> {
+                if ((bugChance + 0.05) <= 1.0) {
+                    bugChance += 0.05;
+                }
+            }
+            case JUNIOR -> {
+
+                if ((bugChance + 0.1) <= 1.0) {
+                    bugChance += 0.1;
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + seniority);
+        }
 
         if (workLeft.get(tech) == 0) {
             workLeft.remove(tech);
@@ -162,6 +189,12 @@ public class Project extends ProjectTemplate {
         if (workLeft.isEmpty()) {
             isFinished = true;
         }
+    }
+
+    public void removeBugs(Double singleTestValue) {
+        if ((bugChance < singleTestValue) || ((bugChance - singleTestValue) < 0.0))
+            throw new IllegalStateException("Unexpected value; " + bugChance + " cannot be lower than " + singleTestValue);
+        bugChance -= singleTestValue;
     }
 
     public boolean isDeadlinePassed() {

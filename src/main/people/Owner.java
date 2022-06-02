@@ -4,9 +4,13 @@ import main.Company;
 import main.Game;
 import main.jobs.Project;
 import main.jobs.enums.TechStack;
+import main.people.enums.Seniority;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import static main.people.employees.Tester.SINGLE_TEST_VALUE;
 
 public class Owner extends Human {
     private final ArrayList<TechStack> skills;
@@ -32,7 +36,7 @@ public class Owner extends Human {
         return false;
     }
 
-    public ArrayList<Project> getProjectsForOwner(Company company) {
+    public ArrayList<Project> getProjectsForOwnerToProgram(Company company) {
         var actualProjects = company.getActualProjects().stream().filter(project -> !project.isFinished()).toList();
         if (actualProjects.size() == 0) return null;
 
@@ -58,6 +62,18 @@ public class Owner extends Human {
         return null;
     }
 
+    public Project getFirstValidProjectToTest(LinkedList<Project> projects) {
+        for (Project project : projects) {
+            var bugsChance = project.getBugsChance();
+
+            if (bugsChance >= SINGLE_TEST_VALUE) {
+                return project;
+            }
+        }
+
+        return null;
+    }
+
 
     public boolean goProgramming(Project project) {
         var workToDo = project.getWorkLeft();
@@ -65,7 +81,7 @@ public class Owner extends Human {
 
         for (var tech : workToDo.keySet()) {
             if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
-                project.makeProgressByTech(tech);
+                project.makeProgressByTech(tech, Seniority.MID);
                 project.setDevelopedByOwner(true);
 
                 return true;
@@ -73,5 +89,15 @@ public class Owner extends Human {
         }
 
         return false;
+    }
+
+    public boolean goTesting(Project project) {
+        var bugsChance = project.getBugsChance();
+        if (bugsChance < SINGLE_TEST_VALUE) {
+            return false;
+        }
+
+        project.removeBugs(SINGLE_TEST_VALUE);
+        return true;
     }
 }

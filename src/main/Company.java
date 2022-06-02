@@ -7,9 +7,12 @@ import main.people.Owner;
 import main.people.employees.Developer;
 import main.people.employees.Employee;
 import main.people.employees.Sales;
+import main.people.employees.Tester;
 import main.people.enums.Position;
 
 import java.util.LinkedList;
+
+import static main.people.employees.Tester.DAILY_TEST_AMOUNT;
 
 public class Company {
     public static final Double HIRE_COST = 2000.0;
@@ -106,6 +109,16 @@ public class Company {
         return developers;
     }
 
+    public LinkedList<Tester> getHiredTesters() {
+        var testers = new LinkedList<Tester>();
+
+        for (Employee worker : hiredEmployees) {
+            if (worker.isTester()) testers.add((Tester) worker);
+        }
+
+        return testers;
+    }
+
     public LinkedList<Sales> getHiredSales() {
         var sales = new LinkedList<Sales>();
 
@@ -137,6 +150,7 @@ public class Company {
 
     public void performWork() {
         sendDevelopersToWork();
+        sendTestersToWork();
         sendSalesToWork();
     }
 
@@ -146,8 +160,37 @@ public class Company {
 
         if (projects != null) {
             for (var developer : developers) {
+                System.out.println("> Developer " + developer.getName() + ":");
+                if (developer.isSick()) {
+                    System.out.println(Game.TAB + getName() + " is sick today.");
+                    continue;
+                }
+
                 var validProject = developer.getFirstValidProject(projects);
                 if (validProject != null) developer.goToWork(validProject);
+            }
+            System.out.println();
+        }
+    }
+
+    private void sendTestersToWork() {
+        var testers = getHiredTesters();
+        if (testers == null) return;
+
+        var projects = getActualProjects();
+        if (projects == null) return;
+
+        for (var tester : testers) {
+            System.out.println("> Tester " + tester + ":");
+            if (tester.isSick()) {
+                System.out.println(Game.TAB + getName() + " is sick today.");
+                continue;
+            }
+
+            for (int i = 0; i < DAILY_TEST_AMOUNT; i++) {
+
+                var validProject = tester.getFirstValidProject(projects);
+                if (validProject != null) tester.goToWork(validProject);
             }
         }
     }
@@ -208,11 +251,10 @@ public class Company {
 
     public void payMonthlyTaxes() {
         if (cash < monthlyTax) {
-         System.out.println("You don't have enough money to pax monthly taxes from your incomes");
-         System.out.println("Your cash: " + cash + ". Taxes to pay this month: " + monthlyTax);
-         Game.lostGame();
-        }
-        else {
+            System.out.println("You don't have enough money to pax monthly taxes from your incomes");
+            System.out.println("Your cash: " + cash + ". Taxes to pay this month: " + monthlyTax);
+            Game.lostGame();
+        } else {
             cash -= monthlyTax;
             System.out.println("Successfully paid " + monthlyTax + " monthly taxes.");
             monthlyTax = 0.0;
