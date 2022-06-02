@@ -8,21 +8,24 @@ import main.jobs.enums.DifficultyLevel;
 import main.people.Client;
 import main.people.enums.Position;
 
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class Game {
+    public static final String TAB = "    ";
+    public static final String DECIMAL_FORMATTER = "#.##";
+    public static final DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMATTER);
+
     private static final int START_CLIENTS = 5;
     private static final int START_PROJECTS = 3;
-
-    public static final String TAB = "    ";
+    private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
 
     private static LinkedList<Client> availableClients;
     private static LinkedList<Project> availableProjects;
 
-    private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
     private static int successfulProjects;
     private static int gameDay;
     private static LocalDate gameDate;
@@ -97,7 +100,8 @@ public class Game {
             var project = projectTransactions.get(gameDate);
             company.addCash(project.getFinalPayment());
 
-            if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD)) successfulProjects++;
+            if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD))
+                successfulProjects++;
         }
     }
 
@@ -143,6 +147,8 @@ public class Game {
                 return searchClients();
             case 3:
                 return goProgramming();
+            case 4:
+                return goTesting();
             case 5:
                 return returnContract();
             case 6:
@@ -216,8 +222,6 @@ public class Game {
         return true;
     }
 
-
-
     /**
      * 2. Clients Menu
      *
@@ -238,7 +242,8 @@ public class Game {
      */
     private boolean goProgramming() {
         var owner = company.getOwner();
-        var projectsForOwner = owner.getProjectsForOwner(company);
+        var projectsForOwner = owner.getProjectsForOwnerToProgram(company);
+
         if (projectsForOwner == null || projectsForOwner.isEmpty()) {
             System.out.println("You don't have any project to work on.");
             UserActions.pressEnterKeyToContinue();
@@ -253,6 +258,28 @@ public class Game {
         if (chosenProject == null) return false;
 
         return owner.goProgramming(chosenProject);
+    }
+
+    private boolean goTesting() {
+        var owner = company.getOwner();
+
+        var projects = company.getActualProjects();
+        if (projects == null) {
+            System.out.println("You don't have any project to test.");
+            return false;
+        }
+
+        boolean isSuccessful = false;
+
+        for (int i = 0; i < 3; i++) {
+
+            var chosenProject = owner.getFirstValidProjectToTest(projects);
+            if (chosenProject == null) return false;
+
+            boolean anySingleActionIsSuccessful = owner.goTesting(chosenProject);
+            if (anySingleActionIsSuccessful) isSuccessful = true;
+        }
+        return isSuccessful;
     }
 
     /**
@@ -323,15 +350,15 @@ public class Game {
                 System.out.println("Projects ready to return:");
 
                 for (var project : completedProjects) {
-                    System.out.println(TAB + project.getName() + ", Deadline: " + project.getActualDeadline());
+                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugsChance(true) + ", Deadline: " + project.getActualDeadline());
                 }
             }
 
             if (!currentProjects.isEmpty()) {
                 System.out.println("Current projects: ");
 
-                for (var project : actualProjects) {
-                    System.out.println(TAB + project.getName() + ", work left: " + project.getWorkLeft() + ", Deadline: " + project.getActualDeadline());
+                for (var project : currentProjects) {
+                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugsChance(true) + ", work left: " + project.getWorkLeft() + ", Deadline: " + project.getActualDeadline());
                 }
             }
         }

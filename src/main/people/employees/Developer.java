@@ -1,5 +1,6 @@
 package main.people.employees;
 
+import main.Game;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.jobs.enums.TechStack;
@@ -39,23 +40,25 @@ public class Developer extends Employee {
 
     @Override
     public void goToWork(Project project) {
-        System.out.println("WorkDev");
-        if (isSick()) {
-            System.out.println("Dev " + getName() + " is sick today.");
-            return;
-        }
-
         var workToDo = project.getWorkLeft();
         if (workToDo == null || workToDo.isEmpty()) {
             return;
         }
 
+        int dailyWork;
+        switch (this.seniority) {
+            case SENIOR -> dailyWork = Randomizer.draw(25) ? 2 : 1;
+            case JUNIOR -> dailyWork = Randomizer.draw(20) ? 0 : 1;
+            default -> dailyWork = 1;
+        }
+
         for (var tech : workToDo.keySet()) {
-            if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
-                System.out.println("DEBUG: dev " + getName() + " worked on " + project.getName() + " in " + tech);
-                System.out.println("Work left: " + project.getWorkLeft().get(tech));
-                project.makeProgressByTech(tech);
-                return;
+            for (int i = 0; i < dailyWork; i++) {
+                if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
+                    System.out.println(Game.TAB + "worked on " + project.getName() + " in " + tech);
+                    project.makeProgressByTech(tech, this.seniority);
+                    return;
+                }
             }
         }
     }
@@ -66,14 +69,12 @@ public class Developer extends Employee {
 
             for (TechStack tech : workToDo.keySet()) {
                 if (this.skills.contains(tech) && workToDo.get(tech) > 0) {
-                    System.out.println(this.getName() + skills + " can work on " + tech + " in " + project);
                     return project;
                 }
 
             }
         }
 
-        System.out.println(this.getName() + skills + " can not work on any project");
         return null;
     }
 
