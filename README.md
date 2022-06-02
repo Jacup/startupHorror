@@ -106,14 +106,14 @@ Get paid for 3 projects, but with specific conditions:
 #### Employees, subcontractors:
 - [x] Developers 
 - [x] Sales
-- [ ] Testers
+- [x] Testers
 - [ ] Subcontractors
 - [ ] Employee costs (tax, insurance etc.)
 
 #### Projects: 
 - [x] Sign new project
 - [x] Programming 
-- [ ] Testing
+- [x] Testing
 - [x] Returning/hand over
 
 #### Gameplay:
@@ -126,7 +126,7 @@ Get paid for 3 projects, but with specific conditions:
 - [x] Sign new project
 - [x] Search new client/project
 - [x] Go programming
-- [ ] Go testing
+- [x] Go testing
 - [x] Return finished project
 - [x] Hire employee
 - [x] Fire employee
