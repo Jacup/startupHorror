@@ -75,6 +75,10 @@ public class Project extends ProjectTemplate {
         return paymentDelayDays;
     }
 
+    public Integer getEstimatedPaymentDate() {
+        return DEFAULT_PAYMENT_DELAY;
+    }
+
     public Double getPayment() {
         return payment;
     }
@@ -151,6 +155,14 @@ public class Project extends ProjectTemplate {
         return finalPayment;
     }
 
+    public boolean isBugged() {
+        if (bugChance > 0.75) return true;
+        else if (bugChance > 0.5) return !Randomizer.draw(50);
+        else if (bugChance > 0.25) return !Randomizer.draw(75);
+        else if (bugChance > 0.10) return !Randomizer.draw(90);
+
+        return false;
+    }
 
     // public methods
 
@@ -219,9 +231,7 @@ public class Project extends ProjectTemplate {
 
     // private methods, generators
     private String generateRandomName() {
-        var name = availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
-        availableProjectNames.remove(name);
-        return name;
+        return availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
     }
 
     private Integer generatePaymentDelay() {

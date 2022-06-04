@@ -54,6 +54,9 @@ public class Game {
         System.exit(1);
     }
 
+    public static void removeClient(Client client) {
+    }
+
     public void setup() {
         company = createCompany();
         gameHr.generateEmployees();
