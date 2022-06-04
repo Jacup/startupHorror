@@ -134,7 +134,7 @@ public class Company {
     }
 
     public void paySalaryToWorkers() {
-        // later I could calculate salary per day, because if someone is hired at the end of the month, he shouldn't get full salary.
+        // TODO: calculate salary per day, because if someone is hired at the end of the month, he shouldn't get full salary.
         for (var employee : hiredEmployees) {
             Double salary = employee.getSalary();
 
@@ -223,14 +223,38 @@ public class Company {
             return false;
         }
 
-        project.setFinalPayment();
-        actualProjects.remove(project);
+        var isBugged = project.isBugged();
+
+        if (isBugged) {
+            switch (project.getClient().getType()) {
+                case DEMANDING -> {
+                    if (Randomizer.draw(50)) returnBugged(project);
+                }
+                case MTHRFCKR -> {
+                    returnBugged(project);
+                    return false;
+                }
+            }
+
+        }
+
         var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
 
+        project.setFinalPayment();
         Game.addNewTransaction(paymentDate, project);
+
         monthlyTax += project.getFinalPayment() * 0.10;
 
+        actualProjects.remove(project);
+        System.out.println("Successfully returned project to client. Payment value: " + project.getFinalPayment() + ", estimated payment date: " + Game.getGameDate().plusDays(project.getEstimatedPaymentDate())
+        );
         return true;
+    }
+
+    private void returnBugged(Project project) {
+        System.out.println("This client will not work with you anymore, because project was bugged.");
+        Game.removeClient(project.getClient());
+
     }
 
     public Owner getOwner() {
