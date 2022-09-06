@@ -1,7 +1,8 @@
 package people;
 
-import main.people.enums.Position;
-import main.people.enums.Seniority;
+
+import people.enums.Position;
+import people.enums.Seniority;
 
 public class Contractor extends Human{
 

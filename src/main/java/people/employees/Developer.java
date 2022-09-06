@@ -1,10 +1,13 @@
 package people.employees;
 
+import helpers.Randomizer;
+import jobs.Project;
+import jobs.enums.TechStack;
 import lombok.Getter;
 import lombok.ToString;
-import main.helpers.Randomizer;
-import main.jobs.Project;
-import main.jobs.enums.TechStack;
+import people.enums.Position;
+import people.enums.Seniority;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.List;
 import static java.lang.Double.parseDouble;
 
 @ToString
-public class Developer extends main.people.employees.Employee {
+public class Developer extends Employee {
     private static final int BASE_SENIOR_SALARY = 12000;
     private static final int BASE_MID_SALARY = 5000;
     private static final int BASE_JUNIOR_SALARY = 3000;
@@ -23,7 +26,7 @@ public class Developer extends main.people.employees.Employee {
     private final LinkedList<TechStack> skills;
 
     public Developer() {
-        super(DEVELOPER);
+        super(Position.DEVELOPER);
         this.seniority = Seniority.values()[Randomizer.generateRandomValue(Seniority.values().length)];
         this.skills = generateSkills();
         setSalary(getBaseSalary() * getSkillsMultiplier());

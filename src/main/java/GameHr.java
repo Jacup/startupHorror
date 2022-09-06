@@ -1,16 +1,11 @@
-import main.helpers.Console;
-import main.helpers.UserActions;
-import main.java.Company;
-import main.people.employees.Employee;
-import main.people.enums.Position;
+import helpers.UserActions;
+import people.employees.Employee;
+import people.enums.Position;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import static main.java.Company.HIRE_COST;
-
 
 public class GameHr {
     private static final int START_EMPLOYEES = 10;
@@ -132,7 +127,7 @@ public class GameHr {
         return false;
     }
 
-    private void printEmployees(List<Employee> employees) {
+    private void printEmployees(LinkedList<Employee> employees) {
         for (int i = 1; i <= employees.size(); i++)
             System.out.println(Game.TAB + i + ". " + employees.get(i - 1));
         System.out.println(Game.TAB + 0 + ". Go back");

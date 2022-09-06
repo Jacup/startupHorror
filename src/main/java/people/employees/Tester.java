@@ -1,8 +1,8 @@
 package people.employees;
 
-import main.helpers.Randomizer;
-import main.jobs.Project;
-import main.people.enums.Position;
+import helpers.Randomizer;
+import jobs.Project;
+import people.enums.Position;
 
 import java.util.LinkedList;
 

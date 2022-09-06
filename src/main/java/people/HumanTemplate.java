@@ -1,6 +1,6 @@
 package people;
 
-import main.helpers.Randomizer;
+import helpers.Randomizer;
 
 import java.util.ArrayList;
 import java.util.List;

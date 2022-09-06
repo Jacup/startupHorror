@@ -1,10 +1,12 @@
 package jobs;
 
+import helpers.Randomizer;
+import jobs.enums.DifficultyLevel;
+import jobs.enums.TechStack;
 import lombok.Getter;
 import lombok.Setter;
-import main.helpers.Randomizer;
-import main.jobs.enums.DifficultyLevel;
-import main.jobs.enums.TechStack;
+import people.Client;
+import people.enums.Seniority;
 
 import java.time.LocalDate;
 import java.util.Arrays;

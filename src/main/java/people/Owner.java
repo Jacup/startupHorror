@@ -1,7 +1,7 @@
 package people;
 
-import main.jobs.Project;
-import main.jobs.enums.TechStack;
+import jobs.Project;
+import jobs.enums.TechStack;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

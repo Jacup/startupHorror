@@ -1,4 +1,4 @@
-package main.jobs.enums;
+package jobs.enums;
 
 public enum DifficultyLevel {
     EASY, MEDIUM, HARD

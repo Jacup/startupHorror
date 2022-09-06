@@ -1,12 +1,12 @@
 package people.employees;
 
+import helpers.Randomizer;
 import lombok.Getter;
 import lombok.Setter;
-import main.helpers.Randomizer;
-import main.people.Human;
-import main.people.HumanTemplate;
-import main.people.enums.Position;
-import main.people.interfaces.Worker;
+import people.Human;
+import people.HumanTemplate;
+import people.enums.Position;
+import people.interfaces.Worker;
 
 public abstract class Employee extends Human implements Worker {
     private static final int SICKNESS_CHANCE = 3;

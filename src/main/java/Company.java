@@ -1,17 +1,17 @@
+import helpers.Randomizer;
+import jobs.Project;
 import lombok.Getter;
-import main.helpers.Randomizer;
-import main.jobs.Project;
-import main.people.HumanTemplate;
-import main.people.Owner;
-import main.people.employees.Developer;
-import main.people.employees.Employee;
-import main.people.employees.Sales;
-import main.people.employees.Tester;
-import main.people.enums.Position;
+import people.HumanTemplate;
+import people.Owner;
+import people.employees.Developer;
+import people.employees.Employee;
+import people.employees.Sales;
+import people.employees.Tester;
+import people.enums.Position;
 
 import java.util.LinkedList;
 
-import static main.people.employees.Tester.DAILY_TEST_AMOUNT;
+import static people.employees.Tester.DAILY_TEST_AMOUNT;
 
 public class Company {
     public static final Double HIRE_COST = 2000.0;
