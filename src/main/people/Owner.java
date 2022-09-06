@@ -15,13 +15,11 @@ import static main.people.employees.Tester.SINGLE_TEST_VALUE;
 public class Owner extends Human {
     private final ArrayList<TechStack> skills;
     private int findClientProgress;
-    private int projectsFound;
 
     public Owner(String firstName, String lastName) {
         super(firstName, lastName);
         this.skills = new ArrayList<>(List.of(TechStack.BACKEND, TechStack.DATABASE, TechStack.FRONTEND, TechStack.PRESTASHOP, TechStack.WORDPRESS));
         this.findClientProgress = 0;
-        this.projectsFound = 0;
     }
 
     public boolean makeProgressOnFindingClients() {
@@ -29,7 +27,6 @@ public class Owner extends Human {
 
         if (findClientProgress == 4) {
             Game.generateNewProject(true);
-            projectsFound++;
             findClientProgress = 0;
             return true;
         }

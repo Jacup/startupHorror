@@ -1,5 +1,6 @@
 package main;
 
+import lombok.Getter;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.HumanTemplate;
@@ -19,8 +20,13 @@ public class Company {
     private static final Double FIRE_COST = 2000.0;
     private static final Integer TAXES_PERCENT = 30;
 
+    @Getter
     private final String name;
+
+    @Getter
     private final Owner owner;
+
+    @Getter
     private Double cash;
 
     private final LinkedList<Employee> hiredEmployees = new LinkedList<>();
@@ -42,21 +48,12 @@ public class Company {
         return true;
     }
 
-    // company
-    public String getName() {
-        return name;
-    }
-
     private Double generateRandomCashAmount() {
         return (double) Randomizer.generateRandomValue(10000, 20000);
     }
 
     private boolean haveEnoughCash(Double value) {
         return cash >= value;
-    }
-
-    public Double getCash() {
-        return cash;
     }
 
     public void addCash(Double value) {
@@ -255,10 +252,6 @@ public class Company {
         System.out.println("This client will not work with you anymore, because project was bugged.");
         Game.removeClient(project.getClient());
 
-    }
-
-    public Owner getOwner() {
-        return owner;
     }
 
     public Integer getDaysSpendOnTaxes() {

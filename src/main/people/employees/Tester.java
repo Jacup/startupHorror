@@ -18,9 +18,6 @@ public class Tester extends Employee {
         setSalary(generateSalary());
     }
 
-
-    // public methods
-
     @Override
     public void goToWork(Project project) {
         var bugsChance = project.getBugsChance();
@@ -31,9 +28,6 @@ public class Tester extends Employee {
         project.removeBugs(SINGLE_TEST_VALUE);
         System.out.println(Game.TAB + "tested " + project.getName());
     }
-
-
-    // private methods
 
     private Double generateSalary() {
         return (double) Randomizer.generateRandomValue((int) (BASE_SALARY * 0.8), (int) (BASE_SALARY * 1.8));

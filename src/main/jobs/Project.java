@@ -1,5 +1,7 @@
 package main.jobs;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.Game;
 import main.helpers.Randomizer;
 import main.jobs.enums.DifficultyLevel;
@@ -18,22 +20,48 @@ public class Project extends ProjectTemplate {
     private static final int DEFAULT_PAYMENT_DELAY = 10;
     public static final Double DEFAULT_DEADLINE_PENALTY = 0.2;
 
+    @Getter
     private final String name;
+
+    @Getter
     private final Client client;
+
+    @Getter
     private final DifficultyLevel difficultyLevel;
 
+    @Getter
     private final Integer deadlineDays;
+
+    @Getter
     private final Double deadlinePenalty;
+
+    @Getter
     private LocalDate actualDeadline;
+
+    @Getter
     private Double bugChance = 0.0;
 
+    @Getter
     private boolean isFinished;
+
+    @Getter
+    @Setter
     private boolean developedByOwner;
+
+    @Getter
     private final Integer paymentDelayDays;
+
+    @Getter
     private final Double payment;
+
+    @Getter
     private Double finalPayment;
 
+    @Getter
     private final HashMap<TechStack, Integer> techStackAndWorkload;
+
+    @Getter
+    @Setter
     private HashMap<TechStack, Integer> workLeft;
 
     public Project(Client client) {
@@ -50,41 +78,8 @@ public class Project extends ProjectTemplate {
         this.developedByOwner = false;
     }
 
-    // public getters and setters
-    public String getName() {
-        return name;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public Integer getDeadlineDays() {
-        return deadlineDays;
-    }
-
-    public Double getDeadlinePenalty() {
-        return deadlinePenalty;
-    }
-
-    public LocalDate getActualDeadline() {
-        return actualDeadline;
-    }
-
-    public Integer getPaymentDelayDays() {
-        return paymentDelayDays;
-    }
-
     public Integer getEstimatedPaymentDate() {
         return DEFAULT_PAYMENT_DELAY;
-    }
-
-    public Double getPayment() {
-        return payment;
-    }
-
-    public Double getBugsChance() {
-        return bugChance;
     }
 
     public String getBugsChance(boolean asPercentage) {
@@ -94,26 +89,6 @@ public class Project extends ProjectTemplate {
         } else return bugChance.toString();
     }
 
-    public DifficultyLevel getDifficultyLevel() {
-        return difficultyLevel;
-    }
-
-    public HashMap<TechStack, Integer> getTechStackAndWorkload() {
-        return techStackAndWorkload;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
-    }
-
-    public HashMap<TechStack, Integer> getWorkLeft() {
-        return workLeft;
-    }
-
-    public void setWorkLeft(HashMap<TechStack, Integer> workLeft) {
-        this.workLeft = workLeft;
-    }
-
     public int getDaysLeft() {
         var days = workLeft.values();
         var counter = 0;
@@ -121,14 +96,6 @@ public class Project extends ProjectTemplate {
             counter += day;
         }
         return counter;
-    }
-
-    public boolean isDevelopedByOwner() {
-        return developedByOwner;
-    }
-
-    public void setDevelopedByOwner(boolean developedByOwner) {
-        this.developedByOwner = developedByOwner;
     }
 
     @Override
@@ -149,10 +116,6 @@ public class Project extends ProjectTemplate {
         if (client.getType() == Client.ClientType.MTHRFCKR) {
             if (Randomizer.draw(1)) finalPayment = 0.0;
         }
-    }
-
-    public Double getFinalPayment() {
-        return finalPayment;
     }
 
     public boolean isBugged() {

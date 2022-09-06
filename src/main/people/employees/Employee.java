@@ -1,5 +1,7 @@
 package main.people.employees;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.helpers.Randomizer;
 import main.people.Human;
 import main.people.HumanTemplate;
@@ -9,7 +11,12 @@ import main.people.interfaces.Worker;
 public abstract class Employee extends Human implements Worker {
     private static final int SICKNESS_CHANCE = 3;
 
+    @Getter
+    @Setter
     protected Position position;
+
+    @Getter
+    @Setter
     protected Double salary;
     private Double cash;
 
@@ -43,18 +50,6 @@ public abstract class Employee extends Human implements Worker {
 
     public boolean isSales() {
         return position == Position.SALES;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public Double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Double salary) {
-        this.salary = salary;
     }
 
     public void addCash(Double amount) {
