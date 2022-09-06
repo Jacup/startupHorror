@@ -1,4 +1,4 @@
-package main.jobs;
+package jobs;
 
 import java.util.LinkedList;
 import java.util.List;

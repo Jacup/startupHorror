@@ -1,16 +1,11 @@
-package main.people;
+package people;
 
-import main.Company;
-import main.Game;
 import main.jobs.Project;
 import main.jobs.enums.TechStack;
-import main.people.enums.Seniority;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static main.people.employees.Tester.SINGLE_TEST_VALUE;
 
 public class Owner extends Human {
     private final ArrayList<TechStack> skills;

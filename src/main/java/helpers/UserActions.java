@@ -1,4 +1,4 @@
-package main.helpers;
+package helpers;
 
 import java.util.Scanner;
 
@@ -10,10 +10,6 @@ public class UserActions {
         System.out.println("Press Enter key to continue...");
 
         s.nextLine();
-    }
-
-    public static byte getUserInputByte() {
-        return getUserInputByte(127);
     }
 
     public static byte getUserInputByte(int maxValue) {

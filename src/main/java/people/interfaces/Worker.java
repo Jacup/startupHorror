@@ -1,4 +1,4 @@
-package main.people.interfaces;
+package people.interfaces;
 
 import main.jobs.Project;
 

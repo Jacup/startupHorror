@@ -1,6 +1,5 @@
-package main.people.employees;
+package people.employees;
 
-import main.Game;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.enums.Position;
@@ -20,7 +19,7 @@ public class Tester extends Employee {
 
     @Override
     public void goToWork(Project project) {
-        var bugsChance = project.getBugsChance();
+        var bugsChance = project.getBugChance();
         if (bugsChance < SINGLE_TEST_VALUE) {
             return;
         }
@@ -35,7 +34,7 @@ public class Tester extends Employee {
 
     public Project getFirstValidProject(LinkedList<Project> projects) {
         for (Project project : projects) {
-            var bugsChance = project.getBugsChance();
+            var bugsChance = project.getBugChance();
 
             if (bugsChance >= SINGLE_TEST_VALUE) {
                 return project;

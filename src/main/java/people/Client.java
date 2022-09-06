@@ -1,4 +1,4 @@
-package main.people;
+package people;
 
 import lombok.Getter;
 import main.helpers.Randomizer;

@@ -1,5 +1,3 @@
-package main;
-
 import main.helpers.Console;
 import main.helpers.Randomizer;
 import main.helpers.UserActions;

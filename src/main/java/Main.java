@@ -1,5 +1,3 @@
-package main;
-
 import java.util.Scanner;
 
 public class Main {
@@ -12,7 +10,7 @@ public class Main {
         var scanner = new Scanner(System.in);
         scanner.nextLine();
 
-        var game = new Game();
+        var game = new main.Game();
         game.setup();
         game.play();
      }

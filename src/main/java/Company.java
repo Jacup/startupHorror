@@ -1,5 +1,3 @@
-package main;
-
 import lombok.Getter;
 import main.helpers.Randomizer;
 import main.jobs.Project;

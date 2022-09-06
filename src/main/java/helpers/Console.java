@@ -1,10 +1,8 @@
-package main.helpers;
+package helpers;
 
-import main.jobs.Project;
+import jobs.Project;
 
 import java.util.List;
-
-import static main.Game.TAB;
 
 public class Console {
     public static void printList(List<String> options) {

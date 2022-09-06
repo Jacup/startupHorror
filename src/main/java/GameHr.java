@@ -1,7 +1,6 @@
-package main;
-
 import main.helpers.Console;
 import main.helpers.UserActions;
+import main.java.Company;
 import main.people.employees.Employee;
 import main.people.enums.Position;
 
@@ -10,7 +9,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static main.Company.HIRE_COST;
+import static main.java.Company.HIRE_COST;
+
 
 public class GameHr {
     private static final int START_EMPLOYEES = 10;

@@ -1,6 +1,5 @@
-package main.people.employees;
+package people.employees;
 
-import main.Game;
 import main.helpers.Randomizer;
 import main.jobs.Project;
 import main.people.enums.Position;

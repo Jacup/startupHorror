@@ -1,4 +1,4 @@
-package main.people;
+package people;
 
 import main.people.enums.Position;
 import main.people.enums.Seniority;

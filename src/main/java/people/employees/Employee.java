@@ -1,4 +1,4 @@
-package main.people.employees;
+package people.employees;
 
 import lombok.Getter;
 import lombok.Setter;

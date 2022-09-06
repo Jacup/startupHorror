@@ -1,4 +1,4 @@
-package main.people.enums;
+package people.enums;
 
 public enum Position {
     DEVELOPER, TESTER, SALES,
