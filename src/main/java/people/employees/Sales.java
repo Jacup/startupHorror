@@ -1,6 +1,8 @@
 package people.employees;
 
+import gameplay.Game;
 import helpers.Randomizer;
+import jobs.Project;
 import people.enums.Position;
 
 public class Sales extends Employee {
@@ -29,8 +31,13 @@ public class Sales extends Employee {
         }
     }
 
+    // private methods
+    private Double generateSalary() {
+        return (double) Randomizer.generateRandomValue((int) (BASE_SALARY * 0.8), BASE_SALARY * 2);
+    }
+
     @Override
-    public void goToWork() {
+    public void goToWork(Project project) {
         System.out.println("WorkSales");
         if (isSick()) {
             System.out.println("Salesman " + getName() + " is sick today.");
@@ -38,10 +45,5 @@ public class Sales extends Employee {
         }
 
         findNewProject();
-    }
-
-    // private methods
-    private Double generateSalary() {
-        return (double) Randomizer.generateRandomValue((int) (BASE_SALARY * 0.8), BASE_SALARY * 2);
     }
 }

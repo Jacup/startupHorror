@@ -1,3 +1,5 @@
+import gameplay.Game;
+
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +12,7 @@ public class Main {
         var scanner = new Scanner(System.in);
         scanner.nextLine();
 
-        var game = new main.Game();
+        var game = new Game();
         game.setup();
         game.play();
      }

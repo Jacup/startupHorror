@@ -1,3 +1,5 @@
+package gameplay;
+
 import helpers.Randomizer;
 import jobs.Project;
 import lombok.Getter;
@@ -194,7 +196,7 @@ public class Company {
         var sales = getHiredSales();
 
         for (var salesman : sales) {
-            salesman.goToWork();
+            salesman.goToWork(actualProjects.getFirst());
         }
     }
 

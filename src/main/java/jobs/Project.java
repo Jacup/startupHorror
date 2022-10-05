@@ -1,5 +1,6 @@
 package jobs;
 
+import gameplay.Game;
 import helpers.Randomizer;
 import jobs.enums.DifficultyLevel;
 import jobs.enums.TechStack;
@@ -79,13 +80,6 @@ public class Project extends ProjectTemplate {
 
     public Integer getEstimatedPaymentDate() {
         return DEFAULT_PAYMENT_DELAY;
-    }
-
-    public String getBugsChance(boolean asPercentage) {
-        if (asPercentage) {
-            return bugChance * 100 + "%";
-//            return Game.decimalFormat.format(bugChance * 100) + "%";
-        } else return bugChance.toString();
     }
 
     public int getDaysLeft() {

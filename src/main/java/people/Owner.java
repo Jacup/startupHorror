@@ -1,11 +1,16 @@
 package people;
 
+import gameplay.Company;
+import gameplay.Game;
 import jobs.Project;
 import jobs.enums.TechStack;
+import people.enums.Seniority;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static people.employees.Tester.SINGLE_TEST_VALUE;
 
 public class Owner extends Human {
     private final ArrayList<TechStack> skills;
@@ -56,7 +61,7 @@ public class Owner extends Human {
 
     public Project getFirstValidProjectToTest(LinkedList<Project> projects) {
         for (Project project : projects) {
-            var bugsChance = project.getBugsChance();
+            var bugsChance = project.getBugChance();
 
             if (bugsChance >= SINGLE_TEST_VALUE) {
                 return project;
@@ -84,7 +89,7 @@ public class Owner extends Human {
     }
 
     public boolean goTesting(Project project) {
-        var bugsChance = project.getBugsChance();
+        var bugsChance = project.getBugChance();
         if (bugsChance < SINGLE_TEST_VALUE) {
             return false;
         }

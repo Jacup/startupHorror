@@ -1,16 +1,17 @@
-import main.helpers.Console;
-import main.helpers.Randomizer;
-import main.helpers.UserActions;
-import main.jobs.Project;
-import main.jobs.enums.DifficultyLevel;
-import main.people.Client;
-import main.people.enums.Position;
+package gameplay;
 
+import helpers.Console;
+import helpers.Randomizer;
+import helpers.UserActions;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Predicate;
+import jobs.Project;
+import jobs.enums.DifficultyLevel;
+import people.Client;
+import people.enums.Position;
 
 public class Game {
     public static final String TAB = "    ";
@@ -50,6 +51,9 @@ public class Game {
         System.out.println("\n\n\nSorry. You lost. ");
         UserActions.pressEnterKeyToContinue();
         System.exit(1);
+    }
+
+    public static void removeClient(Client client) {
     }
 
     public void setup() {
@@ -348,7 +352,7 @@ public class Game {
                 System.out.println("Projects ready to return:");
 
                 for (var project : completedProjects) {
-                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugsChance(true) + ", Deadline: " + project.getActualDeadline());
+                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugChance() + ", Deadline: " + project.getActualDeadline());
                 }
             }
 
@@ -356,7 +360,7 @@ public class Game {
                 System.out.println("Current projects: ");
 
                 for (var project : currentProjects) {
-                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugsChance(true) + ", work left: " + project.getWorkLeft() + ", Deadline: " + project.getActualDeadline());
+                    System.out.println(TAB + project.getName() + ", bugged in " + project.getBugChance() + ", work left: " + project.getWorkLeft() + ", Deadline: " + project.getActualDeadline());
                 }
             }
         }

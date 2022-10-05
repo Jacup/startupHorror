@@ -1,3 +1,6 @@
+package gameplay;
+
+import helpers.Console;
 import helpers.UserActions;
 import people.employees.Employee;
 import people.enums.Position;
@@ -6,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import static gameplay.Company.HIRE_COST;
 
 public class GameHr {
     private static final int START_EMPLOYEES = 10;

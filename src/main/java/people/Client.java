@@ -1,7 +1,7 @@
 package people;
 
+import helpers.Randomizer;
 import lombok.Getter;
-import main.helpers.Randomizer;
 
 public class Client extends Human {
 
