@@ -26,11 +26,13 @@ public class Game {
     private static LinkedList<Project> availableProjects;
 
     private static int successfulProjects;
-    private static int gameDay;
-    private static LocalDate gameDate;
+
+    private DifficultyLevel difficultyLvl;
 
     private final Scanner scanner;
     private final GameHr gameHr;
+    private static GameTime gameTime;
+
     private Company company;
 
     public Game() {
@@ -39,12 +41,11 @@ public class Game {
         availableClients = new LinkedList<>();
         availableProjects = new LinkedList<>();
         successfulProjects = 0;
-        gameDate = LocalDate.of(2022, 1, 1);
-        gameDay = 1;
+        gameTime = new GameTime();
     }
 
     public static LocalDate getGameDate() {
-        return gameDate;
+        return gameTime.getLocalDate();
     }
 
     public static void lostGame() {
@@ -67,7 +68,7 @@ public class Game {
         while (gameIsContinued()) {
             if (dayActivities()) {
                 routines();
-                if (isWorkDay(gameDate)) company.performWork();
+                if (isWorkDay(gameTime.getLocalDate())) company.performWork();
                 nextDay();
                 UserActions.pressEnterKeyToContinue();
             }
@@ -98,8 +99,8 @@ public class Game {
     }
 
     private void getPaymentsForProjects() {
-        if (projectTransactions.containsKey(gameDate)) {
-            var project = projectTransactions.get(gameDate);
+        if (projectTransactions.containsKey(gameTime.getLocalDate())) {
+            var project = projectTransactions.get(gameTime.getLocalDate());
             company.addCash(project.getFinalPayment());
 
             if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD))
@@ -108,7 +109,7 @@ public class Game {
     }
 
     private void monthlyRoutines() {
-        if (gameDate.getDayOfMonth() == gameDate.lengthOfMonth()) {
+        if (gameTime.getLocalDate().getDayOfMonth() == gameTime.getLocalDate().lengthOfMonth()) {
             // tax office
             if (company.getDaysSpendOnTaxes() < 2) {
                 System.out.println("The tax office shuts down your business because you fail to comply with tax obligations.");
@@ -125,8 +126,8 @@ public class Game {
     }
 
     private static void nextDay() {
-        gameDay += 1;
-        gameDate = gameDate.plusDays(1);
+        gameTime.setGameDay(gameTime.getGameDay() + 1);
+        gameTime.incrementLocalDate();
     }
 
     /**
@@ -329,7 +330,7 @@ public class Game {
 
         // cash
         String cashMsg = "Your cash: " + company.getCash();
-        String dateMsg = gameDate.getDayOfWeek().toString() + ", " + gameDate + " - Day " + gameDay;
+        String dateMsg = gameTime.getLocalDate().getDayOfWeek().toString() + ", " + gameTime.getLocalDate() + " - Day " + gameTime.getGameDay();
 
         System.out.println("-".repeat(80));
         System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
@@ -410,5 +411,10 @@ public class Game {
 
     public static void addNewTransaction(LocalDate date, Project project) {
         projectTransactions.put(date, project);
+    }
+
+    //WA for getting instance of game in other classes, will be fixed later.
+    public Game getInstance() {
+        return this;
     }
 }
