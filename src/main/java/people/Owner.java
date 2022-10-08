@@ -16,8 +16,8 @@ public class Owner extends Human {
     private final ArrayList<TechStack> skills;
     private int findClientProgress;
 
-    public Owner(String firstName, String lastName) {
-        super(firstName, lastName);
+    public Owner() {
+        super();
         this.skills = new ArrayList<>(List.of(TechStack.BACKEND, TechStack.DATABASE, TechStack.FRONTEND, TechStack.PRESTASHOP, TechStack.WORDPRESS));
         this.findClientProgress = 0;
     }

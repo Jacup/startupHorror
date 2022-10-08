@@ -10,9 +10,12 @@ import java.util.*;
 import java.util.function.Predicate;
 import jobs.Project;
 import jobs.enums.DifficultyLevel;
+import lombok.Builder;
+import lombok.Singular;
 import people.Client;
 import people.enums.Position;
 
+@Builder
 public class Game {
     public static final String TAB = "    ";
     public static final String DECIMAL_FORMATTER = "#.##";
@@ -32,6 +35,9 @@ public class Game {
     private final Scanner scanner;
     private final GameHr gameHr;
     private static GameTime gameTime;
+
+    @Singular
+    private List<Player> players;
 
     private Company company;
 
@@ -127,7 +133,7 @@ public class Game {
 
     private static void nextDay() {
         gameTime.setGameDay(gameTime.getGameDay() + 1);
-        gameTime.incrementLocalDate();
+        gameTime.nextDay();
     }
 
     /**

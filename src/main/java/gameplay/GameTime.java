@@ -14,7 +14,7 @@ public class GameTime {
     @Setter
     private int gameDay = 1;
 
-    public void incrementLocalDate() {
+    public void nextDay() {
         var x = localDate.plusDays(1);
     }
 }

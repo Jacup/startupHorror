@@ -24,9 +24,6 @@ public class Company {
     private final String name;
 
     @Getter
-    private final Owner owner;
-
-    @Getter
     private Double cash;
 
     private final LinkedList<Employee> hiredEmployees = new LinkedList<>();
@@ -38,7 +35,6 @@ public class Company {
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
-        this.owner = new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
         this.daysSpendOnTaxes = 0;
         this.monthlyTax = 0.0;
     }
