@@ -8,13 +8,13 @@ import java.time.LocalDate;
 public class GameTime {
 
     @Getter
-    private final LocalDate localDate = LocalDate.of(2022, 1, 1);
+    private LocalDate localDate = LocalDate.of(2022, 1, 1);
 
     @Getter
     @Setter
     private int gameDay = 1;
 
     public void nextDay() {
-        var x = localDate.plusDays(1);
+        localDate = localDate.plusDays(1);
     }
 }

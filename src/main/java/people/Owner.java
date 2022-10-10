@@ -40,8 +40,9 @@ public class Owner extends Human {
         var list = new ArrayList<Project>();
 
         for (var project : actualProjects) {
-            var candidate = company.getOwner().checkProject(project);
-            if (candidate != null) list.add(candidate);
+            //var candidate = company.getOwner().checkProject(project);
+            Object candidate = null;
+            if (candidate != null) list.add((Project) candidate);
         }
 
         return list;

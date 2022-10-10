@@ -13,7 +13,7 @@ public class Client extends Human {
     }
 
     public Client() {
-        super(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
+        super();
         this.type = ClientType.values()[Randomizer.generateRandomValue(ClientType.values().length)];
     }
 

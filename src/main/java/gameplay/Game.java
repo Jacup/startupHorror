@@ -15,7 +15,6 @@ import lombok.Singular;
 import people.Client;
 import people.enums.Position;
 
-@Builder
 public class Game {
     public static final String TAB = "    ";
     public static final String DECIMAL_FORMATTER = "#.##";
@@ -115,7 +114,7 @@ public class Game {
     }
 
     private void monthlyRoutines() {
-        if (gameTime.getLocalDate().getDayOfMonth() == gameTime.getLocalDate().lengthOfMonth()) {
+        if (gameTime.getGameDay() == gameTime.getLocalDate().lengthOfMonth()) {
             // tax office
             if (company.getDaysSpendOnTaxes() < 2) {
                 System.out.println("The tax office shuts down your business because you fail to comply with tax obligations.");
@@ -237,9 +236,9 @@ public class Game {
      * @return true if day is ended.
      */
     private boolean searchClients() {
-        if (company.getOwner().makeProgressOnFindingClients()) {
-            System.out.println("Congratulations, you have found new client with available project!");
-        }
+       // if (company.getOwner().makeProgressOnFindingClients()) {
+      //      System.out.println("Congratulations, you have found new client with available project!");
+      //  }
 
         return true;
     }
@@ -250,8 +249,8 @@ public class Game {
      * @return true if day is ended.
      */
     private boolean goProgramming() {
-        var owner = company.getOwner();
-        var projectsForOwner = owner.getProjectsForOwnerToProgram(company);
+        //var owner = company.getOwner();
+        List<Project> projectsForOwner = null;
 
         if (projectsForOwner == null || projectsForOwner.isEmpty()) {
             System.out.println("You don't have any project to work on.");
@@ -266,11 +265,13 @@ public class Game {
         var chosenProject = projectsForOwner.get(choice - 1);
         if (chosenProject == null) return false;
 
-        return owner.goProgramming(chosenProject);
+        //return owner.goProgramming(chosenProject);
+        return false;
     }
 
     private boolean goTesting() {
-        var owner = company.getOwner();
+        //var owner = company.getOwner();
+        List<Project> owner = null;
 
         var projects = company.getActualProjects();
         if (projects == null) {
@@ -282,10 +283,12 @@ public class Game {
 
         for (int i = 0; i < 3; i++) {
 
-            var chosenProject = owner.getFirstValidProjectToTest(projects);
+            //var chosenProject = owner.getFirstValidProjectToTest(projects);
+            Object chosenProject = null;
             if (chosenProject == null) return false;
 
-            boolean anySingleActionIsSuccessful = owner.goTesting(chosenProject);
+            //boolean anySingleActionIsSuccessful = owner.goTesting(chosenProject);
+            boolean anySingleActionIsSuccessful = false;
             if (anySingleActionIsSuccessful) isSuccessful = true;
         }
         return isSuccessful;
@@ -342,7 +345,7 @@ public class Game {
         System.out.println(cashMsg + " ".repeat(80 - cashMsg.length() - dateMsg.length()) + dateMsg);
 
         // taxes
-        String taxes = "Days spend on taxes in " + getGameDate().getMonth().toString().toLowerCase() + ": " + company.getDaysSpendOnTaxes();
+        String taxes = "Days spend on taxes in " + getGameDate().getMonth() + ": " + company.getDaysSpendOnTaxes();
         System.out.println(taxes);
 
         if (successfulProjects > 0) {
