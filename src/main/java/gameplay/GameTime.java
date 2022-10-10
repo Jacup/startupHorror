@@ -16,5 +16,6 @@ public class GameTime {
 
     public void nextDay() {
         localDate = localDate.plusDays(1);
+        gameDay++;
     }
 }

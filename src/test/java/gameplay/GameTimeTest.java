@@ -4,12 +4,11 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 
-
 class GameTimeTest {
     static GameTime gameTime;
 
     @BeforeEach
-    void initializeComponenets() {
+    void initializeComponent() {
         gameTime = new GameTime();
     }
 
