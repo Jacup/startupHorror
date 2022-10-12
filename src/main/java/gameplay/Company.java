@@ -3,8 +3,6 @@ package gameplay;
 import helpers.Randomizer;
 import jobs.Project;
 import lombok.Getter;
-import people.HumanTemplate;
-import people.Owner;
 import people.employees.Developer;
 import people.employees.Employee;
 import people.employees.Sales;

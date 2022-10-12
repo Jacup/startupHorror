@@ -18,4 +18,5 @@ public class GameTime {
         localDate = localDate.plusDays(1);
         gameDay++;
     }
+
 }
