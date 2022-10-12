@@ -131,7 +131,6 @@ public class Company {
 
             if (this.cash > salary) {
                 this.cash = cash - salary;
-                employee.addCash(salary);
             } else {
                 System.out.println("Whoops! It looks like you don't have enough money to pay salary to " + employee.getName());
                 Game.lostGame();
@@ -250,10 +249,6 @@ public class Company {
 
     public Integer getDaysSpendOnTaxes() {
         return daysSpendOnTaxes;
-    }
-
-    public void addDaySpendOnTaxes() {
-        daysSpendOnTaxes++;
     }
 
     public void resetTaxDays() {
