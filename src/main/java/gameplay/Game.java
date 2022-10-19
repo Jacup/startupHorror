@@ -3,7 +3,6 @@ package gameplay;
 import helpers.Console;
 import helpers.Randomizer;
 import helpers.UserActions;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
 import jobs.Project;
@@ -69,7 +68,7 @@ public class Game {
             if (true) {
                 console.printDayActivities();
                 routines();
-                if (isWorkDay(gameTime.getLocalDate())) company.performWork();
+                if (gameTime.isWorkDay()) company.performWork();
                 nextDay();
                 UserActions.pressEnterKeyToContinue();
             }
@@ -83,11 +82,6 @@ public class Game {
         }
 
         return true;
-    }
-
-    private static boolean isWorkDay(LocalDate day) {
-        var dayOfWeek = day.getDayOfWeek();
-        return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
     }
 
     private void routines() {

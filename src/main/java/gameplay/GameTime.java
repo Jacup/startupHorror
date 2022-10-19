@@ -3,6 +3,7 @@ package gameplay;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class GameTime {
@@ -19,4 +20,7 @@ public class GameTime {
         gameDay++;
     }
 
+    public boolean isWorkDay() {
+        return localDate.getDayOfWeek() != DayOfWeek.SATURDAY && localDate.getDayOfWeek() != DayOfWeek.SUNDAY;
+    }
 }
