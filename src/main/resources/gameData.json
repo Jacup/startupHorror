@@ -1,0 +1,7 @@
+{
+  "difficultyLvl": "easy",
+  "successfulProjectsTarget": "3",
+  "startProjects": 5,
+  "startClients": 3,
+  "developerSalary": [3000, 6000, 12000]
+}

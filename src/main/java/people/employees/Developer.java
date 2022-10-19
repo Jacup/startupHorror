@@ -17,10 +17,6 @@ import static java.lang.Double.parseDouble;
 
 @ToString
 public class Developer extends Employee {
-    private static final int BASE_SENIOR_SALARY = 12000;
-    private static final int BASE_MID_SALARY = 5000;
-    private static final int BASE_JUNIOR_SALARY = 3000;
-
     private final Seniority seniority;
 
     @Getter
@@ -111,9 +107,9 @@ public class Developer extends Employee {
 
     private int getBaseSalary() {
         return switch (seniority) {
-            case SENIOR -> BASE_SENIOR_SALARY;
-            case MID -> BASE_MID_SALARY;
-            case JUNIOR -> BASE_JUNIOR_SALARY;
+            case SENIOR -> 2137;
+            case MID -> 2137;
+            case JUNIOR -> 2137;
         };
     }
 
