@@ -53,9 +53,6 @@ public class Game {
         System.exit(1);
     }
 
-    public static void removeClient(Client client) {
-    }
-
     public void setup() {
         company = createCompany();
         gameHr.generateEmployees();
@@ -162,9 +159,5 @@ public class Game {
         } else {
             generateNewProject();
         }
-    }
-
-    public static void addNewTransaction(LocalDate date, Project project) {
-        projectTransactions.put(date, project);
     }
 }

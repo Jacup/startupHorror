@@ -42,7 +42,7 @@ public class Company {
     }
 
     private boolean haveEnoughCash(Double value) {
-        return cash >= value;
+        return cash < value;
     }
 
     public void addCash(Double value) {
@@ -51,7 +51,7 @@ public class Company {
 
     // employees
     public boolean hireEmployee(Employee employee) {
-        if (!haveEnoughCash(HIRE_COST)) {
+        if (haveEnoughCash(HIRE_COST)) {
             System.out.println("You can't hire employee now, because you don't have enough money");
             return false;
         }
@@ -70,7 +70,7 @@ public class Company {
             return false;
         }
 
-        if (!haveEnoughCash(FIRE_COST)) {
+        if (haveEnoughCash(FIRE_COST)) {
             System.out.println("You can't fire employee now, because you don't have enough money");
             return false;
         }
