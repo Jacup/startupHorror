@@ -12,7 +12,7 @@ public class Contractor extends Human{
 
 
     public Contractor(String firstName, String lastName, Position position, Seniority seniority) {
-        super(firstName, lastName);
+        super();
         this.position = position;
         this.seniority = seniority;
     }

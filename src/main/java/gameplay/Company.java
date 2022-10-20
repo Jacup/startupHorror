@@ -2,14 +2,13 @@ package gameplay;
 
 import helpers.Randomizer;
 import jobs.Project;
+
 import lombok.Getter;
-import people.HumanTemplate;
-import people.Owner;
+
 import people.employees.Developer;
 import people.employees.Employee;
 import people.employees.Sales;
 import people.employees.Tester;
-import people.enums.Position;
 
 import java.util.LinkedList;
 
@@ -18,13 +17,9 @@ import static people.employees.Tester.DAILY_TEST_AMOUNT;
 public class Company {
     public static final Double HIRE_COST = 2000.0;
     private static final Double FIRE_COST = 2000.0;
-    private static final Integer TAXES_PERCENT = 30;
 
     @Getter
     private final String name;
-
-    @Getter
-    private final Owner owner;
 
     @Getter
     private Double cash;
@@ -38,14 +33,8 @@ public class Company {
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
-        this.owner = new Owner(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
         this.daysSpendOnTaxes = 0;
         this.monthlyTax = 0.0;
-    }
-
-    public boolean goToTaxOffice() {
-        this.daysSpendOnTaxes++;
-        return true;
     }
 
     private Double generateRandomCashAmount() {
@@ -53,7 +42,7 @@ public class Company {
     }
 
     private boolean haveEnoughCash(Double value) {
-        return cash >= value;
+        return cash < value;
     }
 
     public void addCash(Double value) {
@@ -62,7 +51,7 @@ public class Company {
 
     // employees
     public boolean hireEmployee(Employee employee) {
-        if (!haveEnoughCash(HIRE_COST)) {
+        if (haveEnoughCash(HIRE_COST)) {
             System.out.println("You can't hire employee now, because you don't have enough money");
             return false;
         }
@@ -81,7 +70,7 @@ public class Company {
             return false;
         }
 
-        if (!haveEnoughCash(FIRE_COST)) {
+        if (haveEnoughCash(FIRE_COST)) {
             System.out.println("You can't fire employee now, because you don't have enough money");
             return false;
         }
@@ -126,10 +115,6 @@ public class Company {
         return sales;
     }
 
-    public int getAmountOfEmployeesByType(Position position) {
-        return (int) hiredEmployees.stream().filter((employee) -> employee.getPosition().equals(position)).count();
-    }
-
     public void paySalaryToWorkers() {
         // TODO: calculate salary per day, because if someone is hired at the end of the month, he shouldn't get full salary.
         for (var employee : hiredEmployees) {
@@ -137,7 +122,6 @@ public class Company {
 
             if (this.cash > salary) {
                 this.cash = cash - salary;
-                employee.addCash(salary);
             } else {
                 System.out.println("Whoops! It looks like you don't have enough money to pay salary to " + employee.getName());
                 Game.lostGame();
@@ -200,66 +184,12 @@ public class Company {
         }
     }
 
-    // projects
-    public boolean signNewProject(Project project) {
-        actualProjects.add(project);
-        project.setActualDeadline();
-        System.out.println("\nCongratulations! Your have new project! \nDetails:");
-        System.out.println(project);
-        return true;
-    }
-
     public LinkedList<Project> getActualProjects() {
         return actualProjects;
     }
 
-    public boolean returnProject(Project project) {
-        // TODO: support for non-working projects, along with implementing testers.
-        if (!project.isFinished()) {
-            System.out.println("This project is not finished yet.");
-            return false;
-        }
-
-        var isBugged = project.isBugged();
-
-        if (isBugged) {
-            switch (project.getClient().getType()) {
-                case DEMANDING -> {
-                    if (Randomizer.draw(50)) returnBugged(project);
-                }
-                case MTHRFCKR -> {
-                    returnBugged(project);
-                    return false;
-                }
-            }
-
-        }
-
-        var paymentDate = Game.getGameDate().plusDays(project.getPaymentDelayDays());
-
-        project.setFinalPayment();
-        Game.addNewTransaction(paymentDate, project);
-
-        monthlyTax += project.getFinalPayment() * 0.10;
-
-        actualProjects.remove(project);
-        System.out.println("Successfully returned project to client. Payment value: " + project.getFinalPayment() + ", estimated payment date: " + Game.getGameDate().plusDays(project.getEstimatedPaymentDate())
-        );
-        return true;
-    }
-
-    private void returnBugged(Project project) {
-        System.out.println("This client will not work with you anymore, because project was bugged.");
-        Game.removeClient(project.getClient());
-
-    }
-
     public Integer getDaysSpendOnTaxes() {
         return daysSpendOnTaxes;
-    }
-
-    public void addDaySpendOnTaxes() {
-        daysSpendOnTaxes++;
     }
 
     public void resetTaxDays() {

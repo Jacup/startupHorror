@@ -4,7 +4,6 @@ import helpers.Randomizer;
 import lombok.Getter;
 import lombok.Setter;
 import people.Human;
-import people.HumanTemplate;
 import people.enums.Position;
 import people.interfaces.Worker;
 
@@ -18,12 +17,10 @@ public abstract class Employee extends Human implements Worker {
     @Getter
     @Setter
     protected Double salary;
-    private Double cash;
 
     public Employee(Position position) {
-        super(HumanTemplate.getRandomFirstName(), HumanTemplate.getRandomLastName());
+        super();
         this.position = position;
-        this.cash = 0.0;
     }
 
     // public methods
@@ -50,10 +47,6 @@ public abstract class Employee extends Human implements Worker {
 
     public boolean isSales() {
         return position == Position.SALES;
-    }
-
-    public void addCash(Double amount) {
-        this.cash += amount;
     }
 
     public boolean isSick() {
