@@ -8,9 +8,10 @@ import people.enums.Position;
 import java.util.LinkedList;
 
 public class Tester extends Employee {
-    private static final int BASE_SALARY = 4000;
-    public static final int DAILY_TEST_AMOUNT = 3;
-    public static final Double SINGLE_TEST_VALUE = 0.05;
+   // to be refactored to read from  file
+    private int BASE_SALARY;
+    public int DAILY_TEST_AMOUNT;
+    public Double SINGLE_TEST_VALUE;
 
 
     public Tester() {

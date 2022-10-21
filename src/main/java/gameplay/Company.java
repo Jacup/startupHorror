@@ -12,11 +12,10 @@ import people.employees.Tester;
 
 import java.util.LinkedList;
 
-import static people.employees.Tester.DAILY_TEST_AMOUNT;
-
 public class Company {
     public static final Double HIRE_COST = 2000.0;
     private static final Double FIRE_COST = 2000.0;
+    private static final double DAILY_TEST_AMOUNT = 0.05;
 
     @Getter
     private final String name;
