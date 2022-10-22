@@ -23,6 +23,7 @@ public class Company {
     @Getter
     private Double cash;
 
+    @Getter
     private final LinkedList<Employee> hiredEmployees = new LinkedList<>();
     private final LinkedList<Project> actualProjects = new LinkedList<>();
 
@@ -78,10 +79,6 @@ public class Company {
         cash -= FIRE_COST;
         System.out.println(employee.getPosition() + " " + employee.getName() + " has been fired.");
         return true;
-    }
-
-    public LinkedList<Employee> getHiredEmployees() {
-        return hiredEmployees;
     }
 
     public LinkedList<Developer> getHiredDevelopers() {

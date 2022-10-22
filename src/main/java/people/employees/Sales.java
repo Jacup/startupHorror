@@ -9,13 +9,11 @@ public class Sales extends Employee {
     private static final int BASE_SALARY = 5000;
 
     private int projectFindingProgress;
-    private int projectsFound;
 
     public Sales() {
         super(Position.SALES);
         setSalary(generateSalary());
         this.projectFindingProgress = 0;
-        this.projectsFound = 0;
     }
 
     // public methods
@@ -25,7 +23,6 @@ public class Sales extends Employee {
 
         if (projectFindingProgress == 4) {
             Game.generateNewProject(true);
-            projectsFound++;
             projectFindingProgress = 0;
             System.out.println("DEBUG: sales " + this.getName() + " found new client and available project.");
         }
