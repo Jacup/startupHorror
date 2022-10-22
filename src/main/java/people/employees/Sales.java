@@ -12,7 +12,7 @@ public class Sales extends Employee {
     private int projectsFound;
 
     public Sales() {
-        super(Position.SALES);
+        super("xd", "xd", Position.SALES);
         setSalary(generateSalary());
         this.projectFindingProgress = 0;
         this.projectsFound = 0;

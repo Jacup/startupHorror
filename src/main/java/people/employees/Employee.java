@@ -18,8 +18,8 @@ public abstract class Employee extends Human implements Worker {
     @Setter
     protected Double salary;
 
-    public Employee(Position position) {
-        super();
+    public Employee(String firstName, String lastName, Position position) {
+        super(firstName, lastName);
         this.position = position;
     }
 

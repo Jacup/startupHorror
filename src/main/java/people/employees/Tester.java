@@ -15,7 +15,7 @@ public class Tester extends Employee {
 
 
     public Tester() {
-        super(Position.TESTER);
+        super("xd", "xd", Position.TESTER);
         setSalary(generateSalary());
     }
 

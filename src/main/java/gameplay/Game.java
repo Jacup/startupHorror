@@ -8,7 +8,8 @@ import java.util.*;
 import jobs.Project;
 import jobs.enums.DifficultyLevel;
 import lombok.Singular;
-import people.Client;
+import people.Contractor;
+import people.enums.ContractorType;
 
 public class Game {
     public static final String TAB = "    ";
@@ -17,7 +18,6 @@ public class Game {
     private static final int START_PROJECTS = 3;
     private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
 
-    private static LinkedList<Client> availableClients;
     private static LinkedList<Project> availableProjects;
 
     private static int successfulProjects;
@@ -37,7 +37,6 @@ public class Game {
     public Game() {
         this.scanner = new Scanner(System.in);
         gameHr = new GameHr();
-        availableClients = new LinkedList<>();
         availableProjects = new LinkedList<>();
         successfulProjects = 0;
         gameTime = new GameTime();
@@ -93,7 +92,7 @@ public class Game {
     private void getPaymentsForProjects() {
         if (projectTransactions.containsKey(gameTime.getLocalDate())) {
             var project = projectTransactions.get(gameTime.getLocalDate());
-            company.addCash(project.getFinalPayment());
+           // company.addCash(project.getFinalPayment());
 
             if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD))
                 successfulProjects++;
@@ -131,31 +130,26 @@ public class Game {
 
     private static void generateClients() {
         for (int i = 0; i < START_CLIENTS; i++) {
-            availableClients.add(Client.generateRandomClient());
+            //availableClients.add(Client.generateRandomClient());
         }
     }
 
     private static void generateProjects() {
-        var index = Randomizer.generateRandomValue(availableClients.size());
-        var client = availableClients.get(index);
-
         for (int i = 0; i < START_PROJECTS; i++) {
-            availableProjects.add(Project.generateRandomProject(client));
+            availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
         }
     }
 
     public static void generateNewProject() {
         var index = Randomizer.generateRandomValue(availableProjects.size());
-        var client = availableClients.get(index);
 
-        availableProjects.add(Project.generateRandomProject(client));
+        availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
     }
 
     public static void generateNewProject(boolean newClient) {
         if (newClient) {
-            var client = Client.generateRandomClient();
-            availableClients.add(client);
-            availableProjects.add(Project.generateRandomProject(client));
+            var client = new Contractor("xd", "xd", ContractorType.DEMANDING);
+            availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
         } else {
             generateNewProject();
         }

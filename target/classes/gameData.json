@@ -1,0 +1,10 @@
+{
+  "difficultyLvl": "easy",
+  "successfulProjectsTarget": "3",
+  "startProjects": 5,
+  "startClients": 3,
+  "developerSalary": [3000, 6000, 12000],
+  "testerSalary": [3000, 5000],
+  "singleTestValue": "0.05",
+  "dailyTestAmount": "5"
+}

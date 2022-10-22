@@ -23,7 +23,7 @@ public class Developer extends Employee {
     private final LinkedList<TechStack> skills;
 
     public Developer() {
-        super(Position.DEVELOPER);
+        super("xd", "xd", Position.DEVELOPER);
         this.seniority = Seniority.values()[Randomizer.generateRandomValue(Seniority.values().length)];
         this.skills = generateSkills();
         setSalary(getBaseSalary() * getSkillsMultiplier());
