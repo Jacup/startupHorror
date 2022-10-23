@@ -1,6 +1,5 @@
 package people;
 
-
 import lombok.Getter;
 
 import people.enums.ContractorType;
