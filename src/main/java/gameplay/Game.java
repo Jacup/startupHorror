@@ -42,10 +42,6 @@ public class Game {
         gameTime = new GameTime();
     }
 
-    public static LocalDate getGameDate() {
-        return gameTime.getLocalDate();
-    }
-
     public static void lostGame() {
         System.out.println("\n\n\nSorry. You lost. ");
         UserActions.pressEnterKeyToContinue();
@@ -92,10 +88,7 @@ public class Game {
     private void getPaymentsForProjects() {
         if (projectTransactions.containsKey(gameTime.getLocalDate())) {
             var project = projectTransactions.get(gameTime.getLocalDate());
-           // company.addCash(project.getFinalPayment());
 
-            if (!project.isDevelopedByOwner() && project.getDifficultyLevel().equals(DifficultyLevel.HARD))
-                successfulProjects++;
         }
     }
 

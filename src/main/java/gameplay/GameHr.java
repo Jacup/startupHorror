@@ -17,8 +17,4 @@ public class GameHr {
             availableEmployees.add(Employee.generateRandomEmployee());
         }
     }
-
-    public static void removeAvailableEmployee(Employee employee) {
-        availableEmployees.remove(employee);
-    }
 }

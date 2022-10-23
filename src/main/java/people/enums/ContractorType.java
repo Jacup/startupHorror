@@ -3,23 +3,23 @@ package people.enums;
 import lombok.Getter;
 
 public enum ContractorType {
-    RELAXED(0.3, 0, 0.2, 0),
-    DEMANDING(0,0 , 0, 0.5),
-    MOTHERFUCKER(0.3, 0.05, 0, 1.0);
+    RELAXED(30, 0, 20, 0),
+    DEMANDING(0,0 , 0, 50),
+    MOTHERFUCKER(30, 5, 0, 100);
 
     @Getter
-    double delayPaymentWeekChance;
+    int delayPaymentWeekChance;
 
     @Getter
-    double delayPaymentMonthChance;
+    int delayPaymentMonthChance;
 
     @Getter
-    double avoidPunishmentForDelayChance;
+    int avoidPunishmentForDelayChance;
 
     @Getter
-    double looseContractChance;
+    int looseContractChance;
 
-    ContractorType(double delayPaymentWeekChance, double delayPaymentMonthChance, double avoidPunishmentForDelayChance, double looseContractChance) {
+    ContractorType(int delayPaymentWeekChance, int delayPaymentMonthChance, int avoidPunishmentForDelayChance, int looseContractChance) {
         this.delayPaymentWeekChance = delayPaymentWeekChance;
         this.delayPaymentMonthChance = delayPaymentMonthChance;
         this.avoidPunishmentForDelayChance = avoidPunishmentForDelayChance;

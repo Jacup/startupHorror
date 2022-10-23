@@ -40,10 +40,6 @@ public class Project extends ProjectTemplate {
     private boolean isFinished;
 
     @Getter
-    @Setter
-    private boolean developedByOwner;
-
-    @Getter
     private final Integer paymentDelayDays;
 
     @Getter
@@ -67,7 +63,6 @@ public class Project extends ProjectTemplate {
         this.payment = generatePayment();
         this.deadlinePenalty = payment * DEFAULT_DEADLINE_PENALTY;
         this.deadlineDays = generateDeadlineDays();
-        this.developedByOwner = false;
     }
 
     public int getDaysLeft() {
@@ -134,18 +129,9 @@ public class Project extends ProjectTemplate {
 
     private Integer generatePaymentDelay() {
         int paymentDelay = DEFAULT_PAYMENT_DELAY;
-        switch (contractor.getContractorType()) {
-            case RELAXED:
-                if (Randomizer.draw(30)) paymentDelay += 7;
-                break;
-            case DEMANDING:
-                break;
-            case MOTHERFUCKER:
-                int chance = Randomizer.generateRandomValue(100);
-                if (chance < 30) paymentDelay += 7;
-                else if (chance < 35) paymentDelay += 30;
-                break;
-        }
+        if(Randomizer.draw(contractor.getContractorType().getDelayPaymentWeekChance()))
+            paymentDelay += 7;
+        //tbd
 
         return paymentDelay;
     }

@@ -13,8 +13,6 @@ import people.employees.Tester;
 import java.util.LinkedList;
 
 public class Company {
-    public static final Double HIRE_COST = 2000.0;
-    private static final Double FIRE_COST = 2000.0;
     private static final double DAILY_TEST_AMOUNT = 0.05;
 
     @Getter
@@ -38,50 +36,6 @@ public class Company {
 
     private Double generateRandomCashAmount() {
         return (double) Randomizer.generateRandomValue(10000, 20000);
-    }
-
-    private boolean haveEnoughCash(Double value) {
-        return cash < value;
-    }
-
-    public void addCash(Double value) {
-        cash += value;
-    }
-
-    // employees
-    public boolean hireEmployee(Employee employee) {
-        if (haveEnoughCash(HIRE_COST)) {
-            System.out.println("You can't hire employee now, because you don't have enough money");
-            return false;
-        }
-
-        cash -= HIRE_COST;
-        hiredEmployees.add(employee);
-        GameHr.removeAvailableEmployee(employee);
-        System.out.println("Congratulations! You have hired new " + employee.getPosition());
-
-        return true;
-    }
-
-    public boolean fireEmployee(Employee employee) {
-        if (!hiredEmployees.contains(employee)) {
-            System.out.println("Something gone wrong... " + employee.getName() + " does not work here.");
-            return false;
-        }
-
-        if (haveEnoughCash(FIRE_COST)) {
-            System.out.println("You can't fire employee now, because you don't have enough money");
-            return false;
-        }
-
-        hiredEmployees.remove(employee);
-        cash -= FIRE_COST;
-        System.out.println(employee.getPosition() + " " + employee.getName() + " has been fired.");
-        return true;
-    }
-
-    public LinkedList<Employee> getHiredEmployees() {
-        return hiredEmployees;
     }
 
     public LinkedList<Developer> getHiredDevelopers() {

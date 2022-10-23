@@ -32,7 +32,7 @@ public class UserActions {
             } catch (Exception e) {
                 System.out.println("Your input is invalid.\n");
             } finally {
-                s.nextLine();
+                System.out.println();
             }
         }
         return value;
