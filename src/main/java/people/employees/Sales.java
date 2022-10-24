@@ -22,7 +22,6 @@ public class Sales extends Employee {
         System.out.println("DEBUG: sales " + this.getName() + " worked today. " + "project finding: " + projectFindingProgress);
 
         if (projectFindingProgress == 4) {
-            Game.generateNewProject(true);
             projectFindingProgress = 0;
             System.out.println("DEBUG: sales " + this.getName() + " found new client and available project.");
         }

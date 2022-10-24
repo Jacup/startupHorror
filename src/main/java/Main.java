@@ -13,7 +13,6 @@ public class Main {
         scanner.nextLine();
 
         var game = new Game();
-        game.setup();
         game.play();
      }
 

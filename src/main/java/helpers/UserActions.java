@@ -38,4 +38,7 @@ public class UserActions {
         return value;
     }
 
+    public static String getUserInputString(){
+        return s.nextLine();
+    }
 }

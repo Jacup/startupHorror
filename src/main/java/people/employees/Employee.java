@@ -37,18 +37,6 @@ public abstract class Employee extends Human implements Worker {
         return "Name: " + getFirstName() + " " + getLastName() + ", role: " + position + ", salary: " + salary;
     }
 
-    public boolean isDeveloper() {
-        return position == Position.DEVELOPER;
-    }
-
-    public boolean isTester() {
-        return position == Position.TESTER;
-    }
-
-    public boolean isSales() {
-        return position == Position.SALES;
-    }
-
     public boolean isSick() {
         return Randomizer.draw(SICKNESS_CHANCE);
     }

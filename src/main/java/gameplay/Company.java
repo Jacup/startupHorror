@@ -9,12 +9,12 @@ import people.employees.Developer;
 import people.employees.Employee;
 import people.employees.Sales;
 import people.employees.Tester;
+import people.enums.Position;
 
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class Company {
-    private static final double DAILY_TEST_AMOUNT = 0.05;
-
     @Getter
     private final String name;
 
@@ -25,13 +25,11 @@ public class Company {
     private final LinkedList<Project> actualProjects = new LinkedList<>();
 
     private Integer daysSpendOnTaxes;
-    private Double monthlyTax;
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();
         this.name = name;
         this.daysSpendOnTaxes = 0;
-        this.monthlyTax = 0.0;
     }
 
     private Double generateRandomCashAmount() {
@@ -41,8 +39,8 @@ public class Company {
     public LinkedList<Developer> getHiredDevelopers() {
         var developers = new LinkedList<Developer>();
 
-        for (Employee worker : hiredEmployees) {
-            if (worker.isDeveloper()) developers.add((Developer) worker);
+        for (Employee worker : hiredEmployees.stream().filter(e -> e.getPosition() == Position.DEVELOPER).collect(Collectors.toList())) {
+            developers.add((Developer) worker);
         }
 
         return developers;
@@ -51,8 +49,8 @@ public class Company {
     public LinkedList<Tester> getHiredTesters() {
         var testers = new LinkedList<Tester>();
 
-        for (Employee worker : hiredEmployees) {
-            if (worker.isTester()) testers.add((Tester) worker);
+        for (Employee worker : hiredEmployees.stream().filter(e -> e.getPosition() == Position.TESTER).collect(Collectors.toList())) {
+            testers.add((Tester) worker);
         }
 
         return testers;
@@ -61,8 +59,8 @@ public class Company {
     public LinkedList<Sales> getHiredSales() {
         var sales = new LinkedList<Sales>();
 
-        for (Employee worker : hiredEmployees) {
-            if (worker.isSales()) sales.add((Sales) worker);
+        for (Employee worker : hiredEmployees.stream().filter(e -> e.getPosition() == Position.SALES).collect(Collectors.toList())) {
+            sales.add((Sales) worker);
         }
 
         return sales;
@@ -121,11 +119,6 @@ public class Company {
                 continue;
             }
 
-            for (int i = 0; i < DAILY_TEST_AMOUNT; i++) {
-
-                var validProject = tester.getFirstValidProject(projects);
-                if (validProject != null) tester.goToWork(validProject);
-            }
         }
     }
 
@@ -149,15 +142,4 @@ public class Company {
         daysSpendOnTaxes = 0;
     }
 
-    public void payMonthlyTaxes() {
-        if (cash < monthlyTax) {
-            System.out.println("You don't have enough money to pax monthly taxes from your incomes");
-            System.out.println("Your cash: " + cash + ". Taxes to pay this month: " + monthlyTax);
-            Game.lostGame();
-        } else {
-            cash -= monthlyTax;
-            System.out.println("Successfully paid " + monthlyTax + " monthly taxes.");
-            monthlyTax = 0.0;
-        }
-    }
 }

@@ -79,12 +79,6 @@ public class Project extends ProjectTemplate {
         return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
     }
 
-    public String toString(boolean showWorkLeft) {
-        if (showWorkLeft)
-            return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + workLeft.toString();
-        return toString();
-    }
-
     // public methods
 
     public void makeProgressByTech(TechStack tech, Seniority seniority) {

@@ -1,45 +1,26 @@
 package gameplay;
 
 import helpers.Console;
-import helpers.Randomizer;
 import helpers.UserActions;
-import java.time.LocalDate;
-import java.util.*;
-import jobs.Project;
 import jobs.enums.DifficultyLevel;
-import lombok.Singular;
-import people.Contractor;
-import people.enums.ContractorType;
 
 public class Game {
     public static final String TAB = "    ";
 
-    private static final int START_CLIENTS = 5;
-    private static final int START_PROJECTS = 3;
-    private static final HashMap<LocalDate, Project> projectTransactions = new HashMap<>();
-
-    private static LinkedList<Project> availableProjects;
-
     private static int successfulProjects;
 
     private DifficultyLevel difficultyLvl;
+
     private final Console console = new Console();
 
-    private final Scanner scanner;
-    private final GameHr gameHr;
     private static GameTime gameTime;
-
-    @Singular
-    private List<Player> players;
 
     private Company company;
 
     public Game() {
-        this.scanner = new Scanner(System.in);
-        gameHr = new GameHr();
-        availableProjects = new LinkedList<>();
         successfulProjects = 0;
         gameTime = new GameTime();
+        company = createCompany();
     }
 
     public static void lostGame() {
@@ -48,20 +29,13 @@ public class Game {
         System.exit(1);
     }
 
-    public void setup() {
-        company = createCompany();
-        gameHr.generateEmployees();
-        generateClients();
-        generateProjects();
-    }
-
     public void play() {
         while (gameIsContinued()) {
             if (true) {
                 console.printDayActivities();
                 routines();
                 if (gameTime.isWorkDay()) company.performWork();
-                nextDay();
+                gameTime.nextDay();
                 UserActions.pressEnterKeyToContinue();
             }
         }
@@ -77,19 +51,7 @@ public class Game {
     }
 
     private void routines() {
-        dailyRoutines();
         monthlyRoutines();
-    }
-
-    private void dailyRoutines() {
-        getPaymentsForProjects();
-    }
-
-    private void getPaymentsForProjects() {
-        if (projectTransactions.containsKey(gameTime.getLocalDate())) {
-            var project = projectTransactions.get(gameTime.getLocalDate());
-
-        }
     }
 
     private void monthlyRoutines() {
@@ -109,42 +71,10 @@ public class Game {
         }
     }
 
-    private static void nextDay() {
-        gameTime.setGameDay(gameTime.getGameDay() + 1);
-        gameTime.nextDay();
-    }
-
     public Company createCompany() {
         System.out.println("\nPlease enter name of your startup: ");
-        var companyName = scanner.nextLine();
 
+        String companyName = UserActions.getUserInputString();
         return new Company(companyName);
-    }
-
-    private static void generateClients() {
-        for (int i = 0; i < START_CLIENTS; i++) {
-            //availableClients.add(Client.generateRandomClient());
-        }
-    }
-
-    private static void generateProjects() {
-        for (int i = 0; i < START_PROJECTS; i++) {
-            availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
-        }
-    }
-
-    public static void generateNewProject() {
-        var index = Randomizer.generateRandomValue(availableProjects.size());
-
-        availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
-    }
-
-    public static void generateNewProject(boolean newClient) {
-        if (newClient) {
-            var client = new Contractor("xd", "xd", ContractorType.DEMANDING);
-            availableProjects.add(new Project(new Contractor("xd", "xd", ContractorType.DEMANDING)));
-        } else {
-            generateNewProject();
-        }
     }
 }
