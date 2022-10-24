@@ -1,19 +1,16 @@
 package people;
 
+import lombok.Getter;
 
-import people.enums.Position;
-import people.enums.Seniority;
+import people.enums.ContractorType;
 
 public class Contractor extends Human{
 
-    private final Position position;
+    @Getter
+    private final ContractorType contractorType;
 
-    private final Seniority seniority;
-
-
-    public Contractor(String firstName, String lastName, Position position, Seniority seniority) {
-        super();
-        this.position = position;
-        this.seniority = seniority;
+    public Contractor(String firstName, String lastName, ContractorType contractorType) {
+        super(firstName, lastName);
+        this.contractorType = contractorType;
     }
 }

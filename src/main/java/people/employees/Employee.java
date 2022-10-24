@@ -18,8 +18,8 @@ public abstract class Employee extends Human implements Worker {
     @Setter
     protected Double salary;
 
-    public Employee(Position position) {
-        super();
+    public Employee(String firstName, String lastName, Position position) {
+        super(firstName, lastName);
         this.position = position;
     }
 
@@ -35,18 +35,6 @@ public abstract class Employee extends Human implements Worker {
     @Override
     public String toString() {
         return "Name: " + getFirstName() + " " + getLastName() + ", role: " + position + ", salary: " + salary;
-    }
-
-    public boolean isDeveloper() {
-        return position == Position.DEVELOPER;
-    }
-
-    public boolean isTester() {
-        return position == Position.TESTER;
-    }
-
-    public boolean isSales() {
-        return position == Position.SALES;
     }
 
     public boolean isSick() {

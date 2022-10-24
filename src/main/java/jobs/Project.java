@@ -1,15 +1,13 @@
 package jobs;
 
-import gameplay.Game;
 import helpers.Randomizer;
 import jobs.enums.DifficultyLevel;
 import jobs.enums.TechStack;
 import lombok.Getter;
 import lombok.Setter;
-import people.Client;
+import people.Contractor;
 import people.enums.Seniority;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -24,10 +22,10 @@ public class Project extends ProjectTemplate {
     private final String name;
 
     @Getter
-    private final Client client;
+    private final DifficultyLevel difficultyLevel;
 
     @Getter
-    private final DifficultyLevel difficultyLevel;
+    private final Contractor contractor;
 
     @Getter
     private final Integer deadlineDays;
@@ -36,17 +34,10 @@ public class Project extends ProjectTemplate {
     private final Double deadlinePenalty;
 
     @Getter
-    private LocalDate actualDeadline;
-
-    @Getter
     private Double bugChance = 0.0;
 
     @Getter
     private boolean isFinished;
-
-    @Getter
-    @Setter
-    private boolean developedByOwner;
 
     @Getter
     private final Integer paymentDelayDays;
@@ -55,31 +46,23 @@ public class Project extends ProjectTemplate {
     private final Double payment;
 
     @Getter
-    private Double finalPayment;
-
-    @Getter
     private final HashMap<TechStack, Integer> techStackAndWorkload;
 
     @Getter
     @Setter
     private HashMap<TechStack, Integer> workLeft;
 
-    public Project(Client client) {
+    public Project(Contractor contractor) {
         this.name = generateRandomName();
-        this.client = client;
         this.isFinished = false;
         this.difficultyLevel = DifficultyLevel.values()[Randomizer.generateRandomValue(DifficultyLevel.values().length)];
         this.paymentDelayDays = generatePaymentDelay();
+        this.contractor = contractor;
         this.techStackAndWorkload = generateTechStack();
         this.workLeft = new HashMap<>(techStackAndWorkload);
         this.payment = generatePayment();
         this.deadlinePenalty = payment * DEFAULT_DEADLINE_PENALTY;
         this.deadlineDays = generateDeadlineDays();
-        this.developedByOwner = false;
-    }
-
-    public Integer getEstimatedPaymentDate() {
-        return DEFAULT_PAYMENT_DELAY;
     }
 
     public int getDaysLeft() {
@@ -96,39 +79,7 @@ public class Project extends ProjectTemplate {
         return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + techStackAndWorkload.toString();
     }
 
-    public String toString(boolean showWorkLeft) {
-        if (showWorkLeft)
-            return "Project name= " + name + ", difficulty= " + difficultyLevel + ", tech stack= " + workLeft.toString();
-        return toString();
-    }
-
-    public void setFinalPayment() {
-        var penalty = 1 - DEFAULT_DEADLINE_PENALTY;
-        finalPayment = isPenaltyAdded() ? (this.getPayment() * penalty) : this.getPayment();
-
-        if (client.getType() == Client.ClientType.MTHRFCKR) {
-            if (Randomizer.draw(1)) finalPayment = 0.0;
-        }
-    }
-
-    public boolean isBugged() {
-        if (bugChance > 0.75) return true;
-        else if (bugChance > 0.5) return !Randomizer.draw(50);
-        else if (bugChance > 0.25) return !Randomizer.draw(75);
-        else if (bugChance > 0.10) return !Randomizer.draw(90);
-
-        return false;
-    }
-
     // public methods
-
-    public static Project generateRandomProject(Client client) {
-        return new Project(client);
-    }
-
-    public void setActualDeadline() {
-        actualDeadline = Game.getGameDate().plusDays(deadlineDays);
-    }
 
     public void makeProgressByTech(TechStack tech, Seniority seniority) {
         var value = workLeft.get(tech);
@@ -165,26 +116,6 @@ public class Project extends ProjectTemplate {
         bugChance -= singleTestValue;
     }
 
-    public boolean isDeadlinePassed() {
-        return Game.getGameDate().isAfter(actualDeadline);
-    }
-
-    public Integer daysAfterDeadline() {
-        if (isDeadlinePassed()) return Game.getGameDate().compareTo(actualDeadline);
-
-        return 0;
-    }
-
-    public boolean isPenaltyAdded() {
-        var days = daysAfterDeadline();
-
-        if (client.getType() == Client.ClientType.RELAXED) {
-            if (days <= 7) return !Randomizer.draw(20);
-        }
-
-        return true;
-    }
-
     // private methods, generators
     private String generateRandomName() {
         return availableProjectNames.get(Randomizer.generateRandomValue(availableProjectNames.size()));
@@ -192,18 +123,9 @@ public class Project extends ProjectTemplate {
 
     private Integer generatePaymentDelay() {
         int paymentDelay = DEFAULT_PAYMENT_DELAY;
-        switch (client.getType()) {
-            case RELAXED:
-                if (Randomizer.draw(30)) paymentDelay += 7;
-                break;
-            case DEMANDING:
-                break;
-            case MTHRFCKR:
-                int chance = Randomizer.generateRandomValue(100);
-                if (chance < 30) paymentDelay += 7;
-                else if (chance < 35) paymentDelay += 30;
-                break;
-        }
+        if(Randomizer.draw(contractor.getContractorType().getDelayPaymentWeekChance()))
+            paymentDelay += 7;
+        //tbd
 
         return paymentDelay;
     }

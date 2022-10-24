@@ -1,22 +1,23 @@
 package people;
 
 import gameplay.Company;
+
 import lombok.Getter;
 import lombok.Setter;
 
 public abstract class Human {
 
     @Getter
-    private String firstName;
+    private final String firstName;
 
     @Getter
-    private String lastName;
+    private final String lastName;
 
     @Getter
     @Setter
     private Company company;
 
-    public Human() {
+    public Human(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
