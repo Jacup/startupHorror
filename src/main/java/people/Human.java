@@ -1,6 +1,6 @@
 package people;
 
-import gameplay.Company;
+import company.Company;
 
 import lombok.Getter;
 import lombok.Setter;

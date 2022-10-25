@@ -1,5 +1,6 @@
 package gameplay;
 
+import company.Company;
 import helpers.Console;
 import helpers.UserActions;
 import jobs.enums.DifficultyLevel;
@@ -64,10 +65,11 @@ public class Game {
             company.resetTaxDays();
 
             // salaries
-            company.paySalaryToWorkers();
+            company.getCompanyHrOperations().paySalaryToWorkers();
 
+            //there's no method now
             // monthly tax
-            company.payMonthlyTaxes();
+            //company.getCompanyHrOperations().
         }
     }
 
