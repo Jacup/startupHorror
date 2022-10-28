@@ -1,6 +1,6 @@
 package jobs;
 
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import jobs.enums.DifficultyLevel;
 import jobs.enums.TechStack;
 import lombok.Getter;

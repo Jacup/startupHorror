@@ -1,7 +1,6 @@
 package people.employees;
 
-import gameplay.Game;
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import jobs.Project;
 import people.enums.Position;
 
@@ -10,8 +9,8 @@ public class Sales extends Employee {
 
     private int projectFindingProgress;
 
-    public Sales() {
-        super("xd", "xd", Position.SALES);
+    public Sales(String firstName, String lastName) {
+        super(firstName, lastName, Position.SALES);
         setSalary(generateSalary());
         this.projectFindingProgress = 0;
     }

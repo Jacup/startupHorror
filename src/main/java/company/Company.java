@@ -1,12 +1,14 @@
 package company;
 
+import company.companyElements.CompanyEmployeeManager;
+import company.companyElements.CompanyHrOperations;
 import gameplay.Game;
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import jobs.Project;
 
 import lombok.Getter;
-
 import lombok.Setter;
+
 import people.employees.Developer;
 import people.employees.Sales;
 import people.employees.Tester;
@@ -14,6 +16,7 @@ import people.employees.Tester;
 import java.util.LinkedList;
 
 public class Company {
+
     @Getter
     private final String name;
 
@@ -27,11 +30,11 @@ public class Company {
     @Getter
     private Integer daysSpendOnTaxes;
 
-    private CompanyEmployeeManager companyEmployeeManager;
+    private final CompanyEmployeeManager companyEmployeeManager;
 
     //for now it's have own getter, to delete when I refactor game
     @Getter
-    private CompanyHrOperations companyHrOperations;
+    private final CompanyHrOperations companyHrOperations;
 
     public Company(String name) {
         this.cash = generateRandomCashAmount();

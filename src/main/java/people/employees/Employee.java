@@ -1,6 +1,6 @@
 package people.employees;
 
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import lombok.Getter;
 import lombok.Setter;
 import people.Human;
@@ -23,15 +23,6 @@ public abstract class Employee extends Human implements Worker {
         this.position = position;
     }
 
-    // public methods
-    public static Employee generateRandomEmployee() {
-        return switch (generatePosition()) {
-            case DEVELOPER -> new Developer();
-            case TESTER -> new Tester();
-            case SALES -> new Sales();
-        };
-    }
-
     @Override
     public String toString() {
         return "Name: " + getFirstName() + " " + getLastName() + ", role: " + position + ", salary: " + salary;
@@ -41,13 +32,4 @@ public abstract class Employee extends Human implements Worker {
         return Randomizer.draw(SICKNESS_CHANCE);
     }
 
-    // private methods
-    private static Position generatePosition() {
-        // 50% chance for devs, 25% chance for tester, 25% for sales
-        var isDev = Randomizer.draw(50);
-        if (isDev) return Position.DEVELOPER;
-
-        if (Randomizer.draw(50)) return Position.TESTER;
-        return Position.SALES;
-    }
 }

@@ -1,8 +1,8 @@
 package gameplay;
 
 import company.Company;
-import helpers.Console;
-import helpers.UserActions;
+import helpers.console.Console;
+import helpers.console.UserActions;
 import jobs.enums.DifficultyLevel;
 
 public class Game {

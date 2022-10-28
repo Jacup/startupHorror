@@ -1,12 +1,13 @@
-package company;
+package company.companyElements;
 
+import company.Company;
 import gameplay.Game;
 
 public class CompanyHrOperations {
 
-    private Company company;
+    private final Company company;
 
-    private CompanyEmployeeManager companyEmployeeManager;
+    private final CompanyEmployeeManager companyEmployeeManager;
 
     public CompanyHrOperations(Company company, CompanyEmployeeManager companyEmployeeManager) {
         this.company = company;
@@ -25,9 +26,6 @@ public class CompanyHrOperations {
                 Game.lostGame();
             }
         }
-
-
-
     }
 
 }

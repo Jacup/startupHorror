@@ -1,4 +1,4 @@
-package company;
+package company.companyElements;
 
 import lombok.Getter;
 import people.employees.Developer;
@@ -24,6 +24,10 @@ public class CompanyEmployeeManager {
 
     public LinkedList<Sales> getHiredSales() {
         return hiredEmployees.stream().filter(e -> e instanceof Sales).map(Sales.class::cast).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public void hireEmployee(Employee employee) {
+        hiredEmployees.add(employee);
     }
 
 }

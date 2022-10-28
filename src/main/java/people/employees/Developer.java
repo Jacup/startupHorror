@@ -1,7 +1,7 @@
 package people.employees;
 
 import gameplay.Game;
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import jobs.Project;
 import jobs.enums.TechStack;
 import lombok.Getter;
@@ -22,8 +22,8 @@ public class Developer extends Employee {
     @Getter
     private final LinkedList<TechStack> skills;
 
-    public Developer() {
-        super("xd", "xd", Position.DEVELOPER);
+    public Developer(String firstName, String lastName) {
+        super(firstName, lastName, Position.DEVELOPER);
         this.seniority = Seniority.values()[Randomizer.generateRandomValue(Seniority.values().length)];
         this.skills = generateSkills();
         setSalary(getBaseSalary() * getSkillsMultiplier());
