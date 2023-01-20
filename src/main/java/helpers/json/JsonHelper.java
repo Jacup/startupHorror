@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class JsonHelper<T> {
+public class JsonHelper{
 
 
 
@@ -18,8 +18,7 @@ public class JsonHelper<T> {
         FileReader reader = new FileReader(new File(uri));
 
         Jsonb jsonb = JsonbBuilder.create();
-        RandomEmployeesData s = jsonb.fromJson(reader, RandomEmployeesData.class);
 
-        return s;
+        return jsonb.fromJson(reader, RandomEmployeesData.class);
     }
 }

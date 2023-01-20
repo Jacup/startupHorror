@@ -19,7 +19,7 @@ public class RandomEmployeesData implements Serializable {
     private List<String> lastNames;
 
     public RandomEmployeesData deserialize() throws IOException, URISyntaxException {
-        return new JsonHelper<RandomEmployeesData>().getPreparedData();
+        return new JsonHelper().getPreparedData();
     }
 
 
