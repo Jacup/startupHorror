@@ -15,7 +15,7 @@ import java.util.List;
 
 import static java.lang.Double.parseDouble;
 
-@ToString
+@ToString(callSuper = true)
 public class Developer extends Employee {
     private final Seniority seniority;
 
@@ -119,5 +119,7 @@ public class Developer extends Employee {
 
         return parseDouble(multiplier);
     }
+
+
 
 }
