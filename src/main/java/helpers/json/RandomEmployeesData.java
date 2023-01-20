@@ -22,5 +22,4 @@ public class RandomEmployeesData implements Serializable {
         return new JsonHelper().getPreparedData();
     }
 
-
 }
