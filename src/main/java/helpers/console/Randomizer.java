@@ -1,4 +1,4 @@
-package helpers;
+package helpers.console;
 
 import java.util.concurrent.ThreadLocalRandom;
 

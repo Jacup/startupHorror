@@ -1,7 +1,6 @@
 package people.employees;
 
-import gameplay.Game;
-import helpers.Randomizer;
+import helpers.console.Randomizer;
 import jobs.Project;
 import people.enums.Position;
 
@@ -9,13 +8,11 @@ public class Sales extends Employee {
     private static final int BASE_SALARY = 5000;
 
     private int projectFindingProgress;
-    private int projectsFound;
 
-    public Sales() {
-        super(Position.SALES);
+    public Sales(String firstName, String lastName) {
+        super(firstName, lastName, Position.SALES);
         setSalary(generateSalary());
         this.projectFindingProgress = 0;
-        this.projectsFound = 0;
     }
 
     // public methods
@@ -24,8 +21,6 @@ public class Sales extends Employee {
         System.out.println("DEBUG: sales " + this.getName() + " worked today. " + "project finding: " + projectFindingProgress);
 
         if (projectFindingProgress == 4) {
-            Game.generateNewProject(true);
-            projectsFound++;
             projectFindingProgress = 0;
             System.out.println("DEBUG: sales " + this.getName() + " found new client and available project.");
         }
